@@ -1,9 +1,12 @@
-1.Show file permissions
+1.ls -l (Show file permissions)
 2.mv
-3.
+3.chmod (Change a file's permission)
 4.pwd
-5.
+5.ping (Check if a host is online)
 6.find -name
-7.ps
-8.killall
-9.cmp
+7.ps (man page: report a snapshot of the current processes.)
+Modified: 7.top (man page: display Linux processes)
+8.killall (kill processes by name)
+Modified: 8.kill (send a signal to a process)
+9.cmp (compare bit by bit)
+Modified: 9.diff (compare line by line)
