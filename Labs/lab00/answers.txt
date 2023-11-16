@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 1.mv
 2.
 3.pwd
@@ -6,3 +7,10 @@
 6.ps
 7.killall
 8.cmp
+=======
+1.Show file permissions
+2.find -name
+3.ps
+4.killall
+5.cmp
+>>>>>>> ba12be46ecb56cd10dacce58eed7d301cef730de
