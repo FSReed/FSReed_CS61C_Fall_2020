@@ -1,4 +1,4 @@
-1.
-2.
-3.
-4.
+1.find -name
+2.ps
+3.killall
+4.cmp
