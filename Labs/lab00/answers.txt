@@ -1,4 +1,5 @@
-1.find -name
-2.ps
-3.killall
-4.cmp
+1.Show file permissions
+2.find -name
+3.ps
+4.killall
+5.cmp
