@@ -45,14 +45,21 @@ int main() {
 //	char s1[7] = "string";
 //	printf("%p\n", s1);
 
-	struct ll_node* newList = (struct ll_node*) malloc(sizeof(struct ll_node));
-	newList->first = 3;
-	newList->rest = NULL;
-	prepend(&newList, 54);
-	printf("%d\n", newList->first);
-	printf("%d\n", newList->rest->first);
-	free_ll(&newList);
-	printf("%p\n", newList);
+//	struct ll_node* newList = (struct ll_node*) malloc(sizeof(struct ll_node));
+//	newList->first = 3;
+//	newList->rest = NULL;
+//	prepend(&newList, 54);
+//	printf("%d\n", newList->first);
+//	printf("%d\n", newList->rest->first);
+//	free_ll(&newList);
+//	printf("%p\n", newList);
+//	return 0;
+	
+	unsigned x = 0b0010;
+	unsigned n = 2;
+	unsigned * k = &x;
+	*k = (*k) << 2;
+	printf("%d\n", x);
 	return 0;
 }
 
