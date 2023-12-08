@@ -29,6 +29,14 @@ int main() {
 	uint8_t result;
 	uint8_t param = 1;
 	result = 255 + param;
+	param = param << 8;
 	printf("%d\n", result);
+	printf("%d\n", param);
+	
+	const char *s = "0x15";
+	char *endptr;
+	uint32_t hex = strtol(s, &endptr, 16);
+	printf("%d\n", hex);
+	
 	return 0;
 }
