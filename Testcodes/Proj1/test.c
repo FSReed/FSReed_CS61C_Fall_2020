@@ -25,5 +25,10 @@ int main() {
 	r2 = (uint8_t)G;
 	r3 = (uint8_t)B;
 	printf("%d %d %d\n", r1, r2, r3);
+	
+	uint8_t result;
+	uint8_t param = 1;
+	result = 255 + param;
+	printf("%d\n", result);
 	return 0;
 }
