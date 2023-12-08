@@ -22,13 +22,50 @@
 Color *evaluateOnePixel(Image *image, int row, int col)
 {
 	//YOUR CODE HERE
+	Color* tmp = &image->image[row][col];
+	uint8_t secretBit = tmp->B;
+	secretBit = secretBit & 1;
+	uint8_t result = 255 + (1 - secretBit);
+	Color* newColor = (Color*) malloc(sizeof(Color));
+	newColor->R = result;
+	newColor->G = result;
+	newColor->B = result;
+	return newColor;
 }
 
 //Given an image, creates a new image extracting the LSB of the B channel.
 Image *steganography(Image *image)
 {
 	//YOUR CODE HERE
+	Image* newImage = (Image*) malloc(sizeof(Image));
+	newImage->rows = image->rows;
+	newImage->cols = image->cols;
+	newImage->image = (Color**) malloc(sizeof(Color*) * newImage->rows);
+	int i, j;
+	for (i = 0; i < newImage->rows; i++) {
+
+		newImage->image[i] = (Color*) malloc(sizeof(Color) * newImage->cols);
+
+		for (j = 0; j < newImage->cols; j++) {
+			Color* newColor = evaluateOnePixel(image, i, j);
+			newImage->image[i][j] = *newColor;
+			free(newColor);	
+		}
+	}
+	return newImage;
 }
+
+
+void processCLI(int argc, char **argv, char **filename) 
+{
+	if (argc != 2) {
+		printf("usage: %s filename\n",argv[0]);
+		printf("filename is an ASCII PPM file (type P3) with maximum value 255.\n");
+		exit(-1);
+	}
+	*filename = argv[1];
+}
+
 
 /*
 Loads a file of ppm P3 format from a file, and prints to stdout (e.g. with printf) a new image, 
@@ -46,4 +83,13 @@ Make sure to free all memory before returning!
 int main(int argc, char **argv)
 {
 	//YOUR CODE HERE
+	Image *image, *newImage;
+	char* fileName;
+	processCLI(argc,argv,&fileName);
+	image = readData(fileName);
+	newImage = steganography(image);
+	writeData(newImage);
+	freeImage(image);
+	freeImage(newImage);
+	return 0;
 }
