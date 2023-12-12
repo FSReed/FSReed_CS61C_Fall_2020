@@ -66,7 +66,7 @@ This instruction means: we are loading the contents with address of (x11 + 3) fr
 
 If we are operating with signed numbers, when we are copying a signed number from memory to the register, the first bit indicated whether this number is negative or positive. If we keep the upper bits of the register 0, we are making this number look like a positive number. We need to preserve the sign of it, and the operation is to keep the first bit of the number(called `x`), and make all other higher bits in the register `x`. This is called **Sign Extension**
 ![signed](Image/week4-2.png)
-We don't always want to do sign extension, and RISC-V supports `lbu`(load byte unsigned), which zero extends to fill register.
+We don't always want to do sign extension, and RISC-V supports `lbu`(load byte unsigned), which zero extends to fill register. There's **no `sbu`**, because it's meaningless to use more bits in memory to store a number, we just store this byte into the memory.
 
 ### A little note: `addi` seems to be redundant?
 
@@ -155,3 +155,161 @@ Loop:
     j loop
 Done:
 ```
+
+### Logical Instructions
+
+In C, we have `&, |, ^, <<, >>`, in RISC-V, there're corresponding instructions:
+
+|   C   |            RISC-V             |
+| :---: | :---------------------------: |
+|   &   |           and, andi           |
+|  \|   |            or, ori            |
+|   ^   |           xor, xori           |
+|  <<   | sll(shift left logical), slli |
+|  >>   | srl(shift right logical),srli |
+
+There's no logical NOT in RISC-V, using `xor` with $11111111_{two}$.
+
+Arithmetic shifting: When we are working with signed numbers, we need to keep the high-order sign bit. Shift right arithmetic(sra, srai) will do this:
+
+![sra](Image/week4-3.png)
+
+## Machine Programs
+
+How does the assembler file converts to machine code? How program is stored?
+
+![Assembler to Machine code](Image/week4-4.png)
+![Storing Program](Image/week4-5.png)
+
+An Intruction needs 32 bits to be stored in RISC-V, this means programs are stored as bits in the memory. There's a special register in the processor called **(Program Counter)**, which stores the position of the next instruction to be executed.
+
+![PC](Image/week4-6.png)
+
+### RISC-V function call conventions
+
+- We use registers, because registers are faster than memory.
+- **a0-a7** (x10-x17): eight argument registers to pass parameters and two return values(a0 and a1).
+- **ra** (x1): one return address register to return to the point of **origin**
+- Also **s0-s1** (x8-x9) and **s2-s11** (x18-x27): saved registers.
+
+How does a function look like in Aassembly? Here's an example:
+
+![Function](Image/week4-7.png)
+
+- Pseudoinstruction: `jr`(jump register), in the picture above, we are jumping back to the origin with address stored in ra.
+
+  - The pseudoinstruction of `jr ra` is `ret`.
+
+- Why are we using jr rather than j? Because we may call this function from anywhere, so we better set the returning origin address to bea variable.
+- **New instruction:** `jal`(jump and link): jumps to address and simultaneously save the address of the **following** instruction in register ra.
+
+  - In the picture above, at the address of 1008, we store the instruction: `addi ra, zero, 1016`, at 1012, we store `j sum`. This can be done by using `jal` like: `jal sum`. This automatically saves `1012` to ra, and jump to label "sum".
+  - Why have a `jal`? Because function calls are very common, and we don't need to know where the code is in the memory!
+
+- **New instruction:** `jalr`(jump and link register). More about this later.
+
+### Six Basic Steps in Calling a Function
+
+![Six Steps](Image/week4-8.png)
+
+*Some notes:*
+
+- Step 3: The word *local* in the parenthesis means: We can't use any register we want in the processor, because there might be some other values that we stored in order to use later. So we need to acquire spare spaces to do the function.
+- Step 5: How to save old values in registers? No enough registers to do that, so we need to use memory. There's an ideal space in memory called: **stack**.
+
+### Stack in memory
+
+- **sp** (x2) is the stack pointer in RISC-V.
+- Convention is to grow stack down from high to low addresses. It means push decrements sp, and pop increaments sp.
+- Stack frame picture: ![Picture](Image/week4-9.png)
+
+### An Example of RISC-V Code
+
+First, give the function in C:
+
+```C
+int leaf(int i, int j, int k, int l) {
+    int f;
+    f = i + j;
+    return f - (k + l);
+}
+```
+
+We can see that we need 2 local varaibles to store the values, so we need 2 bytes in the stack. Then the RISC-V code will look like:
+
+```RISC-V
+addi sp, sp, -8 # Spare 2 bytes in the stack.
+sw s1, 4(sp)
+sw s0, 0(sp) # These 3 steps are called Prologue
+
+add s0, a0, a1
+add s1, a2, a3 
+sub s0, s0, s1 # return value
+
+lw s1, 4(sp)
+lw s0, 0(sp)
+addi sp, sp, 8 # These 3 steps are called epilogue
+jr ra
+```
+
+### Nested Procedures
+
+What if we call a function in another function. The `ra` register will be overwritten.  
+One possible solution is to store all 31 registers in the stack every time we call a function, but this is very inefficient. There's a **Register Convention** in RISC-V, which is a set of rules to determine which register will be unchanged after a procedure call and which register may be changed. To reduce expensive loads and stores from spilling and restoring registers, RISC-V function-calling convention divides the registers into two categories:
+![Convention1](Image/week4-10.png)
+![Convention2](Image/week4-11.png)
+
+## Memory Allocation
+
+My own understanding so far: (Only considering ra, a0-a7 and s0-s11)
+
+- What the caller needs to store into the memory is **the parameters passed in and the return address of its "father"**. Because the parameter may be overwritten by sub-calls made in this function, so do the return address.
+- What the callee needs to store into the memory is **saved registers**. It's the convention that contents in these registers won't be changed after sub-calls, so the sub-calls themselves need to store these registers to the memory to make sure they can restore the origin data in these registers.
+
+Let's see an example:
+
+```C
+int sumSquare(int x, int y) {
+    return mult(x, x) + y;
+}
+```
+
+Let's do some analysis first:
+
+- What would sumSquare store? **Return address to its "father"**, and **function parameter y** which may be changed during sub-calls.
+- We need to prepare the parameter for mult.
+- **How to get the return value from mult?** Remember that the return value will be stored in **a0!**
+
+```RISC-V
+sumSquare:
+    addi sp, sp, -8     # space on stack
+    sw ra, 4(sp)        # store ra
+    sw a1, 0(sp)        # store y
+
+    mv a1, a0           # prepare parameters for mult
+    jal mult            # call mult. NOW a0 = X + X!!!!!
+    lw a1, 0(sp)        # get y back
+    add a0, a0, a1      # return sumSquare
+
+    lw ra, 4(sp)        # get ra back
+    addi sp, sp, 8      # Don't forget to restore stack!!!!!
+    jr ra               # return
+mult:
+    ...
+```
+
+### Where is the Stack?
+
+First, let's review the memory areas in C:
+
+![C Memory](Image/week4-12.png)
+
+Then here comes the memory allocation of RV32:
+
+![RV32 Memory](Image/week4-13.png)
+![Explanation](Image/week4-14.png)
+
+## Summary
+
+![Summary](Image/week4-15.png)
+Note that there's no subi in RISC-V. A little bug in the picture.
