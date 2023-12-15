@@ -4,12 +4,12 @@
 
 - Data Transfer: **Load from** and **Store to**.
 - Memory: 8 bit chunk is called a **byte**, and memory addresses are really in bytes, not words.
-- Word address is same asaddress of rightmost byte, i.e.**Little-endian** convention.
+- Word address is same as address of rightmost byte, i.e.**Little-endian** convention.
 ![Little endian](Image/week4-1.png)
 
 ## Data Transfer Instructions
 
-The Memory Hierachy:
+The Memory Hierarchy:
 
 - The processor core is at the top of the registers. They are extremely fast, extremely expensive, so we have a small number of them.
 - The memory is implementing a different technology called **DRAM**, which stands for **Dynamic Random Access Memory**. It comes in different flavors, like DDR3/4/5(*Double data rate*), HBM/HBM2/HBM3(*High bandwidth memory*).
@@ -77,15 +77,15 @@ Notice that we can do addi by storing a constant into the memory, and load this 
 
 ### If statement in RISC-V: `beq`(branch if equal)
 
-Syntax like this: `beq reg1, reg2, L1`, which means: Go to statmement labeled L1 if (value in reg1 == value in reg2). From `beq`, we can get other commands:
+Syntax like this: `beq reg1, reg2, L1`, which means: Go to statement labeled L1 if (value in reg1 == value in reg2). From `beq`, we can get other commands:
 
-|  Command   |              Explanation              |
-| :--------: | :-----------------------------------: |
-|    beq     |            branch if equal            |
-|    bne     |          branch if not equal          |
-|    blt     |        branch if less than(<)         |
-|    bge     | brtanch  if greater than or equal(>=) |
-| bltu, bgeu |           unsigned versions           |
+|  Command   |             Explanation              |
+| :--------: | :----------------------------------: |
+|    beq     |           branch if equal            |
+|    bne     |         branch if not equal          |
+|    blt     |        branch if less than(<)        |
+|    bge     | branch  if greater than or equal(>=) |
+| bltu, bgeu |          unsigned versions           |
 
 Branch - change of control flow. These are conditional branches above, which means change control flow depending on outcome of comparison. There is also unconditional branch - always branch. The RISC-V instruction for this is: `j`(jump), as in j label.  
 Why not using conditional branch to implement unconditional branch? Remember that we are using 32-bit instructions, if we use something like `beq x0, x0, label`, we need more space to encode for the condition, thus less space to place the label.
@@ -181,7 +181,7 @@ How does the assembler file converts to machine code? How program is stored?
 ![Assembler to Machine code](Image/week4-4.png)
 ![Storing Program](Image/week4-5.png)
 
-An Intruction needs 32 bits to be stored in RISC-V, this means programs are stored as bits in the memory. There's a special register in the processor called **(Program Counter)**, which stores the position of the next instruction to be executed.
+An instruction needs 32 bits to be stored in RISC-V, this means programs are stored as bits in the memory. There's a special register in the processor called **(Program Counter)**, which stores the position of the next instruction to be executed.
 
 ![PC](Image/week4-6.png)
 
@@ -192,13 +192,13 @@ An Intruction needs 32 bits to be stored in RISC-V, this means programs are stor
 - **ra** (x1): one return address register to return to the point of **origin**
 - Also **s0-s1** (x8-x9) and **s2-s11** (x18-x27): saved registers.
 
-How does a function look like in Aassembly? Here's an example:
+How does a function look like in Assembly? Here's an example:
 
 ![Function](Image/week4-7.png)
 
-- Pseudoinstruction: `jr`(jump register), in the picture above, we are jumping back to the origin with address stored in ra.
+- Pseudo-instruction: `jr`(jump register), in the picture above, we are jumping back to the origin with address stored in ra.
 
-  - The pseudoinstruction of `jr ra` is `ret`.
+  - The pseudo-instruction of `jr ra` is `ret`.
 
 - Why are we using jr rather than j? Because we may call this function from anywhere, so we better set the returning origin address to bea variable.
 - **New instruction:** `jal`(jump and link): jumps to address and simultaneously save the address of the **following** instruction in register ra.
@@ -220,7 +220,7 @@ How does a function look like in Aassembly? Here's an example:
 ### Stack in memory
 
 - **sp** (x2) is the stack pointer in RISC-V.
-- Convention is to grow stack down from high to low addresses. It means push decrements sp, and pop increaments sp.
+- Convention is to grow stack down from high to low addresses. It means push decrements sp, and pop increments sp.
 - Stack frame picture: ![Picture](Image/week4-9.png)
 
 ### An Example of RISC-V Code

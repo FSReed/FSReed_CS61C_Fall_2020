@@ -45,7 +45,7 @@ Why is this useful?
 - Hope NaNs help with debugging
 - They contaminate: op(NaN, X) = NaN
 - Can use the significand to identify which!
-  - Notice this seems to be a waste of bits, remember **"Waste not, want not"**, we can use these different significads to identify what kind of NaNs they are.
+  - Notice this seems to be a waste of bits, remember **"Waste not, want not"**, we can use these different significands to identify what kind of NaNs they are.
 
 #### Representation of Denorms
 
@@ -69,7 +69,7 @@ Interesting facts:
 - There's always $2^{23}$ numbers between two exponent numbers. For example, between $2$ and $4$, between $2^{23}$ and $2^{24}$. So if the exponent field evaluates to 150, the actual exponent is $2^{150-127} = 2^{23}$, then **every time we add 1 to the significand, the actual decimal number will increase by 1!**
 - The biggest positive number which is smaller than $+\infty$ is: `11111110` in exponent field and all ones in significand field. When it adds 1, we get the $+\infty$. Add another one, we'll get the NaN.
 
-### Undertanding the significands
+### Understanding the significands
 
 There're two ways to think about this:
 
@@ -87,9 +87,9 @@ Not really! See this example: $x = 1.5e38$, $y = -1.5e38$, $z = 1$, now if we do
 - Precision is a count of number of bits used to store a number. Like in simple precision we are using 32 bits to store a number.
 - Accuracy is the difference between the result and the real number.
 
-So this means high precision permits high accuracy, but don't guarantee it. For examle, if we are storing the $\pi$ using 24 bits of the significand, this is of high precision, but the accuracy is still low.
+So this means high precision permits high accuracy, but don't guarantee it. For example, if we are storing the $\pi$ using 24 bits of the significand, this is of high precision, but the accuracy is still low.
 
-### Casting floats to ints and vice versa
+### Casting floats to integers and vice versa
 
 Here's an interesting case. Consider the code down here:
 
@@ -130,7 +130,7 @@ The essence is:
 
 ### Assembly Language
 
-- The Basic job of a CPU is to execure lots of instructions. Each processor will execute about 1 billion instructions in a second.
+- The Basic job of a CPU is to execute lots of instructions. Each processor will execute about 1 billion instructions in a second.
 - Instructions are the primitive operations that a CPU may execute.
 - Different CPUs implement different sets of instructions. The set of instructions a particular CPU implements is an **Instruction Set Architecture**(指令集架构). Here are some examples: *ARM(cell phones), Intel x86, IBM Power, IBM/Motorola PowerPC(old Macs), MIPS, **RISC-V**,...*.
 
@@ -141,7 +141,7 @@ The essence is:
 - Benefit: As mentioned above, the registers are directly in hardware, they're very fast, faster than 0.25ns.
 - Drawback: Since registers are in hardware, there's a predetermined number of them. There are 32 registers in RISC-V. Each RISC-V register is 32 bits wide (in RV32 Variant), groups of 32 bits called a **word** in RV32.
 - These 32 registers are numbered from **x0** to **x31**, and **x0 is special**, which always holds value zero. So only 31 registers are able to hold variable values.
-- In most Higher Level Languages(HLL), variables declared first and given a type. Each varible can only represent a value of the type it was declared as. But in Assembly language, the registers have no type.
+- In most Higher Level Languages(HLL), variables declared first and given a type. Each variable can only represent a value of the type it was declared as. But in Assembly language, the registers have no type.
 
 ### RISC-V Add and Sub
 

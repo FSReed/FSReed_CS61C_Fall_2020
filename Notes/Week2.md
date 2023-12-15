@@ -8,7 +8,7 @@ C has 3 different pools of memory:
 
 - Static storage: Global variable storage.
 - The Stack: Local variables.
-- The Heap: (Dynamic malloc storage): data lives until deallocated by programmer. **Not the heap data structure!!!**
+- The Heap: (Dynamic malloc storage): data lives until de-allocated by programmer. **Not the heap data structure!!!**
 
 ## Normal C Memory Management(Lecture 8)
 
@@ -16,7 +16,7 @@ A program's address space contains 4 regions. From the top to the bottom, they a
 Notes:
 
 - *The code block is loaded when the program starts. Never change.*
-- *The OS will prevent stack and heap overcrossing each other. See in CS162.*
+- *The OS will prevent stack and heap over-crossing each other. See in CS162.*
 
 ## The Heap(Dynamic Memory)
 
@@ -26,7 +26,7 @@ The memory allocation in the heap is tricky.
 - size of the block
 - a **pointer to the next block**
 
-All **free** blocks are kept in a circular linked list, the pointer fied is unused in an allocated block.
+All **free** blocks are kept in a circular linked list, the pointer field is unused in an allocated block.
 Then consider malloc() function. It might be really slow to search over all the free blocks. So how does malloc() really works?
 There are three wys to find free space when given a request:
 
