@@ -121,6 +121,6 @@ print_newline:
 
 malloc:
     addi    a1, a0, 0
-    addi    a0, x0 9
+    addi    a0, x0, 9
     ecall
     jr  ra
