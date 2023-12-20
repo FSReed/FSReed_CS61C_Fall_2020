@@ -203,7 +203,7 @@ How does a function look like in Assembly? Here's an example:
 - Why are we using jr rather than j? Because we may call this function from anywhere, so we better set the returning origin address to bea variable.
 - **New instruction:** `jal`(jump and link): jumps to address and simultaneously save the address of the **following** instruction in register ra.
 
-  - In the picture above, at the address of 1008, we store the instruction: `addi ra, zero, 1016`, at 1012, we store `j sum`. This can be done by using `jal` like: `jal sum`. This automatically saves `1012` to ra, and jump to label "sum".
+  - In the picture above, at the address of 1008, we store the instruction: `addi ra, zero, 1016`; At 1012, we store `j sum`. This can be done by using `jal` like: `jal sum`. This automatically saves `1012` to ra, and jump to label "sum".
   - Why have a `jal`? Because function calls are very common, and we don't need to know where the code is in the memory!
 
 - **New instruction:** `jalr`(jump and link register). More about this later.
