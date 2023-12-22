@@ -11,16 +11,16 @@ First, we need a normal format of floating points like this: $1.xxx..._2(23 x's)
 - Then **23 bits** follows, representing the significand of the number.
 
 The representation looks like this:
-![Representation of float](./Image/week3_1.png)
+![Representation of float](Image/Week3/week3_1.png)
 
 New Conception: **Underflow**. The main concept is that we are using some bits to represent the exponent part, so we can't represent the number which is close enough to zero. This is **underflow**.
-![Underflow](./Image/week3_2.png)
+![Underflow](Image/Week3/week3_2.png)
 To avoid underflow and overflow, we need to add more bits. This is where **double** comes in. It uses 52 bits to restore the significand, and 11 bits to restore the exponent.
 
 ### Biased Representation of the exponent
 
 Problem: Using 2's complement will cause negative numbers look bigger. So the standard choose to use biased notation. For example, in single precision, we just need to subtract 127 from Exponent field to get the exponent value.
-![Biased notation](Image/week3_3.png)
+![Biased notation](Image/Week3/week3_3.png)
 
 ### Special Numbers
 
@@ -111,11 +111,11 @@ Run this simple piece of code, you can find `(int) k` is not equal to `i` anymor
 
 #### Double precision
 
-![Double Precision](Image/week3_4.png)
+![Double Precision](Image/Week3/week3_4.png)
 
 #### Other representations
 
-![Others](Image/week3_5.png)
+![Others](Image/Week3/week3_5.png)
 
 ### Summing Up
 
@@ -126,7 +126,7 @@ The essence is:
 
 ### The level of abstraction
 
-![Level](Image/week3_6.png)
+![Level](Image/Week3/week3_6.png)
 
 ### Assembly Language
 
