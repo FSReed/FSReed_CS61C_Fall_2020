@@ -7,7 +7,8 @@ To be honest, I'm really afraid whether I'll end up giving up studying all these
 This long-lost enthusiasm in study really cheers me up.
   - Typed at 2023/11/27, 23:54
 
-- Now I'm ready for project2, and I find that the solutions of the discussions are already provided on the website lol. So from discussion 3, I'll just post the solutions of the discussions. And what's more, the starting file of the projects can be found on the introducing page of the project.
+- Now I'm ready for project2, and I find that the solutions of the discussions are already provided on the website lol. So from discussion 3, I'll just post the solutions of the discussions. And what's more, the starting file of the projects can be found on the introducing page of the project.  
+  Due to the unmatched version of Venus, I choose to do the project2 of [CS61C Summer 2023](https://github.com/61c-teach/su23-proj2-starter).
   - Typed at 2023/12/30, 21:00
 
 ## Some problems I failed to solve on my own
