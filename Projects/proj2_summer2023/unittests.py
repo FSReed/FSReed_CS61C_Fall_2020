@@ -53,7 +53,7 @@ class TestRelu(unittest.TestCase):
         # load the test for relu.s
         t = AssemblyTest(self, "relu.s")
         # create an array in the data section
-        array0 = t.array([1, -2, 3, -4, 5, -6, 7, -8, 9])
+        array0 = t.array([1, -2, 3, -4, 5, -6, 0, -8, 9, 17663, -355])
         # load address of `array0` into register a0
         t.input_array("a0", array0)
         # set a1 to the length of our array
@@ -61,7 +61,7 @@ class TestRelu(unittest.TestCase):
         # call the `relu` function
         t.call("relu")
         # check that the array0 was changed appropriately
-        t.check_array(array0, [1, 0, 3, 0, 5, 0, 7, 0, 9])
+        t.check_array(array0, [1, 0, 3, 0, 5, 0, 0, 0, 9, 17663, 0])
         # generate the `assembly/TestRelu_test_simple.s` file and run it through venus
         t.execute()
 
@@ -84,7 +84,7 @@ class TestRelu(unittest.TestCase):
     def test_relu_invalid_n(self):
         t = AssemblyTest(self, "relu.s")
         # set a1 to an invalid length of array
-        t.input_scalar("a1", -1)
+        t.input_scalar("a1", 0)
         # call the `relu` function
         t.call("relu")
         # generate the `assembly/TestRelu_test_invalid_n.s` file and run it through venus
@@ -130,6 +130,36 @@ class TestArgmax(unittest.TestCase):
         t.call("argmax")
         # generate the `assembly/TestArgmax_test_invalid_n.s` file and run it through venus
         t.execute(code=36)
+
+    def test_argmax_tail(self):
+        t = AssemblyTest(self, "argmax.s")
+        # create an array in the data section
+        array0 = t.array([31, -42, 432, 7, -5, 6, 5, -114, 2046])
+        # load address of the array into register a0
+        t.input_array("a0", array0)
+        # set a1 to the length of the array
+        t.input_scalar("a1", len(array0))
+        # call the `argmax` function
+        t.call("argmax")
+        # check that the register a0 contains the correct output
+        t.check_scalar("a0", 8)
+        # generate the `assembly/TestArgmax_test_simple.s` file and run it through venus
+        t.execute()
+
+    def test_argmax_same_max(self):
+        t = AssemblyTest(self, "argmax.s")
+        # create an array in the data section
+        array0 = t.array([82, -42, 433, 7, -5, 6, 434, -114, 434])
+        # load address of the array into register a0
+        t.input_array("a0", array0)
+        # set a1 to the length of the array
+        t.input_scalar("a1", len(array0))
+        # call the `argmax` function
+        t.call("argmax")
+        # check that the register a0 contains the correct output
+        t.check_scalar("a0", 6)
+        # generate the `assembly/TestArgmax_test_simple.s` file and run it through venus
+        t.execute()
 
 
 class TestDot(unittest.TestCase):
@@ -250,6 +280,42 @@ class TestDot(unittest.TestCase):
         # call the `dot` function
         t.call("dot")
         t.execute(code=36)
+
+    def test_dot_custom_stride(self):
+        t = AssemblyTest(self, "dot.s")
+        # create arrays in the data section
+        arr0 = t.array([4, 2, 3, 4, 5, 6, -7, 8, 9])
+        arr1 = t.array([90, 80, 30, 20, 40])
+        # load array addresses into argument registers
+        t.input_array("a0", arr0)
+        t.input_array("a1", arr1)
+        # load array attributes into argument registers
+        t.input_scalar("a2", 3)
+        t.input_scalar("a3", 3)
+        t.input_scalar("a4", 2)
+        # call the `dot` function
+        t.call("dot")
+        # check the return value
+        t.check_scalar("a0", 200)
+        t.execute()
+
+    def test_dot_custom_standard(self):
+        t = AssemblyTest(self, "dot.s")
+        # create arrays in the data section
+        arr0 = t.array([-4, 2, -3, 4, 5, 6, -7, 8, 9])
+        arr1 = t.array([90, 80, 30, 20, 40])
+        # load array addresses into argument registers
+        t.input_array("a0", arr0)
+        t.input_array("a1", arr1)
+        # load array attributes into argument registers
+        t.input_scalar("a2", 4)
+        t.input_scalar("a3", 1)
+        t.input_scalar("a4", 1)
+        # call the `dot` function
+        t.call("dot")
+        # check the return value
+        t.check_scalar("a0", -210)
+        t.execute()
 
 
 class TestMatmul(unittest.TestCase):
