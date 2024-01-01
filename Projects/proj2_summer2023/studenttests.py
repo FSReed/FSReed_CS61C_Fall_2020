@@ -41,7 +41,7 @@ class TestAbsLoss(unittest.TestCase):
         # raise NotImplementedError("TODO")
 
         # create array0 in the data section
-        array0 = t.array([1, 2, 3, 4, 5])
+        array0 = t.array([1, 2, 3, 4, 25])
         # load address of `array0` into register a0
         t.input_array("a0", array0)
         # create array1 in the data section
