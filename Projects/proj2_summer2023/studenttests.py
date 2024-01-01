@@ -57,8 +57,7 @@ class TestAbsLoss(unittest.TestCase):
         # call the `abs_loss` function
         t.call("abs_loss")
         # check that the result array contains the correct output
-        result_array = [1, 1, 1, 1, 10]
-        t.check_array(array2, result_array)
+        t.check_array(array2, [1, 1, 1, 1, 10])
         # check that the register a0 contains the correct output
         t.check_scalar("a0", 14)
         # generate the `assembly/TestAbsLoss_test_simple.s` file and run it through venus
@@ -222,11 +221,10 @@ class TestInitializeZero(unittest.TestCase):
 
         # input the length of the desired array
         t.input_scalar("a0", 5)
-        array0 = [0, 0, 0, 0, 0]
         # call the `initialize_zero` function
         t.call("initialize_zero")
         # check that the register a0 contains the correct array (hint: look at the check_array_pointer function in framework.py)
-        t.check_array_pointer("a0", array0)
+        t.check_array_pointer("a0", [0, 0, 0, 0, 0])
         t.execute()
 
     # Add other test cases if necessary
