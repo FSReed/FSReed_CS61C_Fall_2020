@@ -34,7 +34,7 @@ matmul:
 
     bne a2, a4, invalid_length
     # Prologue
-    addi sp, sp, -40
+    addi sp, sp, -44
     sw s0, 0(sp)
     sw s1, 4(sp)
     sw s2, 8(sp)
@@ -43,9 +43,10 @@ matmul:
     sw s5, 20(sp)
     sw s6, 24(sp)
     sw s7, 28(sp)
-    sw s8, 32(sp)       # s7 and s8 used to store i and j, to avoid frequently store them in the stack during looping.
+    sw s8, 32(sp)       # s7 and s8 used to store i and j, to avoid frequently store them in the stack during looping
+    sw s9, 36(sp)       # Store the current row vector
 
-    sw ra, 36(sp)
+    sw ra, 40(sp)
     
     mv s0, a0
     mv s1, a1
@@ -59,7 +60,7 @@ matmul:
 outer_loop_start:
     mul t0, s7, s2      # How many units to move from the header of m0
     slli t0, t0, 2      # The true offset
-    add t0, t0, s0      # Target row vector
+    add s9, t0, s0      # Target row vector
 
     li s8, 0            # Initialize the column vector in m1
 inner_loop_start:
@@ -68,13 +69,14 @@ inner_loop_start:
     add t1, t1, s3      # Target col vector
     
     # Get ready to call function dot:
-    mv a0, t0
+    # mv a0, t0, This causes all the bugs, because t0 changes after calling dot.
+    mv a0, s9
     mv a1, t1
     mv a2, s2
     li a3, 1
     mv a4, s5
 
-    jal dot
+    jal ra dot          # Forget to add a 'ra' at first, then the program can't get back here correctly
 
     mv t0, a0
     sw t0, 0(s6)
@@ -97,9 +99,10 @@ outer_loop_end:
     lw s6, 24(sp)
     lw s7, 28(sp)
     lw s8, 32(sp)
+    lw s9, 36(sp)
 
-    lw ra, 36(sp)
-    addi sp, sp, 40     # Forget to place sp back in version 0.1
+    lw ra, 40(sp)
+    addi sp, sp, 44     # Forget to place sp back in version 0.1
     jr ra
 
 invalid_length:
