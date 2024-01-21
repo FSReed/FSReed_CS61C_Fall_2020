@@ -99,6 +99,7 @@ outer_loop_end:
     lw s8, 32(sp)
 
     lw ra, 36(sp)
+    addi sp, sp, 40     # Forget to place sp back in version 0.1
     jr ra
 
 invalid_length:
