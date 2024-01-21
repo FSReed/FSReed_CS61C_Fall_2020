@@ -78,9 +78,9 @@ read_matrix:
     jal ra, fclose
     bne a0, zero, fclose_failed
 
+    mv a0, s3
     # Epilogue
     
-
     lw s0, 0(sp)
     lw s1, 4(sp)
     lw s2, 8(sp)
@@ -88,7 +88,7 @@ read_matrix:
     lw s4, 16(sp)
     lw ra, 20(sp)
     addi sp, sp, 24
-    mv a0, s3
+    
     jr ra
 
 malloc_failed:
