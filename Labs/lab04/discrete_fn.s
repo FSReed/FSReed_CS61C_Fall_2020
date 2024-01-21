@@ -77,6 +77,11 @@ main:
 # Think: why might having a1 be useful?
 f:
     # YOUR CODE GOES HERE!
+    mv t0, a0
+    addi t0, t0, 3      # Now t0 stores the offset from the first result.
+    slli t0, t0, 2      # Conver to the true offset.
+    add t0, a1, t0
+    lw a0, 0(t0)        # Get the return value.
 
     jr ra               # Always remember to jr ra after your function!
 
