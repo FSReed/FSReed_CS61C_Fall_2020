@@ -1,9 +1,14 @@
 # Running A Program
 
 Topic of this lecture:
+
 ![Topic](/Image/Week5/week5-19.png)
+
 Abstraction of this lecture:
+
 ![Layer](/Image/Week5/week5-20.png)
+
+Here's one thing to notice: We are mainly focusing on **Compiler, Assembler and Linker**, not the Loader because the loader is mainly discussed in Operating Systems. Take the courses like CS162 to further understand how it works.  
 
 The menu of the note:
 [TOC]
@@ -93,3 +98,11 @@ What would linkers do?
 ![Linking at Machine Code Level](/Image/Week5/week5-34.png)
 
 ## Loader
+
+Just put the summary of what a loader does. We won't go into details.(Learn it from CS162!)  
+
+![Loader](/Image/Week5/week5-35.png)
+
+## In Conclusion
+
+![Conclusion](/Image/Week5/week5-36.png)
