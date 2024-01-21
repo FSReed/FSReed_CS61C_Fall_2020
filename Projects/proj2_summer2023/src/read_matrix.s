@@ -27,47 +27,37 @@
 read_matrix:
 
     # Prologue
-    addi sp, sp, -28
+    addi sp, sp, -24
     sw s0, 0(sp)
     sw s1, 4(sp)
     sw s2, 8(sp)
     sw s3, 12(sp)       # The pointer to the matrix in memory
     sw s4, 16(sp)       # The actual space of memory for the matrix
-    sw s5, 20(sp)
-    sw ra, 24(sp)
+    sw ra, 20(sp)
     mv s0, a0
     mv s1, a1
     mv s2, a2
 
     mv a0, s0
     li a1, 0
-    jal ra fopen
+    jal ra, fopen
     li t0, -1
     beq a0, t0, fopen_failed
     mv s0, a0           # Now s0 is the file descriptor
 
-    li a0, 4
-    jal ra, malloc
-    beq a0, zero, malloc_failed
-    mv s5, a0           # Use s5 to read the first 2 numbers
-
     mv a0, s0
-    mv a1, s5
+    mv a1, s1
     li a2, 4
     jal ra fread
     li t0, 4
     bne a0, t0, fread_failed
-    lw t0, 0(s5)
-    sw t0, 0(s1)        # Store the row number in the corresponding address
 
     mv a0, s0
-    mv a1, s5
+    mv a1, s2
     li a2, 4
     jal ra fread
     li t0, 4
     bne a0, t0, fread_failed
-    lw t0, 0(s5)
-    sw t0, 0(s2)        # Store the col number in the corresponding address
     
     lw s1, 0(s1)
     lw s2, 0(s2)        # Now s1 and s2 stores the real number of rows and cols, not addresses anymore
@@ -89,15 +79,15 @@ read_matrix:
     bne a0, zero, fclose_failed
 
     # Epilogue
+    
 
     lw s0, 0(sp)
     lw s1, 4(sp)
     lw s2, 8(sp)
     lw s3, 12(sp)
     lw s4, 16(sp)
-    lw s5, 20(sp)
-    lw ra, 24(sp)
-    addi sp, sp, 28
+    lw ra, 20(sp)
+    addi sp, sp, 24
     mv a0, s3
     jr ra
 
