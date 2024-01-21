@@ -13,7 +13,8 @@ This long-lost enthusiasm in study really cheers me up.
 
 - **The worst mistake I've ever made, just a single line of code.**
    You can check it in this commit: **`dd57f1b13a8ad415ec6127609f1c405b6aa99cbf`**
-   This is actually the first time for me to experience debugging just one line of code using a whole night.🤡
+   This is actually the first time for me to experience debugging just one line of code using a whole night.🤡  
+   If I stick to the source code I wrote in `read_matrix.s`, debug would be much easier. But I doubted whether the frame code works fine so I try to understand what these codes are doing, like how `malloc` and `sbrk` works in `utils.s`. Finally I slightly know how these weird codes work, but just a vague feeling. I think I would learn them later in OS courses.
   - Typed at 2024/01/21, 23:18
 
 ## Some problems I failed to solve on my own
