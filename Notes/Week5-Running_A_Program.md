@@ -5,6 +5,9 @@ Topic of this lecture:
 Abstraction of this lecture:
 ![Layer](/Image/Week5/week5-20.png)
 
+The menu of the note:
+[TOC]
+
 ## Interpretation and Translation
 
 ![All in one](/Image/Week5/week5-21.png)
@@ -52,7 +55,41 @@ In this case, we will build two tables:
   ![Symbol Table](/Image/Week5/week5-28.png)
 - **Relocation Table**: List of items whose address this file needs. This is like a to-do list for us, which stores what we need to fill in later when we finally **link** all files together. And this is exactly what **linkers** would do: to fix these items, like giving the absolute address of the static data.
 
-Then here's the object file format:
+Then here's the object file format:  
+
 ![Object file format](/Image/Week5/week5-29.png)
 
 ## Linker
+
+What a linker does is to take in Object code files and finally produce the executable code!
+
+- To combine several object files into a single executable.
+- The great thing about linking is that **it enables separate compiling**, which means the change of one file won't require the recompilation of the whole program. We just need to recompile this new file and link it with other existing `.o` files!
+
+![Linking](/Image/Week5/week5-30.png)  
+
+The steps of linking:  
+
+![Steps of linking](/Image/Week5/week5-31.png)  
+
+There are four types of addresses. Except the PC-Relative addresses, other 3 types always need to be reallocated. They are **Absolute FUnction Addresses**, **External Function Reference** and **Static Data Reference**.
+
+What would linkers do?
+
+- Linker knows the length of the text and data segment, and the ordering of text and data segment.
+- Linker resolve references. First search for the reference in all **user's symbol tables**, if there's no matching reference, then it will search in the **library files**. It's very similar to using `printf` in C, we need to `#include <stdio.h>` as an "external library".
+  - Same label in two files may cause conflicting symbol type.
+- Linker calculates the absolute address of each label to be jumped to and each piece of data being referenced. That's the process of fixing the
+- For **RV32**, linker assumes that the **first** text segment starts at the absolute address **0x10000**, which is a **64KB** space from 0x0.
+
+### Remember this kind of file: `*.dll`?
+
+- What we are talking about above is called **Statically-Linked Approach**.
+![Statically-Linked](/Image/Week5/week5-32.png)
+- The problem of this approach is it could be really slow to download the executable as the library grows larger because the library is also one part of the executable. In this case, an alternative comes out, named **Dynamic Linked library(DLL)**.
+- By using DLL, once the library gets updated, all programs using this library will benefit. The idea is we don't need to include the library into the executable, we refer to this library during run-time.
+- Some issues about DLL:
+![Issues](/Image/Week5/week5-33.png)
+![Linking at Machine Code Level](/Image/Week5/week5-34.png)
+
+## Loader
