@@ -18,7 +18,6 @@
 #     this function terminates the program with error code 37
 # =======================================================
 dot:
-    ebreak
     li t0, 1
     blt a2, t0, invalid_element
     blt a3, t0, invalid_stride
