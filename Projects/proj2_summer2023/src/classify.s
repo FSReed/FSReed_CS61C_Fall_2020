@@ -134,7 +134,7 @@ classify:
     jal ra, matmul
 
     # Write output matrix o
-    addi a0, s1, 16
+    lw a0, 16(s1)           #-----Might be the last error
     mv a1, s10
     lw a2, 0(s4)
     lw a3, 4(s5)
