@@ -76,6 +76,10 @@ write_matrix:
     jal ra, fclose
     bnez a0, fclose_failed
 
+    # Free the memory which is allocated before
+    mv a0, s4
+    jal ra, free
+
     # Epilogue
     lw ra, 0(sp)
     lw s0, 4(sp)
