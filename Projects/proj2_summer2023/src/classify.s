@@ -147,12 +147,47 @@ classify:
     mv s0, a0
 
     # If enabled, print argmax(o) and newline
-    beqz s2, print_int
+    bne s2, zero, free_memory
     mv a0, s0
-
+    jal ra, print_int
+    li a0, '\n'
+    jal ra, print_char
+free_memory:
     # Free the memories
+    mv a0, s3
+    jal ra, free            # Free m0's rows and cols
+    mv a0, s4
+    jal ra, free            # Free m1's rows and cols
+    mv a0, s5
+    jal ra, free            # Free input's rows and cols
+    mv a0, s6
+    jal ra, free            # Free m0
+    mv a0, s7
+    jal ra, free            # Free m1
+    mv a0, s8
+    jal ra, free            # Free input
+    mv a0, s9
+    jal ra, free            # Free h
+    mv a0, s10
+    jal ra, free            # Free o
 
+    mv a0, s0               # Return a0
+    # Epilogue
+    
+    lw ra, 0(sp)
+    lw s0, 4(sp)
+    lw s1, 8(sp)
+    lw s2, 12(sp)
+    lw s3, 16(sp)
+    lw s4, 20(sp)
+    lw s5, 24(sp)
+    lw s6, 28(sp)
+    lw s7, 32(sp)
+    lw s8, 36(sp)
+    lw s9, 40(sp)
+    lw s10, 44(sp)
 
+    addi sp, sp, 48
 
     jr ra
 
