@@ -56,7 +56,7 @@ classify:
     beqz a0, malloc_failed
     mv s3, a0
 
-    addi a0, s1, 4          # m0's filename string
+    lw a0, 4(s1)         # m0's filename string
     addi a1, s3, 0
     addi a2, s3, 4          # Two pointers to the allocated memory
     jal ra, read_matrix
@@ -68,7 +68,7 @@ classify:
     beqz a0, malloc_failed
     mv s4, a0
 
-    addi a0, s1, 8          # m1's filename string
+    lw a0, 8(s1)         # m1's filename string
     addi a1, s4, 0
     addi a2, s4, 4          # Two pointers to the allocated memory
     jal ra, read_matrix
@@ -80,7 +80,7 @@ classify:
     beqz a0, malloc_failed
     mv s5, a0
 
-    addi a0, s1, 12          # input's filename string
+    lw a0, 12(s1)          # input's filename string
     addi a1, s5, 0
     addi a2, s5, 4          # Two pointers to the allocated memory
     jal ra, read_matrix
