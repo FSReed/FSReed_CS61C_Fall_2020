@@ -93,6 +93,7 @@ classify:
     lw t0, 0(s3)            # m0's rows
     lw t1, 4(s5)            # input's cols
     mul a0, t0, t1
+    slli a0, a0, 2          #-----Forget to convert to the true address.
     jal ra, malloc
     beqz a0, malloc_failed
     mv s9, a0               # malloc finished
@@ -118,6 +119,7 @@ classify:
     lw t0, 0(s4)            # m1's rows
     lw t1, 4(s5)            # input's cols
     mul a0, t0, t1
+    slli a0, a0, 2          #-----Forget to convert to the true address.
     jal ra, malloc
     beqz a0, malloc_failed
     mv s10, a0              # malloc finished
