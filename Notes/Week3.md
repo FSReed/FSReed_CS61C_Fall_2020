@@ -1,5 +1,10 @@
 # Week3: Floating Points and RISC-V Intro
 
+## Representation of Frictions
+
+In Integers, the LSB of a number represents $2^0$. If we want to represent a friction like 1.75 in decimal, it equals to $2^0 + 2^{-1} + 2^{-2}$. How to represent negative exponents?  
+The answer is straight forward: setting a floating point at the end of the LSB of an integer like $1.75_{10} = 1.11_{two}$.
+
 ## Floating point representation
 
 [Video link](https://www.youtube.com/watch?v=GzOMIRj1yO0&list=PLnvUoC1Ghb7yFhkAHo6fUTvoOQbyofihW&index=3)
@@ -8,7 +13,7 @@ First, we need a normal format of floating points like this: $1.xxx..._2(23 x's)
 
 - The first position tells whether this number is negative. If it's 1, then this number is negative.
 - Then **8 bits** follows, representing the exponent of the number.
-- Then **23 bits** follows, representing the significand of the number.
+- Then **23 bits** follows, representing the significand of the number. The LSB $B$ represents $B * 2^{-23}$.
 
 The representation looks like this:
 ![Representation of float](Image/Week3/week3_1.png)
@@ -49,7 +54,7 @@ Why is this useful?
 
 #### Representation of Denorms
 
-***Notice***: We haven't defined what exponent all zeros, while significand is nonzero would represent. Here comes the problem:  
+***Notice***: We haven't defined what exponent all zeros while significand is nonzero would represent. Here comes the problem:  
 ***Problem***: There's a gap around representation of 0. The smallest number which is bigger than 0 should be: significand all zeros, and exponent equals 1 **(Read the Notice above)**. This evaluates to $2^{-126}$, and the **second smallest number** should be: significand and exponent both equals to 1, and this evaluates to $2^{-126} + 2^{-149}$, the gap is totally different. **What causes this problem? The leading 1!** So we need the representation of the numbers with the leading 0, which are not normalized numbers mentioned before.  
 Now we can define the DEnormalized number: no leading 1, implicit exponent = -126.  
 Now the smallest representable pos num is: $2^{-149}$.
