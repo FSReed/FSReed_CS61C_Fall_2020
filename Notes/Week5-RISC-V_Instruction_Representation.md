@@ -84,8 +84,9 @@ One idea is to **multiply the offset by 4 before adding to PC**, which allows on
 **In short**, this means RISC-V needs to support instructions in 16-byte length, so we will represent the offset by $PC = PC + immediate \times 2$.  
 Moving a single line of code will change the immediate in B-Format, but moving all of code won't change it, because it's a relative address between two lines of code.  
 
-- In this CS61C course, this immediate has to be an even number, because all instructions are 32-byte long, and the byte offset of PC should be a multiple of 4.
-- This 12-bit long immediate encodes **even** 13-bit signed byte offsets(the lowest bit of offset is always 0, so no need to store it).
+- In RISC-V, we are always directing to an even address and this is the reason why the offset has to be even. In this case, the immediate in B-Format is representing the number of **2-byte spaces**.
+- And *in this CS61C course*, **this immediate** has to be an even number because all instructions we are learning are **4-byte-long**, and the byte offset of PC should be a multiple of 4.
+- This 12-bit long immediate encodes a 13-bit signed offset **in byte**(the lowest bit of offset is always 0, so no need to store it).
 
 And this is B-Format:
 ![B-Format](./Image/Week5/week5-10.png)
@@ -145,7 +146,7 @@ There's only one instruction in J-Format: `jal`. What it does can be described a
 
 - Saves $PC + 4$ in the register rd(this is the return address).
 - Set $PC = PC + $offset.(PC-relative jump)
-- Target somewhere within $\pm 2^{19} locations, 2 bytes apart$. For 32-bit instructions, `jal` can provide a range of $\pm 2^{18}$ instructions away from the current instruction.
+- Target somewhere within $\pm 2^{19} locations$. For 32-bit instructions, `jal` can provide a range of $\pm 2^{18}$ instructions away from the current instruction.
 - `j` is the pseudo-code, and `j label` equals `jal x0, label`, which discards the return address.
 - Call functions within $2^{18}$ instructions away from the PC: `jal ra, Function`.
 
