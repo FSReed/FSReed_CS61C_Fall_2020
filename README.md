@@ -26,3 +26,6 @@ This long-lost enthusiasm in study really cheers me up.
   - Update the next day: **Project 2 Finished, with the chain test at last passed!**
 - The course starts to introduce the details about the hardware in computers and I'm really new to these concepts, so I decided to add the handouts of the course which start from **Lecture14** to this repo.
   - Typed at 2024/01/30, 19:00
+- The super clever design of Subtractor:
+  ![Genius](./Notes/Image/Week7/Week7-14.png)
+  - Typed at 2024/02/02, 16:22
