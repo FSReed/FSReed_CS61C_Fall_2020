@@ -5,7 +5,7 @@
 - Data Transfer: **Load from** and **Store to**.
 - Memory: 8 bit chunk is called a **byte**, and memory addresses are really in bytes, not words.
 - Word address is same as address of rightmost byte, i.e.**Little-endian** convention.
-![Little endian](Image/Week4/week4-1.png)
+![Little endian](./Image/Week4/week4-1.png)
 
 ## Data Transfer Instructions
 
@@ -65,7 +65,7 @@ This instruction means: we are loading the contents with address of (x11 + 3) fr
 ### Signed Numbers
 
 If we are operating with signed numbers, when we are copying a signed number from memory to the register, the first bit indicated whether this number is negative or positive. If we keep the upper bits of the register 0, we are making this number look like a positive number. We need to preserve the sign of it, and the operation is to keep the first bit of the number(called `x`), and make all other higher bits in the register `x`. This is called **Sign Extension**
-![signed](Image/Week4/week4-2.png)
+![signed](./Image/Week4/week4-2.png)
 We don't always want to do sign extension, and RISC-V supports `lbu`(load byte unsigned), which zero extends to fill register. There's **no `sbu`**, because it's meaningless to use more bits in memory to store a number, we just store this byte into the memory.
 
 ### A little note: `addi` seems to be redundant?
@@ -172,18 +172,18 @@ There's no logical NOT in RISC-V, using `xor` with $11111111_{two}$.
 
 Arithmetic shifting: When we are working with signed numbers, we need to keep the high-order sign bit. Shift right arithmetic(sra, srai) will do this:
 
-![sra](Image/Week4/week4-3.png)
+![sra](./Image/Week4/week4-3.png)
 
 ## Machine Programs
 
 How does the assembler file converts to machine code? How program is stored?
 
-![Assembler to Machine code](Image/Week4/week4-4.png)
-![Storing Program](Image/Week4/week4-5.png)
+![Assembler to Machine code](./Image/Week4/week4-4.png)
+![Storing Program](./Image/Week4/week4-5.png)
 
 An instruction needs 32 bits to be stored in RISC-V, this means programs are stored as bits in the memory. There's a special register in the processor called **(Program Counter)**, which stores the position of the next instruction to be executed.
 
-![PC](Image/Week4/week4-6.png)
+![PC](./Image/Week4/week4-6.png)
 
 ### RISC-V function call conventions
 
@@ -194,7 +194,7 @@ An instruction needs 32 bits to be stored in RISC-V, this means programs are sto
 
 How does a function look like in Assembly? Here's an example:
 
-![Function](Image/Week4/week4-7.png)
+![Function](./Image/Week4/week4-7.png)
 
 - Pseudo-instruction: `jr`(jump register), in the picture above, we are jumping back to the origin with address stored in ra.
 
@@ -210,7 +210,7 @@ How does a function look like in Assembly? Here's an example:
 
 ### Six Basic Steps in Calling a Function
 
-![Six Steps](Image/Week4/week4-8.png)
+![Six Steps](./Image/Week4/week4-8.png)
 
 *Some notes:*
 
@@ -221,7 +221,7 @@ How does a function look like in Assembly? Here's an example:
 
 - **sp** (x2) is the stack pointer in RISC-V.
 - Convention is to grow stack down from high to low addresses. It means push decrements sp, and pop increments sp.
-- Stack frame picture: ![Picture](Image/Week4/week4-9.png)
+- Stack frame picture: ![Picture](./Image/Week4/week4-9.png)
 
 ### An Example of RISC-V Code
 
@@ -256,8 +256,8 @@ jr ra
 
 What if we call a function in another function. The `ra` register will be overwritten.  
 One possible solution is to store all 31 registers in the stack every time we call a function, but this is very inefficient. There's a **Register Convention** in RISC-V, which is a set of rules to determine which register will be unchanged after a procedure call and which register may be changed. To reduce expensive loads and stores from spilling and restoring registers, RISC-V function-calling convention divides the registers into two categories:
-![Convention1](Image/Week4/week4-10.png)
-![Convention2](Image/Week4/week4-11.png)
+![Convention1](./Image/Week4/week4-10.png)
+![Convention2](./Image/Week4/week4-11.png)
 
 ## Memory Allocation
 
@@ -302,14 +302,14 @@ mult:
 
 First, let's review the memory areas in C:
 
-![C Memory](Image/Week4/week4-12.png)
+![C Memory](./Image/Week4/week4-12.png)
 
 Then here comes the memory allocation of RV32:
 
-![RV32 Memory](Image/Week4/week4-13.png)
-![Explanation](Image/Week4/week4-14.png)
+![RV32 Memory](./Image/Week4/week4-13.png)
+![Explanation](./Image/Week4/week4-14.png)
 
 ## Summary
 
-![Summary](Image/Week4/week4-15.png)
+![Summary](./Image/Week4/week4-15.png)
 Note that there's no subi in RISC-V. A little bug in the picture.
