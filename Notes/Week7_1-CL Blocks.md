@@ -1,4 +1,4 @@
-# Computational Logic Blocks
+# Combinational Logic Blocks
 
 - The design of the subtractor is super clever. I'm totally shocked.
 

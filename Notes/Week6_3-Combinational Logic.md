@@ -1,4 +1,4 @@
-# Computational Logic
+# Combinational Logic
 
 ## Truth Table
 
