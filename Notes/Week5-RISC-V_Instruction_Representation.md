@@ -58,7 +58,7 @@ They do have a new opcode because they are not arithmetic instructions of immedi
 
 ## 4. S-Format
 
-It seems we still need 2 registers and 1 immediate when using S-Format, just like Loads. **But notice that we are not writing to our registers, we are writing to the memory**. So I-Format doesn't fit S-Format, and we need a new Format.  
+It seems we still need 2 registers and 1 immediate when using S-Format, just like Loads. **But notice that we are not writing to our registers, we are writing to the memory** thus no `rd` exists in S-Format. we need a new Format.  
 Compared to I-Format, R-Format is closer to S-Format. Here is a key concept: We don't want to move the locations of the registers in our instructions so that the processor won't need to search for registers all over these 32 bits. And this leads to the (kind of weird) format:
 ![S-Format](./Image/Week5/week5-8.png)
 
