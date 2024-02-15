@@ -146,7 +146,7 @@ There's only one instruction in J-Format: `jal`. What it does can be described a
 
 - Saves $PC + 4$ in the register rd(this is the return address).
 - Set $PC = PC + $offset.(PC-relative jump)
-- Target somewhere within $\pm 2^{19} locations$. For 32-bit instructions, `jal` can provide a range of $\pm 2^{18}$ instructions away from the current instruction.
+- Target somewhere within $\pm 2^{19}$ locations. For 32-bit instructions, `jal` can provide a range of $\pm 2^{18}$ instructions away from the current instruction.
 - `j` is the pseudo-code, and `j label` equals `jal x0, label`, which discards the return address.
 - Call functions within $2^{18}$ instructions away from the PC: `jal ra, Function`.
 

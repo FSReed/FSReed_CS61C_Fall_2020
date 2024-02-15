@@ -51,6 +51,9 @@ And the `PC (Program Counter)` is a register too. It will store the address of t
 ## R-Type Add Datapath
 
 ![Add Datapath](./Image/Week7/Week7-24.png)
+
+**New Label**: `RegWEn`: Determine whether the registers will be overwritten.
+
 ![Time of add](./Image/Week7/Week7-25.png)
 
 ### Datapath for all R-type instructions
@@ -61,6 +64,8 @@ For example, when doing `sub`:
 
 ![Control bits](./Image/Week7/Week7-26.png)
 
+**New Label**: `ALUSel`: Select the CL.
+
 ## Immediates
 
 I-type instructions are different to R-type instructions on bits **20-31**. I-type instructions store a 12-bit immediate in this field. Can we build a datapath that supports both R-types and I-types?  
@@ -69,6 +74,7 @@ I-type instructions are different to R-type instructions on bits **20-31**. I-ty
   ![Mux](./Image/Week7/Week7-27.png)
 - We need to generate a 32-bit immediate using another little block, which takes in a 12-bit immediate stored in I-type instructions and output a 32-bit immediate.
   ![Immediate Generator](./Image/Week7/Week7-28.png)
+  **New label**: `ImmSel`: Select **the way of generating the Immediate**. Now this label is set to `I`. We'll see later that this label can be other types, e.g., `S` or `B`.
 
 ### How to generate the immediate?
 
