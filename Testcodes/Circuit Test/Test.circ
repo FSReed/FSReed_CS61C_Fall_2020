@@ -53,10 +53,6 @@
     <tool name="Clock">
       <a name="facing" val="north"/>
     </tool>
-    <tool name="Constant">
-      <a name="value" val="0xffffffff"/>
-      <a name="width" val="32"/>
-    </tool>
   </lib>
   <lib desc="#Gates" name="1">
     <tool name="PLA">
@@ -69,6 +65,8 @@
     </tool>
     <tool name="Demultiplexer">
       <a name="enable" val="false"/>
+      <a name="select" val="5"/>
+      <a name="width" val="32"/>
     </tool>
   </lib>
   <lib desc="#Arithmetic" name="3"/>
@@ -391,5 +389,71 @@ end TCL_Generic;&#13;
     <wire from="(300,200)" to="(300,270)"/>
     <wire from="(300,270)" to="(330,270)"/>
     <wire from="(320,180)" to="(370,180)"/>
+  </circuit>
+  <circuit name="DeMux">
+    <a name="appearance" val="logisim_evolution"/>
+    <a name="circuit" val="DeMux"/>
+    <a name="circuitnamedboxfixedsize" val="true"/>
+    <a name="circuitvhdlpath" val=""/>
+    <a name="clabel" val=""/>
+    <a name="clabelfont" val="SansSerif bold 16"/>
+    <a name="clabelup" val="east"/>
+    <comp lib="0" loc="(260,440)" name="Constant">
+      <a name="value" val="0x14"/>
+      <a name="width" val="5"/>
+    </comp>
+    <comp lib="0" loc="(270,230)" name="Constant"/>
+    <comp lib="0" loc="(350,100)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+    </comp>
+    <comp lib="0" loc="(350,130)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+    </comp>
+    <comp lib="0" loc="(350,170)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+    </comp>
+    <comp lib="0" loc="(350,230)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+    </comp>
+    <comp lib="0" loc="(350,270)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+    </comp>
+    <comp lib="0" loc="(350,310)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+    </comp>
+    <comp lib="0" loc="(350,360)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+    </comp>
+    <comp lib="0" loc="(350,380)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+    </comp>
+    <comp lib="0" loc="(350,70)" name="Pin">
+      <a name="appearance" val="NewPins"/>
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+    </comp>
+    <comp lib="2" loc="(310,230)" name="Demultiplexer">
+      <a name="enable" val="false"/>
+      <a name="select" val="5"/>
+    </comp>
+    <wire from="(260,440)" to="(330,440)"/>
+    <wire from="(270,230)" to="(310,230)"/>
+    <wire from="(330,390)" to="(330,440)"/>
   </circuit>
 </project>
