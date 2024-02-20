@@ -29,3 +29,6 @@ This long-lost enthusiasm in study really cheers me up.
 - The super clever design of Subtractor:
   ![Genius](./Notes/Image/Week7/Week7-14.png)
   - Typed at 2024/02/02, 16:22
+- The moment that we make hardware and software contact in Lecture20!
+  ![Wow!](./Notes/Image/Week8/Week8-9.png)
+  - Typed at 2024/02/20, 20:08
