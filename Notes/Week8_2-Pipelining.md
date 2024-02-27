@@ -200,3 +200,7 @@ Introduction on [Wikipedia](https://en.wikipedia.org/wiki/Superscalar_processor)
 Quick Overview:
 
 ![Overview](./Image/Week8/Week8-39.png)
+
+## Pipelining and ISA Design
+
+![Summary](./Image/Week8/Week8-40.png)
