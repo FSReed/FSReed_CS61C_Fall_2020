@@ -166,3 +166,37 @@ How to control forwarding? Remember we are packing up all information we need in
 And this is the new datapath we have till now:
 
 ![New DP](./Image/Week8/Week8-33.png)
+
+## Load Data Hazard
+
+If that instruction needs the result of the load, then the hardware will **stall for one cycle**
+
+![Load Hazard](./Image/Week8/Week8-34.png)
+
+We will replace the next instruction to nop, and repeat the original instruction after the nop.
+
+![load Hazard](./Image/Week8/Week8-35.png)
+![Solve](./Image/Week8/Week8-36.png)
+
+And we can optimize our RISC-V code according to this:
+
+![Example](./Image/Week8/Week8-37.png)
+
+If we want to But the burden would be put on the compiler.
+
+## Control Hazard
+
+If we need to take a branch, we would kill the instructions after branch is taken. We only need to kill two instructions after that (convert them to nops) and update the program counter. Then we are going to the position of the branch.
+
+![Branch](./Image/Week8/Week8-38.png)
+
+Every taken branch will cause 2 dead cycles. To reduce the penalty of branching, we need to predict which way branch will go earlier in pipeline.  
+This part is a little bit of mysterious to me. We need to guess the next PC and check our guess. If it's correct, then execute the instruction at the given place without converting 2 instructions to nops? Maybe?  
+
+## Super-Scalar Processor
+
+Introduction on [Wikipedia](https://en.wikipedia.org/wiki/Superscalar_processor)  
+
+Quick Overview:
+
+![Overview](./Image/Week8/Week8-39.png)
