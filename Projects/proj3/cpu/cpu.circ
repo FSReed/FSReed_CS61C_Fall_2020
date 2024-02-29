@@ -362,7 +362,7 @@ end TCL_Generic;
       <a name="label" val="INSTRUCTION"/>
       <a name="width" val="32"/>
     </comp>
-    <comp lib="0" loc="(1800,1290)" name="Tunnel">
+    <comp lib="0" loc="(1670,790)" name="Tunnel">
       <a name="label" val="tohost"/>
       <a name="width" val="32"/>
     </comp>
@@ -512,11 +512,6 @@ end TCL_Generic;
       <a name="label" val="RegWEn"/>
       <a name="labelfont" val="SansSerif bold 6"/>
     </comp>
-    <comp lib="0" loc="(750,970)" name="Tunnel">
-      <a name="facing" val="south"/>
-      <a name="label" val="RegWEn"/>
-      <a name="labelfont" val="SansSerif bold 6"/>
-    </comp>
     <comp lib="0" loc="(760,630)" name="Tunnel">
       <a name="facing" val="north"/>
       <a name="label" val="clk"/>
@@ -558,9 +553,9 @@ end TCL_Generic;
     <comp lib="12" loc="(1420,600)" name="alu"/>
     <comp lib="13" loc="(1010,510)" name="regfile"/>
     <comp lib="14" loc="(700,980)" name="control_logic"/>
-    <comp lib="15" loc="(1300,790)" name="branch_comp"/>
+    <comp lib="15" loc="(1300,800)" name="branch_comp"/>
     <comp lib="16" loc="(870,770)" name="imm_gen"/>
-    <comp lib="17" loc="(1760,1290)" name="csr"/>
+    <comp lib="17" loc="(1630,790)" name="csr"/>
     <comp lib="3" loc="(190,460)" name="Adder">
       <a name="width" val="32"/>
     </comp>
@@ -635,8 +630,8 @@ end TCL_Generic;
     <wire from="(1590,190)" to="(1590,220)"/>
     <wire from="(160,700)" to="(230,700)"/>
     <wire from="(1610,210)" to="(1650,210)"/>
+    <wire from="(1630,790)" to="(1670,790)"/>
     <wire from="(1650,90)" to="(1650,210)"/>
-    <wire from="(1760,1290)" to="(1800,1290)"/>
     <wire from="(1810,130)" to="(1880,130)"/>
     <wire from="(1820,200)" to="(1880,200)"/>
     <wire from="(1820,270)" to="(1880,270)"/>
