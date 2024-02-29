@@ -348,11 +348,11 @@ end TCL_Generic;
     </comp>
     <comp lib="0" loc="(510,440)" name="Tunnel">
       <a name="facing" val="east"/>
-      <a name="label" val="SignBit"/>
+      <a name="label" val="MulSel"/>
     </comp>
     <comp lib="0" loc="(510,470)" name="Tunnel">
       <a name="facing" val="east"/>
-      <a name="label" val="MulSel"/>
+      <a name="label" val="SignBit"/>
     </comp>
     <comp lib="0" loc="(510,500)" name="Tunnel">
       <a name="facing" val="east"/>
@@ -511,7 +511,10 @@ end TCL_Generic;
       <a name="addrWidth" val="12"/>
       <a name="appearance" val="logisim_evolution"/>
       <a name="contents">addr/data: 12 20
-0
+512*0 49004 1023*0 40004 0 0 0 40a04
+0 0 0 40c04 7*0 40604 0 0
+0 40e04 11*0 40704 19*0 40b04 11*0 40304
+15*0 40404 7*0 40504 7*0 40204 15*0 40104
 </a>
       <a name="dataWidth" val="20"/>
     </comp>
