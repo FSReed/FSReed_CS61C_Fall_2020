@@ -429,21 +429,23 @@ end TCL_Generic;
     </comp>
     <comp lib="0" loc="(860,520)" name="Splitter">
       <a name="appear" val="center"/>
+      <a name="bit0" val="10"/>
+      <a name="bit1" val="9"/>
       <a name="bit10" val="6"/>
       <a name="bit11" val="6"/>
-      <a name="bit12" val="7"/>
-      <a name="bit13" val="7"/>
-      <a name="bit14" val="7"/>
-      <a name="bit15" val="7"/>
-      <a name="bit16" val="8"/>
-      <a name="bit17" val="8"/>
-      <a name="bit18" val="9"/>
-      <a name="bit19" val="10"/>
-      <a name="bit3" val="2"/>
-      <a name="bit4" val="2"/>
-      <a name="bit5" val="3"/>
-      <a name="bit6" val="4"/>
-      <a name="bit7" val="5"/>
+      <a name="bit12" val="5"/>
+      <a name="bit13" val="4"/>
+      <a name="bit14" val="3"/>
+      <a name="bit15" val="2"/>
+      <a name="bit16" val="2"/>
+      <a name="bit17" val="2"/>
+      <a name="bit18" val="1"/>
+      <a name="bit19" val="0"/>
+      <a name="bit2" val="8"/>
+      <a name="bit3" val="8"/>
+      <a name="bit4" val="7"/>
+      <a name="bit5" val="7"/>
+      <a name="bit6" val="7"/>
       <a name="bit8" val="6"/>
       <a name="bit9" val="6"/>
       <a name="fanout" val="11"/>
@@ -511,10 +513,24 @@ end TCL_Generic;
       <a name="addrWidth" val="12"/>
       <a name="appearance" val="logisim_evolution"/>
       <a name="contents">addr/data: 12 20
-512*0 49004 1023*0 40004 0 0 0 40a04
-0 0 0 40c04 7*0 40604 0 0
-0 40e04 11*0 40704 19*0 40b04 11*0 40304
-15*0 40404 7*0 40504 7*0 40204 15*0 40104
+512*0 49004 0 0 0 49004 0 0
+0 49004 0 0 0 49004 0 0
+0 49604 0 0 0 49604 0 0
+0 49604 0 0 0 49604 0 0
+0 49704 0 0 0 49704 0 0
+0 49704 0 0 0 49704 19*0 49304
+0 0 0 49304 0 0 0 49304
+0 0 0 49304 0 0 0 49404
+0 0 0 49404 0 0 0 49504
+0 0 0 49504 0 0 0 49204
+0 0 0 49204 0 0 0 49204
+0 0 0 49204 0 0 0 49104
+0 0 0 49104 0 0 0 49104
+0 0 0 49104 899*0 40004 0 0
+0 40a04 0 0 0 40c04 7*0 40604
+0 0 0 40e04 11*0 40704 19*0 40b04
+11*0 40304 15*0 40404 7*0 40504 7*0 40204
+15*0 40104
 </a>
       <a name="dataWidth" val="20"/>
     </comp>
