@@ -24,8 +24,8 @@
       <a name="facing" val="north"/>
     </tool>
     <tool name="Constant">
-      <a name="value" val="0x13"/>
-      <a name="width" val="32"/>
+      <a name="value" val="0xff"/>
+      <a name="width" val="8"/>
     </tool>
     <tool name="Bit Extender">
       <a name="in_width" val="12"/>
@@ -40,6 +40,7 @@
   <lib desc="#Plexers" name="2">
     <tool name="Multiplexer">
       <a name="enable" val="false"/>
+      <a name="width" val="32"/>
     </tool>
     <tool name="Demultiplexer">
       <a name="enable" val="false"/>
@@ -546,24 +547,33 @@ end TCL_Generic;
       <a name="output" val="true"/>
       <a name="width" val="32"/>
     </comp>
+    <comp lib="0" loc="(270,730)" name="Constant">
+      <a name="value" val="0x13"/>
+      <a name="width" val="32"/>
+    </comp>
+    <comp lib="0" loc="(280,690)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="INSTRUCTION"/>
+      <a name="width" val="32"/>
+    </comp>
     <comp lib="0" loc="(310,560)" name="Tunnel">
       <a name="facing" val="east"/>
       <a name="label" val="ALUOutput"/>
       <a name="labelfont" val="SansSerif bold 10"/>
       <a name="width" val="32"/>
     </comp>
-    <comp lib="0" loc="(340,710)" name="Tunnel">
+    <comp lib="0" loc="(310,760)" name="Tunnel">
       <a name="facing" val="east"/>
-      <a name="label" val="INSTRUCTION"/>
-      <a name="width" val="32"/>
+      <a name="label" val="PCSel"/>
+      <a name="labelfont" val="SansSerif bold 10"/>
     </comp>
     <comp lib="0" loc="(360,600)" name="Tunnel">
       <a name="facing" val="east"/>
       <a name="label" val="PCSel"/>
       <a name="labelfont" val="SansSerif bold 10"/>
     </comp>
-    <comp lib="0" loc="(380,750)" name="Tunnel">
-      <a name="facing" val="east"/>
+    <comp lib="0" loc="(400,770)" name="Tunnel">
+      <a name="facing" val="north"/>
       <a name="label" val="clk"/>
     </comp>
     <comp lib="0" loc="(420,620)" name="Tunnel">
@@ -587,15 +597,6 @@ end TCL_Generic;
       <a name="label" val="INSTRUCTION"/>
       <a name="width" val="32"/>
     </comp>
-    <comp lib="0" loc="(740,910)" name="Tunnel">
-      <a name="facing" val="east"/>
-      <a name="label" val="Reg_Ins"/>
-      <a name="width" val="32"/>
-    </comp>
-    <comp lib="0" loc="(740,950)" name="Constant">
-      <a name="value" val="0x13"/>
-      <a name="width" val="32"/>
-    </comp>
     <comp lib="0" loc="(790,130)" name="Pin">
       <a name="facing" val="south"/>
       <a name="label" val="clk"/>
@@ -604,12 +605,12 @@ end TCL_Generic;
       <a name="facing" val="north"/>
       <a name="label" val="clk"/>
     </comp>
-    <comp lib="0" loc="(800,970)" name="Tunnel">
-      <a name="facing" val="east"/>
-      <a name="label" val="PCSel"/>
-      <a name="labelfont" val="SansSerif bold 10"/>
-    </comp>
     <comp lib="0" loc="(810,540)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="Reg_Ins"/>
+      <a name="width" val="32"/>
+    </comp>
+    <comp lib="0" loc="(810,960)" name="Tunnel">
       <a name="facing" val="east"/>
       <a name="label" val="Reg_Ins"/>
       <a name="width" val="32"/>
@@ -730,11 +731,11 @@ end TCL_Generic;
       <a name="select" val="2"/>
       <a name="width" val="32"/>
     </comp>
-    <comp lib="2" loc="(400,540)" name="Multiplexer">
+    <comp lib="2" loc="(370,710)" name="Multiplexer">
       <a name="enable" val="false"/>
       <a name="width" val="32"/>
     </comp>
-    <comp lib="2" loc="(830,930)" name="Multiplexer">
+    <comp lib="2" loc="(400,540)" name="Multiplexer">
       <a name="enable" val="false"/>
       <a name="width" val="32"/>
     </comp>
@@ -766,6 +767,10 @@ end TCL_Generic;
     </comp>
     <comp lib="8" loc="(274,98)" name="Text">
       <a name="text" val="Output to IMEM"/>
+    </comp>
+    <comp lib="8" loc="(365,830)" name="Text">
+      <a name="font" val="SansSerif plain 16"/>
+      <a name="text" val="If branch taken, kill the next instruction that's going to be written to the InstReg"/>
     </comp>
     <comp lib="8" loc="(412,49)" name="Text">
       <a name="font" val="SansSerif bold 22"/>
@@ -861,19 +866,28 @@ end TCL_Generic;
     <wire from="(2220,250)" to="(2220,330)"/>
     <wire from="(2220,50)" to="(2220,210)"/>
     <wire from="(240,530)" to="(270,530)"/>
+    <wire from="(270,730)" to="(330,730)"/>
+    <wire from="(280,690)" to="(330,690)"/>
     <wire from="(310,520)" to="(360,520)"/>
     <wire from="(310,560)" to="(360,560)"/>
-    <wire from="(340,710)" to="(410,710)"/>
+    <wire from="(310,760)" to="(350,760)"/>
+    <wire from="(330,690)" to="(330,700)"/>
+    <wire from="(330,700)" to="(340,700)"/>
+    <wire from="(330,720)" to="(330,730)"/>
+    <wire from="(330,720)" to="(340,720)"/>
+    <wire from="(350,730)" to="(350,760)"/>
     <wire from="(360,520)" to="(360,530)"/>
     <wire from="(360,530)" to="(370,530)"/>
     <wire from="(360,550)" to="(360,560)"/>
     <wire from="(360,550)" to="(370,550)"/>
     <wire from="(360,600)" to="(380,600)"/>
+    <wire from="(370,710)" to="(410,710)"/>
     <wire from="(380,240)" to="(380,260)"/>
     <wire from="(380,260)" to="(590,260)"/>
     <wire from="(380,560)" to="(380,600)"/>
-    <wire from="(380,750)" to="(410,750)"/>
     <wire from="(400,540)" to="(430,540)"/>
+    <wire from="(400,750)" to="(400,770)"/>
+    <wire from="(400,750)" to="(410,750)"/>
     <wire from="(420,580)" to="(420,620)"/>
     <wire from="(420,580)" to="(430,580)"/>
     <wire from="(470,710)" to="(500,710)"/>
@@ -883,27 +897,19 @@ end TCL_Generic;
     <wire from="(520,540)" to="(540,540)"/>
     <wire from="(590,220)" to="(590,260)"/>
     <wire from="(590,70)" to="(590,180)"/>
-    <wire from="(740,910)" to="(770,910)"/>
-    <wire from="(740,950)" to="(770,950)"/>
     <wire from="(760,210)" to="(770,210)"/>
     <wire from="(760,90)" to="(1650,90)"/>
     <wire from="(760,90)" to="(760,210)"/>
-    <wire from="(770,910)" to="(770,920)"/>
-    <wire from="(770,920)" to="(800,920)"/>
-    <wire from="(770,940)" to="(770,950)"/>
-    <wire from="(770,940)" to="(800,940)"/>
     <wire from="(790,130)" to="(790,220)"/>
-    <wire from="(800,970)" to="(810,970)"/>
     <wire from="(810,210)" to="(850,210)"/>
     <wire from="(810,540)" to="(830,540)"/>
-    <wire from="(810,950)" to="(810,970)"/>
+    <wire from="(810,960)" to="(860,960)"/>
     <wire from="(820,780)" to="(860,780)"/>
     <wire from="(820,800)" to="(860,800)"/>
-    <wire from="(830,930)" to="(860,930)"/>
     <wire from="(850,520)" to="(1000,520)"/>
     <wire from="(850,540)" to="(1000,540)"/>
     <wire from="(850,560)" to="(1000,560)"/>
-    <wire from="(860,930)" to="(860,990)"/>
+    <wire from="(860,960)" to="(860,990)"/>
     <wire from="(870,190)" to="(870,220)"/>
     <wire from="(890,210)" to="(940,210)"/>
     <wire from="(910,980)" to="(910,990)"/>
