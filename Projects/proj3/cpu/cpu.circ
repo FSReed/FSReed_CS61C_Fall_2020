@@ -40,7 +40,6 @@
   <lib desc="#Plexers" name="2">
     <tool name="Multiplexer">
       <a name="enable" val="false"/>
-      <a name="width" val="32"/>
     </tool>
     <tool name="Demultiplexer">
       <a name="enable" val="false"/>

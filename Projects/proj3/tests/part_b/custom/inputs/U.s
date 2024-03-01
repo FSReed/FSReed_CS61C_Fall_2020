@@ -1,0 +1,3 @@
+lui a0, 0xffff
+auipc t0, 0xffff
+
