@@ -5,38 +5,8 @@
   <lib desc="#Wiring" name="0">
     <tool name="Splitter">
       <a name="appear" val="center"/>
-      <a name="bit1" val="0"/>
-      <a name="bit10" val="0"/>
-      <a name="bit11" val="0"/>
-      <a name="bit12" val="0"/>
-      <a name="bit13" val="0"/>
-      <a name="bit14" val="0"/>
-      <a name="bit15" val="0"/>
-      <a name="bit16" val="0"/>
-      <a name="bit17" val="0"/>
-      <a name="bit18" val="0"/>
-      <a name="bit19" val="0"/>
-      <a name="bit2" val="0"/>
-      <a name="bit20" val="1"/>
-      <a name="bit21" val="1"/>
-      <a name="bit22" val="1"/>
-      <a name="bit23" val="1"/>
-      <a name="bit24" val="1"/>
-      <a name="bit25" val="1"/>
-      <a name="bit26" val="1"/>
-      <a name="bit27" val="1"/>
-      <a name="bit28" val="1"/>
-      <a name="bit29" val="1"/>
-      <a name="bit3" val="0"/>
-      <a name="bit30" val="1"/>
-      <a name="bit31" val="1"/>
-      <a name="bit4" val="0"/>
-      <a name="bit5" val="0"/>
-      <a name="bit6" val="0"/>
-      <a name="bit7" val="0"/>
-      <a name="bit8" val="0"/>
-      <a name="bit9" val="0"/>
-      <a name="incoming" val="32"/>
+      <a name="fanout" val="4"/>
+      <a name="incoming" val="4"/>
     </tool>
     <tool name="Pin">
       <a name="facing" val="north"/>
@@ -544,7 +514,14 @@ end TCL_Generic;
     <comp lib="0" loc="(610,770)" name="Tunnel">
       <a name="facing" val="east"/>
       <a name="label" val="Reg_Ins"/>
+      <a name="labelfont" val="SansSerif bold 10"/>
       <a name="width" val="32"/>
+    </comp>
+    <comp lib="0" loc="(610,790)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="ImmSel"/>
+      <a name="labelfont" val="SansSerif bold 10"/>
+      <a name="width" val="3"/>
     </comp>
     <comp lib="0" loc="(610,950)" name="Tunnel">
       <a name="facing" val="east"/>
@@ -617,6 +594,12 @@ end TCL_Generic;
       <a name="facing" val="north"/>
       <a name="label" val="clk"/>
     </comp>
+    <comp lib="0" loc="(800,970)" name="Tunnel">
+      <a name="facing" val="south"/>
+      <a name="label" val="ImmSel"/>
+      <a name="labelfont" val="SansSerif bold 6"/>
+      <a name="width" val="3"/>
+    </comp>
     <comp lib="0" loc="(870,190)" name="Pin">
       <a name="facing" val="south"/>
       <a name="label" val="ra"/>
@@ -628,7 +611,7 @@ end TCL_Generic;
       <a name="label" val="ra"/>
       <a name="width" val="32"/>
     </comp>
-    <comp lib="0" loc="(870,770)" name="Tunnel">
+    <comp lib="0" loc="(880,770)" name="Tunnel">
       <a name="label" val="Immediate"/>
       <a name="width" val="32"/>
     </comp>
@@ -787,6 +770,7 @@ end TCL_Generic;
     <wire from="(590,70)" to="(590,180)"/>
     <wire from="(600,530)" to="(620,530)"/>
     <wire from="(610,770)" to="(650,770)"/>
+    <wire from="(610,790)" to="(650,790)"/>
     <wire from="(610,950)" to="(650,950)"/>
     <wire from="(640,510)" to="(790,510)"/>
     <wire from="(640,530)" to="(790,530)"/>
@@ -801,8 +785,10 @@ end TCL_Generic;
     <wire from="(760,90)" to="(1650,90)"/>
     <wire from="(760,90)" to="(760,210)"/>
     <wire from="(790,130)" to="(790,220)"/>
+    <wire from="(800,970)" to="(800,980)"/>
     <wire from="(810,210)" to="(850,210)"/>
     <wire from="(870,190)" to="(870,220)"/>
+    <wire from="(870,770)" to="(880,770)"/>
     <wire from="(890,210)" to="(940,210)"/>
     <wire from="(960,190)" to="(960,220)"/>
     <wire from="(970,970)" to="(970,980)"/>
