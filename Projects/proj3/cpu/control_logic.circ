@@ -6,37 +6,39 @@
     <tool name="Splitter">
       <a name="appear" val="center"/>
       <a name="bit1" val="0"/>
-      <a name="bit10" val="0"/>
-      <a name="bit11" val="0"/>
-      <a name="bit12" val="0"/>
-      <a name="bit13" val="0"/>
-      <a name="bit14" val="0"/>
-      <a name="bit15" val="0"/>
-      <a name="bit16" val="0"/>
-      <a name="bit17" val="0"/>
-      <a name="bit18" val="0"/>
-      <a name="bit19" val="0"/>
+      <a name="bit10" val="1"/>
+      <a name="bit11" val="1"/>
+      <a name="bit12" val="1"/>
+      <a name="bit13" val="1"/>
+      <a name="bit14" val="1"/>
+      <a name="bit15" val="1"/>
+      <a name="bit16" val="2"/>
+      <a name="bit17" val="2"/>
+      <a name="bit18" val="2"/>
+      <a name="bit19" val="2"/>
       <a name="bit2" val="0"/>
-      <a name="bit20" val="1"/>
-      <a name="bit21" val="1"/>
-      <a name="bit22" val="1"/>
-      <a name="bit23" val="1"/>
-      <a name="bit24" val="1"/>
-      <a name="bit25" val="1"/>
-      <a name="bit26" val="1"/>
-      <a name="bit27" val="1"/>
-      <a name="bit28" val="1"/>
-      <a name="bit29" val="1"/>
+      <a name="bit20" val="2"/>
+      <a name="bit21" val="2"/>
+      <a name="bit22" val="2"/>
+      <a name="bit23" val="2"/>
+      <a name="bit24" val="3"/>
+      <a name="bit25" val="3"/>
+      <a name="bit26" val="3"/>
+      <a name="bit27" val="3"/>
+      <a name="bit28" val="3"/>
+      <a name="bit29" val="3"/>
       <a name="bit3" val="0"/>
-      <a name="bit30" val="1"/>
-      <a name="bit31" val="1"/>
+      <a name="bit30" val="3"/>
+      <a name="bit31" val="3"/>
       <a name="bit4" val="0"/>
       <a name="bit5" val="0"/>
       <a name="bit6" val="0"/>
       <a name="bit7" val="0"/>
-      <a name="bit8" val="0"/>
-      <a name="bit9" val="0"/>
+      <a name="bit8" val="1"/>
+      <a name="bit9" val="1"/>
+      <a name="fanout" val="4"/>
       <a name="incoming" val="32"/>
+      <a name="spacing" val="2"/>
     </tool>
     <tool name="Pin">
       <a name="facing" val="north"/>
@@ -54,8 +56,7 @@
       <a name="facing" val="north"/>
     </tool>
     <tool name="Constant">
-      <a name="value" val="0xff"/>
-      <a name="width" val="8"/>
+      <a name="value" val="0x0"/>
     </tool>
   </lib>
   <lib desc="#Gates" name="1">
@@ -543,35 +544,23 @@ end TCL_Generic;
       <a name="addrWidth" val="12"/>
       <a name="appearance" val="logisim_evolution"/>
       <a name="contents">addr/data: 12 20
-49000 0 0 0 49000 0 0 0
-49000 0 0 0 49000 0 0 0
-49000 0 0 0 49000 0 0 0
-49000 0 0 0 49000 0 0 0
-49000 0 0 0 49000 0 0 0
-49000 0 0 0 49000 467*0 49004 0
-0 0 49004 0 0 0 49004 0
-0 0 49004 0 0 0 49604 0
-0 0 49604 0 0 0 49604 0
-0 0 49604 0 0 0 49704 0
-0 0 49704 0 0 0 49704 0
-0 0 49704 19*0 49304 0 0 0
-49304 0 0 0 49304 0 0 0
-49304 0 0 0 49404 0 0 0
-49404 0 0 0 49504 0 0 0
-49504 0 0 0 49204 0 0 0
-49204 0 0 0 49204 0 0 0
-49204 0 0 0 49104 0 0 0
-49104 0 0 0 49104 0 0 0
-49104 387*0 11010 0 0 0 11010 0
-0 0 11010 0 0 0 11010 0
-0 0 11030 0 0 0 11030 0
-0 0 11030 0 0 0 11030 0
-0 0 110f0 0 0 0 110f0 0
-0 0 110f0 0 0 0 110f0 467*0
-40004 0 0 0 40a04 0 0 0
-40c04 7*0 40604 0 0 0 40e04 11*0
-40704 19*0 40b04 11*0 40304 15*0 40404 7*0
-40504 7*0 40204 15*0 40104
+48*49000 464*0 16*49004 16*49604 16*49704 16*0 16*49304 8*49404
+8*49504 16*49204 16*49104 384*0 16*11010 16*11030 16*110f0 464*0
+4*40004 4*40a04 4*40c04 4*0 4*40604 4*40e04 8*0 4*40704
+16*0 4*40b04 8*0 4*40304 12*0 4*40404 4*0 4*40504
+4*0 4*40204 12*0 4*40104 1420*0 1b000 1b000 9b000
+0 1b000 1b000 9b000 0 1b000 1b000 9b000
+0 1b000 1b000 9b000 0 9b000 9b000 1b000
+0 9b000 9b000 1b000 0 9b000 9b000 1b000
+0 9b000 9b000 1b000 33*0 1b000 9b000 1b000
+0 1b000 9b000 1b000 0 1b000 9b000 1b000
+0 1b000 9b000 1b000 0 9b000 1b000 1b000
+0 9b000 1b000 1b000 0 9b000 1b000 1b000
+0 9b000 1b000 1b000 0 1f000 9f000 1f000
+0 1f000 9f000 1f000 0 1f000 9f000 1f000
+0 1f000 9f000 1f000 0 9f000 1f000 1f000
+0 9f000 1f000 1f000 0 9f000 1f000 1f000
+0 9f000 1f000 1f000
 </a>
       <a name="dataWidth" val="20"/>
     </comp>

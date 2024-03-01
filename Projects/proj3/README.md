@@ -23,3 +23,6 @@ First, I think using ROM is a huge waste of space and hard to design. But it tur
 4. **Painful Debug**: When using ROM to implement I-type, as I take `inst[25]` into consideration, sometimes this bit would affect the output of Control Logic! This is hard to find out to be honest. I try `slti s0, s0, -149` and find this bug. Solution is simple, just fill in the blanks with the right output like this: 
    ![Fill in](./Images/proj3_5.png)
    Should pay more attention to this later in this project.
+5. When filling branch output of Control Logic, should fill each line separately according to the instruction. Note that all output would have the format `0x?b000` where ? could be either `9`(branch taken) or `1`(branch not taken). Then figure out the correct output according to the instruction we are working on. 
+   **For Unsigned version**, the output would have the output like `0x?f000`. `?` has the same meaning as before.
+6. this
