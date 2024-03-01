@@ -5,40 +5,8 @@
   <lib desc="#Wiring" name="0">
     <tool name="Splitter">
       <a name="appear" val="center"/>
-      <a name="bit1" val="0"/>
-      <a name="bit10" val="1"/>
-      <a name="bit11" val="1"/>
-      <a name="bit12" val="1"/>
-      <a name="bit13" val="1"/>
-      <a name="bit14" val="1"/>
-      <a name="bit15" val="1"/>
-      <a name="bit16" val="2"/>
-      <a name="bit17" val="2"/>
-      <a name="bit18" val="2"/>
-      <a name="bit19" val="2"/>
-      <a name="bit2" val="0"/>
-      <a name="bit20" val="2"/>
-      <a name="bit21" val="2"/>
-      <a name="bit22" val="2"/>
-      <a name="bit23" val="2"/>
-      <a name="bit24" val="3"/>
-      <a name="bit25" val="3"/>
-      <a name="bit26" val="3"/>
-      <a name="bit27" val="3"/>
-      <a name="bit28" val="3"/>
-      <a name="bit29" val="3"/>
-      <a name="bit3" val="0"/>
-      <a name="bit30" val="3"/>
-      <a name="bit31" val="3"/>
-      <a name="bit4" val="0"/>
-      <a name="bit5" val="0"/>
-      <a name="bit6" val="0"/>
-      <a name="bit7" val="0"/>
-      <a name="bit8" val="1"/>
-      <a name="bit9" val="1"/>
       <a name="fanout" val="4"/>
-      <a name="incoming" val="32"/>
-      <a name="spacing" val="2"/>
+      <a name="incoming" val="4"/>
     </tool>
     <tool name="Pin">
       <a name="facing" val="north"/>
@@ -56,7 +24,8 @@
       <a name="facing" val="north"/>
     </tool>
     <tool name="Constant">
-      <a name="value" val="0x0"/>
+      <a name="value" val="0xff"/>
+      <a name="width" val="8"/>
     </tool>
   </lib>
   <lib desc="#Gates" name="1">
@@ -554,13 +523,13 @@ end TCL_Generic;
 0 9b000 9b000 1b000 0 9b000 9b000 1b000
 0 9b000 9b000 1b000 33*0 1b000 9b000 1b000
 0 1b000 9b000 1b000 0 1b000 9b000 1b000
-0 1b000 9b000 1b000 0 9b000 1b000 1b000
-0 9b000 1b000 1b000 0 9b000 1b000 1b000
-0 9b000 1b000 1b000 0 1f000 9f000 1f000
+0 1b000 9b000 1b000 0 9b000 1b000 9b000
+0 9b000 1b000 9b000 0 9b000 1b000 9b000
+0 9b000 1b000 9b000 0 1f000 9f000 1f000
 0 1f000 9f000 1f000 0 1f000 9f000 1f000
-0 1f000 9f000 1f000 0 9f000 1f000 1f000
-0 9f000 1f000 1f000 0 9f000 1f000 1f000
-0 9f000 1f000 1f000
+0 1f000 9f000 1f000 0 9f000 1f000 9f000
+0 9f000 1f000 9f000 0 9f000 1f000 9f000
+0 9f000 1f000 9f000
 </a>
       <a name="dataWidth" val="20"/>
     </comp>
