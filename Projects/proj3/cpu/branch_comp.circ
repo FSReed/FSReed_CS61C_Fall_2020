@@ -206,6 +206,60 @@ end TCL_Generic;
     <comp lib="0" loc="(220,310)" name="Tunnel">
       <a name="label" val="BrUn"/>
     </comp>
+    <comp lib="0" loc="(370,100)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="rs1"/>
+      <a name="labelfont" val="SansSerif bold 10"/>
+      <a name="width" val="32"/>
+    </comp>
+    <comp lib="0" loc="(370,120)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="rs2"/>
+      <a name="labelfont" val="SansSerif bold 10"/>
+      <a name="width" val="32"/>
+    </comp>
+    <comp lib="0" loc="(490,100)" name="Tunnel">
+      <a name="label" val="BrEq"/>
+      <a name="labelfont" val="SansSerif bold 10"/>
+    </comp>
+    <comp lib="0" loc="(490,130)" name="Tunnel">
+      <a name="label" val="ULt"/>
+      <a name="labelfont" val="SansSerif bold 10"/>
+    </comp>
+    <comp lib="0" loc="(490,210)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="Lt"/>
+      <a name="labelfont" val="SansSerif bold 10"/>
+    </comp>
+    <comp lib="0" loc="(490,230)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="ULt"/>
+      <a name="labelfont" val="SansSerif bold 10"/>
+    </comp>
+    <comp lib="0" loc="(520,280)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="BrUn"/>
+      <a name="labelfont" val="SansSerif bold 10"/>
+    </comp>
+    <comp lib="0" loc="(590,220)" name="Tunnel">
+      <a name="label" val="BrLt"/>
+    </comp>
+    <comp lib="0" loc="(600,100)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="rs1"/>
+      <a name="labelfont" val="SansSerif bold 10"/>
+      <a name="width" val="32"/>
+    </comp>
+    <comp lib="0" loc="(600,120)" name="Tunnel">
+      <a name="facing" val="east"/>
+      <a name="label" val="rs2"/>
+      <a name="labelfont" val="SansSerif bold 10"/>
+      <a name="width" val="32"/>
+    </comp>
+    <comp lib="0" loc="(710,120)" name="Tunnel">
+      <a name="label" val="Lt"/>
+      <a name="labelfont" val="SansSerif bold 10"/>
+    </comp>
     <comp lib="0" loc="(930,130)" name="Tunnel">
       <a name="facing" val="east"/>
       <a name="label" val="BrEq"/>
@@ -224,6 +278,16 @@ end TCL_Generic;
       <a name="label" val="BrLt"/>
       <a name="output" val="true"/>
     </comp>
+    <comp lib="2" loc="(570,220)" name="Multiplexer">
+      <a name="enable" val="false"/>
+    </comp>
+    <comp lib="3" loc="(450,110)" name="Comparator">
+      <a name="mode" val="unsigned"/>
+      <a name="width" val="32"/>
+    </comp>
+    <comp lib="3" loc="(680,110)" name="Comparator">
+      <a name="width" val="32"/>
+    </comp>
     <comp lib="8" loc="(156,94)" name="Text">
       <a name="text" val="INPUTS to your circuit"/>
     </comp>
@@ -241,6 +305,22 @@ end TCL_Generic;
     <wire from="(220,180)" to="(220,230)"/>
     <wire from="(220,270)" to="(220,290)"/>
     <wire from="(220,330)" to="(220,340)"/>
+    <wire from="(370,100)" to="(410,100)"/>
+    <wire from="(370,120)" to="(410,120)"/>
+    <wire from="(450,110)" to="(480,110)"/>
+    <wire from="(450,120)" to="(480,120)"/>
+    <wire from="(480,100)" to="(480,110)"/>
+    <wire from="(480,100)" to="(490,100)"/>
+    <wire from="(480,120)" to="(480,130)"/>
+    <wire from="(480,130)" to="(490,130)"/>
+    <wire from="(490,210)" to="(540,210)"/>
+    <wire from="(490,230)" to="(540,230)"/>
+    <wire from="(520,280)" to="(550,280)"/>
+    <wire from="(550,240)" to="(550,280)"/>
+    <wire from="(570,220)" to="(590,220)"/>
+    <wire from="(600,100)" to="(640,100)"/>
+    <wire from="(600,120)" to="(640,120)"/>
+    <wire from="(680,120)" to="(710,120)"/>
     <wire from="(80,100)" to="(220,100)"/>
     <wire from="(80,100)" to="(80,340)"/>
     <wire from="(80,340)" to="(220,340)"/>
