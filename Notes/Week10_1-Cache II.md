@@ -51,3 +51,68 @@ But every time searching the cache would be expensive because we need to compare
 
 - From infinity-size to finite-size, the differences are **capacity misses**.
 - From **full associative** to **finite associative**(**between** full associative and direct mapped), the differences are **conflict misses**.
+
+## Set Associative Caches
+
+### N-Way Set Associative Cache
+
+- Set Associative Cache lives in between of **Direct Mapped Cache** and **Full Associative Cache**. The **tag** and **offset** of SAC is same as it is in Direct Mapped Cache, but now the **index** would point to a certain **set** in the cache, which contains several blocks!
+- **What's the difference?**
+  We can use index and direct to the map, then **compare all the tags in that set** to find the address we are looking for.
+- *Example*: In the picture below, if we are accessing address `0` and `4` over and over again, direct mapped cache won't work! But using this set associative cache, we can take advantage of the cache.
+  ![Example](./Image/Week10/Week10-6.png)
+- Direct mapped caches are exactly 1-way set associative caches.
+- *Example*: Circuit of a 4-way set associative cache. 
+
+### Block Replacement Policy
+
+When the cache is full, how should we replace the blocks? This question doesn't work for direct mapped caches because each address has a corresponding position in the cache.  
+There are 3 principles to choose: **Least recently used**, **first in first out** and **random**. Each has some pros and cons:
+
+![Policy](./Image/Week10/Week10-8.png)
+
+## Average Memory Access Time(AMAT)
+
+`AMAT = HIT_TIME + Miss Penalty * Miss Rate`  
+Why not HIT_TIME * Hit Rate? Because no matter the cache is hit or not, we need to fetch data from the cache. So HIT_TIME is always there.  
+
+
+![AMAT](./Image/Week10/Week10-9.png)
+
+How to reduce the miss penalty? We've already talked about the design of block size. Any other ways?  
+
+### **Second Level Cache**
+
+![L2](./Image/Week10/Week10-10.png)
+
+With the concept of different level of caches, we can complete the Memory Hierarchy now:
+
+![MH](./Image/Week10/Week10-11.png)
+
+Multi-level cache hierarchy is like a recursive design. Now the miss penalty of L1 would be the Hit time **of L2** and **miss penalty $\times$ miss rate** of **L2**.  
+
+![MH](./Image/Week10/Week10-12.png)
+
+### Typical Scale of Multi-level Caches
+
+![Scale](./Image/Week10/Week10-13.png)
+
+- Why miss rate of L2 so high? Because *all good stuffs are in L1*.
+- *An example to show how L2 improves the performance of AMAT*:
+  ![Example](./Image/Week10/Week10-14.png)
+  ![Example](./Image/Week10/Week10-15.png)
+  Can be 4 times faster.
+
+## Actual CPU
+
+![PowerPC](./Image/Week10/Week10-16.png)
+
+### Intel i7
+
+![i7](./Image/Week10/Week10-17.png)
+
+### Cache is everywhere!
+
+![Conclusion](./Image/Week10/Week10-18.png)
+
+If something is expensive but we want to do it repeatedly, **do it once and cache the result**!
