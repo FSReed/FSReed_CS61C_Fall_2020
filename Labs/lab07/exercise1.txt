@@ -1,19 +1,19 @@
 Scenario 1
-    1.
-    2.
-    3.
+    1.[step size], [cache size]
+    2.0
+    3.[step size], [1]
 
 Scenario 2
-    1.
-    2.
-    3.
+    1.2
+    2.MHHH
+    3.1.0
 
 Scenario 3
-    1.
-    2.
-    3.
-    4.
-    5.
+    1.[0.50], [0.00], 
+    2.32 accesses to L1, and 16 of them are misses
+    3.16 accesses to L2
+    4.Increase the block size of L2 to 16 bytes will work.
+    5.[=], [=], [>], [=]
 
 --- lines below are ignored by the AG ---
 
@@ -21,4 +21,6 @@ Checkoff Question 1:
 Checkoff Question 2:
 Checkoff Question 3:
 Checkoff Question 4:
-Checkoff Question 5:
+Checkoff Question 5: Access the elements with the same amount as **Cache size** and apply all 1024 functions to these elements. Then go to the next block in the array.
+Checkoff Question 6: Because when L2's block size increases, the behavior of L1 won't change. For the first 4 access, L1 would perform `MHMH`. The first miss is a compulsory miss for both L1 and L2, but when second miss happens, array[2] has already been loaded into L2 for the bigger block size of L2. Therefore this access would hit L2.
+
