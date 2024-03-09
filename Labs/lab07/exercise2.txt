@@ -1,8 +1,15 @@
-1.
-2.
+ijk:    n = 1000, 1.931 Gflop/s
+ikj:    n = 1000, 0.171 Gflop/s
+jik:    n = 1000, 1.767 Gflop/s
+jki:    n = 1000, 12.684 Gflop/s
+kij:    n = 1000, 0.166 Gflop/s
+kji:    n = 1000, 10.673 Gflop/s
+
+As a reminder, the formula in the innermost loop is `C[i + j * n] = A[i + k * n] * B[k + j * n];`  
+It's obvious that only `j` and `k` would jump n "units" in each loop.
 
 --- lines below are ignored by the AG ---
 
-Checkoff Question 1:
-Checkoff Question 2:
+Checkoff Question 1:The fastest one is `jki`. In this case, `j` and `k` is fixed, then we increase `i` by 1 in each iteration, then `A and C` would move with the stride 1 and `B` would be fixed.
+Checkoff Question 2:The fastest one is `jki`. In this case, `j` and `k` is fixed, then we increase `i` by 1 in each iteration, then `A and C` would move with the stride 1 and `B` would be fixed.
 Checkoff Question 3:
