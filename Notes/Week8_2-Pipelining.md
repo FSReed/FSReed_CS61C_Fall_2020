@@ -193,6 +193,9 @@ If we need to take a branch, we would kill the instructions after branch is take
 Every taken branch will cause 2 dead cycles. To reduce the penalty of branching, we need to predict which way branch will go earlier in pipeline.  
 This part is a little bit of mysterious to me. We need to guess the next PC and check our guess. If it's correct, then execute the instruction at the given place without converting 2 instructions to nops? Maybe?  
 
+- Edit on 2024/03/11:
+  - The branch prediction can be very complicated. A surprising fact is that today's CPU can even always correctly predict whether the branch will be taken. Even AI technologies will be integrated into a CPU to improve the correctness of branch prediction, the CPU will learn from wrong predictions it made and performs better next time. That's amazing!
+
 ## Super-Scalar Processor
 
 Introduction on [Wikipedia](https://en.wikipedia.org/wiki/Superscalar_processor)  
