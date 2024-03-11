@@ -27,3 +27,22 @@ What does the core of the OS do?
   3. **OS Boot**: Initialize services.
   4. **Init**: Launch an application that waits for input. That's an infinite loop!
   ![Boot](./Image/Week10/Week10-22.png)
+
+## Operating System Functions (Better re-watch [this video](https://www.youtube.com/watch?v=NeGAhZzmCVg&list=PLnvUoC1Ghb7ziIlgNnQ24Gb6HBmLQO4T4&index=3) after going through VM and IO)
+
+### Launching Applications
+
+- Applications are processes for a CPU. Multiple processes would run simultaneously on a single core of CPU so OS needs to implement this.
+- Applications are started by *another process* -> **Shell** calling an OS routine.
+  - Loads executable file from the disk
+  - Set **argc** and **argv**, jump into main.
+  - Shell will wait for main to return.
+
+### Supervisor Mode
+
+- If an application goes wrong, the whole system may crash down. How to prevent this?
+- OS needs to constrain the resource one application can access (like devices and memory).
+- Out of supervisor mode, the process can only access *a subset of instructions and memory*.
+- The error in supervisor mode is often catastrophic.
+
+...Too many terminologies. Check the video in the title and learn them slowly in the following lectures.
