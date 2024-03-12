@@ -103,6 +103,10 @@ Multi-level cache hierarchy is like a recursive design. Now the miss penalty of 
   ![Example](./Image/Week10/Week10-15.png)
   Can be 4 times faster.
 
+Page 8 in **Discussion09** may be helpful in understanding the AMAT of the cache.
+
+![Disc](./Image/Week10/Week10-23.png)
+
 ## Actual CPU
 
 ![PowerPC](./Image/Week10/Week10-16.png)
