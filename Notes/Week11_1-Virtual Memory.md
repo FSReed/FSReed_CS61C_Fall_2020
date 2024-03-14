@@ -1,4 +1,4 @@
-# Virtual Memory (Lecture 29-30)
+# Virtual Memory (Lecture 29)
 
 ## Virtual Memory Concepts
 
