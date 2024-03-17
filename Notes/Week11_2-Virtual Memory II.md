@@ -1,5 +1,9 @@
 # Virtual Memory II(Lecture 30)
 
+- There are too few examples in this lecture so [wikipedia](https://en.wikipedia.org/wiki/Page_table) might helps a lot when learning this.  
+- What's more, here's [a great answer about table walk](https://cs.stackexchange.com/questions/102834/what-is-happening-during-table-walk).
+- Check the [PDF](./CS356Unit9_VM.pdf) for more detailed explanation.
+
 ## Hierarchical Page Tables
 
 - If a page table has $2^{20}$ entries which contains 4 bytes, the size of a single page table will be 4 MiB. What if there are like **256 processes** running simultaneously? The total size of the page tables will be **1GiB**!
@@ -28,3 +32,27 @@ So we will use something same with *cache* (conceptually) to solve the problem, 
 
 ![TLB in Datapath](./Image/Week11/Week11-16.png)
 ![Translation](./Image/Week11/Week11-17.png)
+![COntext Switching](./Image/Week11/Week11-18.png)
+
+## *Intel i7 Page System*
+
+What's the TLB and the hierarchical page table looks like in 64-bit system? Here's the summary of the **i7 address translation**.
+
+![i7](./Image/Week11/Week11-19.png)
+
+## Virtual Memory Performance
+
+### Comparison between Cache and TLB
+
+![Comp](./Image/Week11/Week11-20.png)
+
+- In TLB, the whole page would be stored in each line. In cache, each line contains $block size$ bytes.
+- In virtual memory, the **penalty of writing through to the disk** is too high. So in virtual memory,  we only write back.
+
+In general, we just add another level called virtual memory *under the main memory*. We can access the **AMAT of the virtual memory** by adding up *the AMAT to the main memory* and *the penalty of accessing the disk*.  
+But accessing the disk can be much slower than accessing the memory:
+
+![diskAccess](./Image/Week11/Week11-21.png)
+
+I thought increasing the hit rate to the main memory can easily handle this problem. But I was too naive. It turns out that even we increase the hit rate to $99.9%$, the AMAT can still be about **80 times slower** than the AMAT without paging! To get the similar performance, we need to cut down the miss rate to under 0.001%!
+You can check the last 2 slides of [the lecture PDF](https://inst.eecs.berkeley.edu/~cs61c/fa20/pdfs/lectures/lec30.pdf).
