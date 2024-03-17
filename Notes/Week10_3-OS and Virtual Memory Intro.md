@@ -45,4 +45,42 @@ What does the core of the OS do?
 - Out of supervisor mode, the process can only access *a subset of instructions and memory*.
 - The error in supervisor mode is often catastrophic.
 
-...Too many terminologies. Check the video in the title and learn them slowly in the following lectures.
+### System Calls
+
+- If we want to *read a file*, *launch new processes* or *send data through network* etc., we need to call the Operating System to do these stuffs for us.
+- We need to place some arguments in the register, then call the OS to handle this for us.
+- After the call, the OS will perform some operations then return back to the user mode.
+
+### Interrupts, Exceptions and Traps
+
+- **Interrupt**: Caused by something **external** to the program.
+  - For example, keyboard interrupt.
+  - Not an emergency. Can handle this whenever the system is convenient. Just don't wait too long.
+- **Exception**: Caused by something **internal** to the program.
+  - For example, memory error
+  - Need to be handled **right away** and precisely on the instruction that caused the exception.
+  - Need to drop everything in the pipeline now.
+- **Trap**: Service of handling the interrupts or exceptions by hardware jump to the trap handler code.
+
+![TrapH](./Image/Week10/Week10-24.png)
+
+The exceptions in a 5-Stage Pipelined Datapath:
+
+![Excp](./Image/Week10/Week10-25.png)
+
+### Multi Programming
+
+- The OS can run multiple applications at the same time, but not each process has its own core of course. How to achieve that?
+- **Context Switch**: Switches between processes very quickly.
+- When jumping into process, **set timer**:
+  - When it expires, store PC, registers and other related resources.
+  - **Pick another process to run and load its state**.
+  - Set timer again, **change to user mode**, jump to the new PC and start executing this new process.
+- Deciding what process to run is called **scheduling**.
+
+### Protection Translation, Paging
+
+- Applications may overwrite another application's memory. Some programs may contain some same fixed addresses, and they should not share the same physical memory at these addresses.
+- We may want to address **more memory than we actually have physically**.
+- **Solution**: Virtual Memory
+  - Gives each process an illusion of a full memory address space that is completely owned by itself.
