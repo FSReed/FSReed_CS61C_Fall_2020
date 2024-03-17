@@ -15,6 +15,8 @@ The answer is no. The idea is **to update the word in cache block** without writ
 
 - The content in memory and cache could be different!
 - Another **dirty bit** is needed to indicate this block in cache should be written back to memory when necessary.
+- *Update on 2024/03/17*:
+  - Write through is allowed in cache because it's not that slow. But writing through to the disk is not allowed!
 
 ## Block Size Trade-offs
 
