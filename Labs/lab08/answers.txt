@@ -1,19 +1,23 @@
 Exercise 1:
-    1.
-    2.
-    3.
+    1.1
+    2.5,5,0,5
+    3.no,no
 
 Exercise 2:
-    1.
+    1.00,20,40,60,80,A0,C0,E0,00,20
 
 Exercise 3:
-    1.
+    1.Physical Memory Size
 
 --- lines below are ignored by the AG ---
 
 Exercise 1 Checkoff Questions:
-    1.
-    2.
+    1.As the size of the page is 32-bytes, the virtual address should use the lowset 5 bits to represent the offset. Then there will be 3 bits used to store the virtual page number.
+      Then we search this virtual page number in the TLB. Notice that TLB will store the map from **virtual page number** to **physical page number**. If it hits TLB, we get the physical page number easily.
+      If not, we search in the page table. If the virtual page is invalid, we need to load the data from the disk into the memory. In this case, the PPN and TLB shares the same size, and TLB is fully associative. So if a virtual page is not in the TLB, this virtual page must have never been loaded or was replaced by other virtual pages. But both cases will make this virtual page invalid in page table. There will be no page hit in this case.
+    2.The physical address only have 2 bits for the PPN because there are only 4 pages in the memory.
+      But the virtual address has 8 bits, with the lowest 5 bits as the offset. So the virtual address has 3 bits for the VPN.
 
 Exercise 4 Checkoff Question:
-    1.
+    1.Can't use appletviewer command successfully. According to the webm provided by the Lab website, I think the reason might be the processor is executing multiple tasks at the same time. During each context switch, the TLB will be invalid.
+
