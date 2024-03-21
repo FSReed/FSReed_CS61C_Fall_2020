@@ -3,6 +3,7 @@
 - There are too few examples in this lecture so [wikipedia](https://en.wikipedia.org/wiki/Page_table) might helps a lot when learning this.  
 - What's more, here's [a great answer about table walk](https://cs.stackexchange.com/questions/102834/what-is-happening-during-table-walk).
 - Check the [PDF](./CS356Unit9_VM.pdf) for more detailed explanation.
+- Lab08 can be really helpful in understanding virtual memory. Use the `Camera.jar` provided in the Lab08 folder.
 
 ## Hierarchical Page Tables
 
