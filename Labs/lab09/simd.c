@@ -76,7 +76,7 @@ long long int sum_simd(int vals[NUM_ELEMS]) {
 		}
 		/* You'll need a tail case. */
 		for (; counter < NUM_ELEMS; counter++) {
-		    result += vals[counter - 1];
+		    result += vals[counter];
 		}
 	}
 	clock_t end = clock();
