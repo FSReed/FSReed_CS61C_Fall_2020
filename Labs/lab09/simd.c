@@ -58,7 +58,6 @@ long long int sum_simd(int vals[NUM_ELEMS]) {
 		__m128i current;
 		__m128i mask;
 		int* container;
-		int counter = 0;
 		for (unsigned int i = 0; i < NUM_ELEMS / 4; i++) {
 		    crtPointer = (__m128i*) &vals[i * 4];
 		    current = _mm_loadu_si128(crtPointer);
@@ -67,7 +66,6 @@ long long int sum_simd(int vals[NUM_ELEMS]) {
 		    current = _mm_and_si128(current, mask);
 		    // Sum with previous result
 		    tmpResult = _mm_add_epi32(current, tmpResult);
-		    counter += 4;
 		}
 		_mm_storeu_si128(&tmpResult, tmpResult);
 		container = (int*) &tmpResult;
@@ -75,7 +73,7 @@ long long int sum_simd(int vals[NUM_ELEMS]) {
 		    result += container[i];
 		}
 		/* You'll need a tail case. */
-		for (; counter < NUM_ELEMS; counter++) {
+		for (int counter = NUM_ELEMS / 4 * 4; counter < NUM_ELEMS; counter++) {
 		    result += vals[counter];
 		}
 	}
@@ -91,9 +89,54 @@ long long int sum_simd_unrolled(int vals[NUM_ELEMS]) {
 	for(unsigned int w = 0; w < OUTER_ITERATIONS; w++) {
 		/* COPY AND PASTE YOUR sum_simd() HERE */
 		/* MODIFY IT BY UNROLLING IT */
+		__m128i tmpResult = _mm_setzero_si128();
+		__m128i* crtPointer;
+		__m128i current;
+		__m128i mask;
+		int* container;
+		for (unsigned int i = 0; i < NUM_ELEMS / 16 * 16; i += 16) {
+		    crtPointer = (__m128i*) &vals[i];
+		    current = _mm_loadu_si128(crtPointer);
+		    // Compare with 127
+		    mask = _mm_cmpgt_epi32(current, _127);
+		    current = _mm_and_si128(current, mask);
+		    // Sum with previous result
+		    tmpResult = _mm_add_epi32(current, tmpResult);
 
+		    crtPointer = (__m128i*) &vals[i + 4];
+		    current = _mm_loadu_si128(crtPointer);
+		    // Compare with 127
+		    mask = _mm_cmpgt_epi32(current, _127);
+		    current = _mm_and_si128(current, mask);
+		    // Sum with previous result
+		    tmpResult = _mm_add_epi32(current, tmpResult);
+
+		    crtPointer = (__m128i*) &vals[i + 8];
+		    current = _mm_loadu_si128(crtPointer);
+		    // Compare with 127
+		    mask = _mm_cmpgt_epi32(current, _127);
+		    current = _mm_and_si128(current, mask);
+		    // Sum with previous result
+		    tmpResult = _mm_add_epi32(current, tmpResult);
+
+		    crtPointer = (__m128i*) &vals[i + 12];
+		    current = _mm_loadu_si128(crtPointer);
+		    // Compare with 127
+		    mask = _mm_cmpgt_epi32(current, _127);
+		    current = _mm_and_si128(current, mask);
+		    // Sum with previous result
+		    tmpResult = _mm_add_epi32(current, tmpResult);
+		}
+		_mm_storeu_si128(&tmpResult, tmpResult);
+		container = (int*) &tmpResult;
+		for (int j = 0; j < 4; j++) {
+		    result += container[j];
+		}
 		/* You'll need 1 or maybe 2 tail cases here. */
-
+		for (int counter = NUM_ELEMS / 16 * 16; counter < NUM_ELEMS; counter++) {
+		    result += vals[counter];
+		    break;
+		}
 	}
 	clock_t end = clock();
 	printf("Time taken: %Lf s\n", (long double)(end - start) / CLOCKS_PER_SEC);
