@@ -74,7 +74,10 @@ long long int sum_simd(int vals[NUM_ELEMS]) {
 		}
 		/* You'll need a tail case. */
 		for (int counter = NUM_ELEMS / 4 * 4; counter < NUM_ELEMS; counter++) {
-		    result += vals[counter];
+		    int tmp = vals[counter];
+		    if (tmp >= 128) {
+			result += tmp;
+		    }
 		}
 	}
 	clock_t end = clock();
@@ -134,8 +137,10 @@ long long int sum_simd_unrolled(int vals[NUM_ELEMS]) {
 		}
 		/* You'll need 1 or maybe 2 tail cases here. */
 		for (int counter = NUM_ELEMS / 16 * 16; counter < NUM_ELEMS; counter++) {
-		    result += vals[counter];
-		    break;
+		    int tmp = vals[counter];
+		    if (tmp >= 128) {
+			result += tmp;
+		    }
 		}
 	}
 	clock_t end = clock();
