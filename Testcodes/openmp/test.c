@@ -5,10 +5,13 @@
 #include <omp.h>
 
 int main() {
-	omp_set_num_threads(4);
+    	const int THREAD = 4;
+	omp_set_num_threads(THREAD);
+	printf("There are %d threads working now:\n", THREAD);
 	#pragma omp parallel for
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 20; i++) {
 		printf("thread = %d\n", omp_get_thread_num());
 	}
 	return 0;
 }
+
