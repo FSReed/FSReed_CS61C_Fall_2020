@@ -21,6 +21,7 @@ Only need to modify the `setup.py` using 2 function calls. If it's done properly
 
 - Enter the Virtual Environment
 - Type `python3.6` to enter python
+- Type `import numc as nc`
 
 The output of python should be `CS61C Fall2020 Project 4: numc imported!`  
 
