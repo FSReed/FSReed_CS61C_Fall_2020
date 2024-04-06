@@ -80,7 +80,7 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int row_offset, int col_offs
 	return -1;
     }
 
-    double** data;
+    double** data = (double**) malloc(sizeof(double*) * rows);
 
     for (int r = 0; r < rows; r++) {
 	double* rData = (double*) malloc(sizeof(double) * cols);
@@ -121,6 +121,7 @@ void deallocate_matrix(matrix *mat) {
  */
 double get(matrix *mat, int row, int col) {
     /* TODO: YOUR CODE HERE */
+    return mat -> data[row][col];
 }
 
 /*
@@ -129,6 +130,7 @@ double get(matrix *mat, int row, int col) {
  */
 void set(matrix *mat, int row, int col, double val) {
     /* TODO: YOUR CODE HERE */
+    mat -> data[row][col] = val;
 }
 
 /*
@@ -136,6 +138,11 @@ void set(matrix *mat, int row, int col, double val) {
  */
 void fill_matrix(matrix *mat, double val) {
     /* TODO: YOUR CODE HERE */
+    for (int r = 0; r < mat -> rows; r++) {
+	for (int c = 0; c < mat -> cols; c++) {
+	    mat -> data[r][c] = val;
+	}
+    }
 }
 
 /*
