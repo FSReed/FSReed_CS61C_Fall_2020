@@ -121,7 +121,17 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int row_offset, int col_offs
  */
 void deallocate_matrix(matrix *mat) {
     /* TODO: YOUR CODE HERE */
-    
+    if (mat == NULL || mat -> ref_cnt > 1) {
+	return;
+    }
+    if (mat -> parent != NULL) {
+	mat -> parent -> ref_cnt--;
+    }
+    for (int r = 0; r < mat -> rows; r++) {
+	free(mat -> data[r]);
+    }
+    free(mat -> data);
+    free(mat);
 }
 
 /*
