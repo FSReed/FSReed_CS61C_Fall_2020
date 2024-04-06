@@ -25,3 +25,8 @@ int mul_matrix(matrix *result, matrix *mat1, matrix *mat2);
 int pow_matrix(matrix *result, matrix *mat, int pow);
 int neg_matrix(matrix *result, matrix *mat);
 int abs_matrix(matrix *result, matrix *mat);
+
+/* I add this method on my own
+ */
+void copy_data(matrix *dests, matrix *src);
+

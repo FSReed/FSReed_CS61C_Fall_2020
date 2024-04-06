@@ -104,6 +104,10 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int row_offset, int col_offs
     (*mat) -> ref_cnt = 1;
     (*mat) -> is_1d = (rows == 1 || cols == 1) ? 1 : 0;
     (*mat) -> parent = from;
+    
+    if (from != NULL) {
+	from -> ref_cnt++;
+    }
 
     return 0;
 }
@@ -160,10 +164,12 @@ int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
 	// PyErr_SetString(PyExc_RunTimeError, "Different dimension of two given matrices!");
 	return -1;
     }
-    allocate_matrix(&result, mat1 -> rows, mat1 -> cols);
+    // allocate_matrix(&result, mat1 -> rows, mat1 -> cols);
     for (int r = 0; r < mat1 -> rows; r++) {
 	for (int c = 0; c < mat1 -> cols; c++) {
-	    result -> data[r][c] = mat1 -> data[r][c] + mat2 -> data[r][c];
+	    double tmp1 = get(mat1, r, c);
+	    double tmp2 = get(mat2, r, c);
+	    set(result, r, c, tmp1 + tmp2);
 	}
     }
     return 0;
@@ -175,7 +181,8 @@ int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
  */
 int sub_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     /* TODO: YOUR CODE HERE */
-    matrix* tmp = (matrix*) malloc(sizeof(matrix));
+    matrix* tmp;
+    allocate_matrix(&tmp, mat1 -> rows, mat1 -> cols);
     neg_matrix(tmp, mat2);
     return add_matrix(result, mat1, tmp);
 }
@@ -195,11 +202,19 @@ int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
 	// PyErr_SetString(PyExc_ValueError, "Improper dimensions of two matrices to do multiplication");
 	return -1;
     }
-    allocate_matrix(&result, mat1 -> rows, mat2 -> cols);
+    // Wrong!:
+    // allocate_matrix(&result, mat1 -> rows, mat2 -> cols);
+
+    for (int i = 0; i < result -> rows; i++) {
+	for (int j = 0; j < result -> cols; j++) {
+	    result -> data[i][j] = 0;
+	}
+    }
+
     for (int i = 0; i < result -> rows; i++) {
 	for (int k = 0; k < mat1 -> cols; k++) {
 	    for (int j = 0; j < result -> cols; j++) {
-		result -> data[i * result -> cols][j] += mat1 -> data[i * result -> cols][k] * mat2 -> data[k * result -> cols][j];
+		result -> data[i][j] += mat1 -> data[i][k] * mat2 -> data[k][j];
 	    }
 	}
     }
@@ -213,11 +228,20 @@ int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
  */
 int pow_matrix(matrix *result, matrix *mat, int pow) {
     /* TODO: YOUR CODE HERE */
-    matrix* tmp = (matrix*) malloc(sizeof(matrix));
-    *tmp = *mat;
+    if (mat -> rows != mat -> cols) {
+	// PyErr...
+	return -1;
+    }
+    int mat_size = mat -> rows;
+    matrix* tmp;
+    allocate_matrix(&tmp, mat_size, mat_size);
+
+    copy_data(tmp, mat);
+
     while (pow > 1) {
-	mul_matrix(result, mat, tmp);
-	*tmp = *result;
+	pow--;
+	mul_matrix(result, tmp, mat);
+	copy_data(tmp, result);
     }
     return 0;
 }
@@ -228,7 +252,7 @@ int pow_matrix(matrix *result, matrix *mat, int pow) {
  */
 int neg_matrix(matrix *result, matrix *mat) {
     /* TODO: YOUR CODE HERE */
-    allocate_matrix(&result, mat ->rows, mat ->cols);
+    // allocate_matrix(&result, mat ->rows, mat ->cols);
     for (int r = 0; r < mat -> rows; r++) {
 	for (int c = 0; c < mat -> cols; c++) {
 	    result -> data[r][c] = -mat -> data[r][c];
@@ -243,7 +267,7 @@ int neg_matrix(matrix *result, matrix *mat) {
  */
 int abs_matrix(matrix *result, matrix *mat) {
     /* TODO: YOUR CODE HERE */
-    allocate_matrix(&result, mat ->rows, mat ->cols);
+    // allocate_matrix(&result, mat ->rows, mat ->cols);
     for (int r = 0; r < mat -> rows; r++) {
 	for (int c = 0; c < mat -> cols; c++) {
 	    int tmp = mat -> data[r][c];
@@ -251,5 +275,13 @@ int abs_matrix(matrix *result, matrix *mat) {
 	}
     }
     return 0;
+}
+
+void copy_data(matrix* dest, matrix* src) {
+    for (int r = 0; r < src -> rows; r++) {
+	for (int c = 0; c < src -> cols; c++) {
+	    dest -> data[r][c] = src -> data[r][c];
+	}
+    }
 }
 
