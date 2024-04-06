@@ -15,3 +15,14 @@ It seems to be fine if you don't modify `Makefile`, but I don't know why. `make`
 - In `mul_matrix`, I forget to initialize the `result` matrix's entries to all 0.
 - Use a "stupid" way to copy the previous `result` into `tmp` in `pow_matrix`. Is there any clever way to implement `pow_matrix`?
 
+## Task 2: Setup Numc
+
+Only need to modify the `setup.py` using 2 function calls. If it's done properly:
+
+- Enter the Virtual Environment
+- Type `python3.6` to enter python
+
+The output of python should be `CS61C Fall2020 Project 4: numc imported!`  
+
+## Task 3
+
