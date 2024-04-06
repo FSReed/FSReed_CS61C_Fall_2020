@@ -73,25 +73,26 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int row_offset, int col_offs
                         int rows, int cols) {
     /* TODO: YOUR CODE HERE */
      if (rows <= 0 || cols <= 0) {
-	PyErr_SetString(PyExc_ValueError, "Wrong Value!");
+	// PyErr_SetString(PyExc_ValueError, "Wrong Value!");
 	return -1;
     }
 
     if (from != NULL && ((rows + row_offset) > from -> rows || (cols + col_offset) > from -> cols)) {
-	PyErr_SetString(PyExc_ValueError, "Wrong Value!");
+	// PyErr_SetString(PyExc_ValueError, "Wrong Value!");
 	return -1;
     }
 
+    *mat = (matrix*) malloc(sizeof(matrix));
     double** data = (double**) malloc(sizeof(double*) * rows);
 
     for (int r = 0; r < rows; r++) {
 	double* rData = (double*) malloc(sizeof(double) * cols);
 	if (rData == NULL) {
-	PyErr_SetString(PyExc_RuntimeError, "Fail to Allocate!");
+	// PyErr_SetString(PyExc_RuntimeError, "Fail to Allocate!");
 	    return -1;
 	}
 	for (int c = 0; c < cols; c++) {
-	    double element = from == NULL ? 0.0 : from -> data[r][col_offset + c];
+	    double element = (from == NULL ? 0.0 : from -> data[row_offset + r][col_offset + c]);
 	    rData[c] = element;
 	}
 	data[r] = rData;
@@ -116,6 +117,7 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int row_offset, int col_offs
  */
 void deallocate_matrix(matrix *mat) {
     /* TODO: YOUR CODE HERE */
+    
 }
 
 /*
@@ -154,7 +156,10 @@ void fill_matrix(matrix *mat, double val) {
  */
 int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     /* TODO: YOUR CODE HERE */
-    check_dimension(mat1, mat2);
+    if (mat1 -> rows != mat2 -> rows || mat1 -> cols != mat2 -> cols) {
+	// PyErr_SetString(PyExc_RunTimeError, "Different dimension of two given matrices!");
+	return -1;
+    }
     allocate_matrix(&result, mat1 -> rows, mat1 -> cols);
     for (int r = 0; r < mat1 -> rows; r++) {
 	for (int c = 0; c < mat1 -> cols; c++) {
@@ -182,6 +187,23 @@ int sub_matrix(matrix *result, matrix *mat1, matrix *mat2) {
  */
 int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     /* TODO: YOUR CODE HERE */
+    /* As matrix is row oriented, the formula is:
+     * result[i * n + j] += mat1[i * n + k] * mat1[k * n + j]
+     * To use the cache locality better, the innermost loop should be iterating over j
+     */
+    if (mat1 -> cols != mat2 -> rows) {
+	// PyErr_SetString(PyExc_ValueError, "Improper dimensions of two matrices to do multiplication");
+	return -1;
+    }
+    allocate_matrix(&result, mat1 -> rows, mat2 -> cols);
+    for (int i = 0; i < result -> rows; i++) {
+	for (int k = 0; k < mat1 -> cols; k++) {
+	    for (int j = 0; j < result -> cols; j++) {
+		result -> data[i * result -> cols][j] += mat1 -> data[i * result -> cols][k] * mat2 -> data[k * result -> cols][j];
+	    }
+	}
+    }
+    return 0;
 }
 
 /*
@@ -191,6 +213,13 @@ int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
  */
 int pow_matrix(matrix *result, matrix *mat, int pow) {
     /* TODO: YOUR CODE HERE */
+    matrix* tmp = (matrix*) malloc(sizeof(matrix));
+    *tmp = *mat;
+    while (pow > 1) {
+	mul_matrix(result, mat, tmp);
+	*tmp = *result;
+    }
+    return 0;
 }
 
 /*
@@ -222,16 +251,5 @@ int abs_matrix(matrix *result, matrix *mat) {
 	}
     }
     return 0;
-}
-/*
- * Check if two matrices have same dimension
- */
-int check_dimension(matrix *mat1, matrix *mat2) {
-    if (mat1 -> rows != mat2 -> rows || mat1 -> cols != mat2 -> cols) {
-	PyErr_SetString(PyExc_RunTimeError, "Different dimension of two given matrices!");
-	return -1;
-    } else {
-	return 0;
-    }
 }
 
