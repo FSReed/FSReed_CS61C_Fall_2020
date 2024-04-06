@@ -59,6 +59,7 @@ void rand_matrix(matrix *result, unsigned int seed, double low, double high) {
  */
 int allocate_matrix(matrix **mat, int rows, int cols) {
     /* TODO: YOUR CODE HERE */
+    return allocate_matrix_ref(mat, NULL, 0, 0, rows, cols);
 }
 
 /*
@@ -71,6 +72,36 @@ int allocate_matrix(matrix **mat, int rows, int cols) {
 int allocate_matrix_ref(matrix **mat, matrix *from, int row_offset, int col_offset,
                         int rows, int cols) {
     /* TODO: YOUR CODE HERE */
+     if (rows <= 0 || cols <= 0) {
+	return -1;
+    }
+
+    if (from != NULL && ((rows + row_offset) > from -> rows || (cols + col_offset) > from -> cols)) {
+	return -1;
+    }
+
+    double** data;
+
+    for (int r = 0; r < rows; r++) {
+	double* rData = (double*) malloc(sizeof(double) * cols);
+	if (rData == NULL) {
+	    return -1;
+	}
+	for (int c = 0; c < cols; c++) {
+	    double element = from == NULL ? 0.0 : from -> data[r][col_offset + c];
+	    rData[c] = element;
+	}
+	data[r] = rData;
+    }
+
+    (*mat) -> rows = rows;
+    (*mat) -> cols = cols;
+    (*mat) -> data = data;
+    (*mat) -> ref_cnt = 1;
+    (*mat) -> is_1d = (rows == 1 || cols == 1) ? 1 : 0;
+    (*mat) -> parent = from;
+
+    return 0;
 }
 
 /*
