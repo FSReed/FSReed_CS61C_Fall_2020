@@ -73,10 +73,12 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int row_offset, int col_offs
                         int rows, int cols) {
     /* TODO: YOUR CODE HERE */
      if (rows <= 0 || cols <= 0) {
+	PyErr_SetString(PyExc_ValueError, "Wrong Value!");
 	return -1;
     }
 
     if (from != NULL && ((rows + row_offset) > from -> rows || (cols + col_offset) > from -> cols)) {
+	PyErr_SetString(PyExc_ValueError, "Wrong Value!");
 	return -1;
     }
 
@@ -85,6 +87,7 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int row_offset, int col_offs
     for (int r = 0; r < rows; r++) {
 	double* rData = (double*) malloc(sizeof(double) * cols);
 	if (rData == NULL) {
+	PyErr_SetString(PyExc_RuntimeError, "Fail to Allocate!");
 	    return -1;
 	}
 	for (int c = 0; c < cols; c++) {
@@ -151,6 +154,14 @@ void fill_matrix(matrix *mat, double val) {
  */
 int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     /* TODO: YOUR CODE HERE */
+    check_dimension(mat1, mat2);
+    allocate_matrix(&result, mat1 -> rows, mat1 -> cols);
+    for (int r = 0; r < mat1 -> rows; r++) {
+	for (int c = 0; c < mat1 -> cols; c++) {
+	    result -> data[r][c] = mat1 -> data[r][c] + mat2 -> data[r][c];
+	}
+    }
+    return 0;
 }
 
 /*
@@ -159,6 +170,9 @@ int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
  */
 int sub_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     /* TODO: YOUR CODE HERE */
+    matrix* tmp = (matrix*) malloc(sizeof(matrix));
+    neg_matrix(tmp, mat2);
+    return add_matrix(result, mat1, tmp);
 }
 
 /*
@@ -185,6 +199,13 @@ int pow_matrix(matrix *result, matrix *mat, int pow) {
  */
 int neg_matrix(matrix *result, matrix *mat) {
     /* TODO: YOUR CODE HERE */
+    allocate_matrix(&result, mat ->rows, mat ->cols);
+    for (int r = 0; r < mat -> rows; r++) {
+	for (int c = 0; c < mat -> cols; c++) {
+	    result -> data[r][c] = -mat -> data[r][c];
+	}
+    }
+    return 0;
 }
 
 /*
@@ -193,5 +214,24 @@ int neg_matrix(matrix *result, matrix *mat) {
  */
 int abs_matrix(matrix *result, matrix *mat) {
     /* TODO: YOUR CODE HERE */
+    allocate_matrix(&result, mat ->rows, mat ->cols);
+    for (int r = 0; r < mat -> rows; r++) {
+	for (int c = 0; c < mat -> cols; c++) {
+	    int tmp = mat -> data[r][c];
+	    result -> data[r][c] = tmp >= 0 ? tmp : -tmp;
+	}
+    }
+    return 0;
+}
+/*
+ * Check if two matrices have same dimension
+ */
+int check_dimension(matrix *mat1, matrix *mat2) {
+    if (mat1 -> rows != mat2 -> rows || mat1 -> cols != mat2 -> cols) {
+	PyErr_SetString(PyExc_RunTimeError, "Different dimension of two given matrices!");
+	return -1;
+    } else {
+	return 0;
+    }
 }
 
