@@ -77,7 +77,7 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int row_offset, int col_offs
 	return -1;
     }
 
-    if (from != NULL && ((rows + row_offset) > from -> rows || (cols + col_offset) > from -> cols)) {
+    if (from != NULL && ((rows + row_offset) > from->rows || (cols + col_offset) > from->cols)) {
 	// PyErr_SetString(PyExc_ValueError, "Wrong Value!");
 	return -1;
     }
@@ -92,21 +92,21 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int row_offset, int col_offs
 	    return -1;
 	}
 	for (int c = 0; c < cols; c++) {
-	    double element = (from == NULL ? 0.0 : from -> data[row_offset + r][col_offset + c]);
+	    double element = (from == NULL ? 0.0 : from->data[row_offset + r][col_offset + c]);
 	    rData[c] = element;
 	}
 	data[r] = rData;
     }
 
-    (*mat) -> rows = rows;
-    (*mat) -> cols = cols;
-    (*mat) -> data = data;
-    (*mat) -> ref_cnt = 1;
-    (*mat) -> is_1d = (rows == 1 || cols == 1) ? 1 : 0;
-    (*mat) -> parent = from;
+    (*mat)->rows = rows;
+    (*mat)->cols = cols;
+    (*mat)->data = data;
+    (*mat)->ref_cnt = 1;
+    (*mat)->is_1d = (rows == 1 || cols == 1) ? 1 : 0;
+    (*mat)->parent = from;
     
     if (from != NULL) {
-	from -> ref_cnt++;
+	from->ref_cnt++;
     }
 
     return 0;
@@ -121,16 +121,16 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int row_offset, int col_offs
  */
 void deallocate_matrix(matrix *mat) {
     /* TODO: YOUR CODE HERE */
-    if (mat == NULL || mat -> ref_cnt > 1) {
+    if (mat == NULL || mat->ref_cnt > 1) {
 	return;
     }
-    if (mat -> parent != NULL) {
-	mat -> parent -> ref_cnt--;
+    if (mat->parent != NULL) {
+	mat->parent->ref_cnt--;
     }
-    for (int r = 0; r < mat -> rows; r++) {
-	free(mat -> data[r]);
+    for (int r = 0; r < mat->rows; r++) {
+	free(mat->data[r]);
     }
-    free(mat -> data);
+    free(mat->data);
     free(mat);
 }
 
@@ -140,7 +140,7 @@ void deallocate_matrix(matrix *mat) {
  */
 double get(matrix *mat, int row, int col) {
     /* TODO: YOUR CODE HERE */
-    return mat -> data[row][col];
+    return mat->data[row][col];
 }
 
 /*
@@ -149,7 +149,7 @@ double get(matrix *mat, int row, int col) {
  */
 void set(matrix *mat, int row, int col, double val) {
     /* TODO: YOUR CODE HERE */
-    mat -> data[row][col] = val;
+    mat->data[row][col] = val;
 }
 
 /*
@@ -157,9 +157,9 @@ void set(matrix *mat, int row, int col, double val) {
  */
 void fill_matrix(matrix *mat, double val) {
     /* TODO: YOUR CODE HERE */
-    for (int r = 0; r < mat -> rows; r++) {
-	for (int c = 0; c < mat -> cols; c++) {
-	    mat -> data[r][c] = val;
+    for (int r = 0; r < mat->rows; r++) {
+	for (int c = 0; c < mat->cols; c++) {
+	    mat->data[r][c] = val;
 	}
     }
 }
@@ -170,13 +170,13 @@ void fill_matrix(matrix *mat, double val) {
  */
 int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     /* TODO: YOUR CODE HERE */
-    if (mat1 -> rows != mat2 -> rows || mat1 -> cols != mat2 -> cols) {
+    if (mat1->rows != mat2->rows || mat1->cols != mat2->cols) {
 	// PyErr_SetString(PyExc_RunTimeError, "Different dimension of two given matrices!");
 	return -1;
     }
-    // allocate_matrix(&result, mat1 -> rows, mat1 -> cols);
-    for (int r = 0; r < mat1 -> rows; r++) {
-	for (int c = 0; c < mat1 -> cols; c++) {
+    // allocate_matrix(&result, mat1->rows, mat1->cols);
+    for (int r = 0; r < mat1->rows; r++) {
+	for (int c = 0; c < mat1->cols; c++) {
 	    double tmp1 = get(mat1, r, c);
 	    double tmp2 = get(mat2, r, c);
 	    set(result, r, c, tmp1 + tmp2);
@@ -192,7 +192,7 @@ int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
 int sub_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     /* TODO: YOUR CODE HERE */
     matrix* tmp;
-    allocate_matrix(&tmp, mat1 -> rows, mat1 -> cols);
+    allocate_matrix(&tmp, mat1->rows, mat1->cols);
     neg_matrix(tmp, mat2);
     return add_matrix(result, mat1, tmp);
 }
@@ -208,23 +208,23 @@ int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
      * result[i * n + j] += mat1[i * n + k] * mat1[k * n + j]
      * To use the cache locality better, the innermost loop should be iterating over j
      */
-    if (mat1 -> cols != mat2 -> rows) {
+    if (mat1->cols != mat2->rows) {
 	// PyErr_SetString(PyExc_ValueError, "Improper dimensions of two matrices to do multiplication");
 	return -1;
     }
     // Wrong!:
-    // allocate_matrix(&result, mat1 -> rows, mat2 -> cols);
+    // allocate_matrix(&result, mat1->rows, mat2->cols);
 
-    for (int i = 0; i < result -> rows; i++) {
-	for (int j = 0; j < result -> cols; j++) {
-	    result -> data[i][j] = 0;
+    for (int i = 0; i < result->rows; i++) {
+	for (int j = 0; j < result->cols; j++) {
+	    result->data[i][j] = 0;
 	}
     }
 
-    for (int i = 0; i < result -> rows; i++) {
-	for (int k = 0; k < mat1 -> cols; k++) {
-	    for (int j = 0; j < result -> cols; j++) {
-		result -> data[i][j] += mat1 -> data[i][k] * mat2 -> data[k][j];
+    for (int i = 0; i < result->rows; i++) {
+	for (int k = 0; k < mat1->cols; k++) {
+	    for (int j = 0; j < result->cols; j++) {
+		result->data[i][j] += mat1->data[i][k] * mat2->data[k][j];
 	    }
 	}
     }
@@ -238,11 +238,11 @@ int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
  */
 int pow_matrix(matrix *result, matrix *mat, int pow) {
     /* TODO: YOUR CODE HERE */
-    if (mat -> rows != mat -> cols) {
+    if (mat->rows != mat->cols) {
 	// PyErr...
 	return -1;
     }
-    int mat_size = mat -> rows;
+    int mat_size = mat->rows;
     matrix* tmp;
     allocate_matrix(&tmp, mat_size, mat_size);
 
@@ -263,9 +263,9 @@ int pow_matrix(matrix *result, matrix *mat, int pow) {
 int neg_matrix(matrix *result, matrix *mat) {
     /* TODO: YOUR CODE HERE */
     // allocate_matrix(&result, mat ->rows, mat ->cols);
-    for (int r = 0; r < mat -> rows; r++) {
-	for (int c = 0; c < mat -> cols; c++) {
-	    result -> data[r][c] = -mat -> data[r][c];
+    for (int r = 0; r < mat->rows; r++) {
+	for (int c = 0; c < mat->cols; c++) {
+	    result->data[r][c] = -mat->data[r][c];
 	}
     }
     return 0;
@@ -278,19 +278,19 @@ int neg_matrix(matrix *result, matrix *mat) {
 int abs_matrix(matrix *result, matrix *mat) {
     /* TODO: YOUR CODE HERE */
     // allocate_matrix(&result, mat ->rows, mat ->cols);
-    for (int r = 0; r < mat -> rows; r++) {
-	for (int c = 0; c < mat -> cols; c++) {
-	    int tmp = mat -> data[r][c];
-	    result -> data[r][c] = tmp >= 0 ? tmp : -tmp;
+    for (int r = 0; r < mat->rows; r++) {
+	for (int c = 0; c < mat->cols; c++) {
+	    int tmp = mat->data[r][c];
+	    result->data[r][c] = tmp >= 0 ? tmp : -tmp;
 	}
     }
     return 0;
 }
 
 void copy_data(matrix* dest, matrix* src) {
-    for (int r = 0; r < src -> rows; r++) {
-	for (int c = 0; c < src -> cols; c++) {
-	    dest -> data[r][c] = src -> data[r][c];
+    for (int r = 0; r < src->rows; r++) {
+	for (int c = 0; c < src->cols; c++) {
+	    dest->data[r][c] = src->data[r][c];
 	}
     }
 }
