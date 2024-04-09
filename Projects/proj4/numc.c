@@ -287,6 +287,31 @@ PyObject *Matrix61c_repr(PyObject *self) {
  */
 PyObject *Matrix61c_add(Matrix61c* self, PyObject* args) {
     /* TODO: YOUR CODE HERE */
+    matrix* tmp_mat = NULL;
+    Matrix61c* new_arg = (Matrix61c*) args;
+    Matrix61c* rv = (Matrix61c*) Matrix61c_new(&Matrix61cType, NULL, NULL);
+    if (!PyObject_TypeCheck(args, &Matrix61cType)) {
+        PyErr_SetString(PyExc_TypeError, "Argument must of type numc.Matrix!");
+	return NULL;
+    }
+    if (self->mat->rows != new_arg->mat->rows || self->mat->cols != new_arg->mat->cols) {
+	PyErr_SetString(PyExc_ValueError, "Different dimension!");
+	return NULL;
+    }
+    int alloc_result = allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
+    if (alloc_result != 0) {
+	PyErr_SetString(PyExc_RuntimeError, "Allocation failed");
+	return NULL;
+    }
+
+    int add_failed = add_matrix(tmp_mat, self->mat, new_arg->mat);
+    if (add_failed) {
+	PyErr_SetString(PyExc_RuntimeError, "Addition failed");
+	return NULL;
+    }
+    rv->mat = tmp_mat;
+    rv->shape = get_shape(tmp_mat->rows, tmp_mat->cols);
+    return (PyObject*) rv;
 }
 
 /*
@@ -332,6 +357,7 @@ PyObject *Matrix61c_pow(Matrix61c *self, PyObject *pow, PyObject *optional) {
  */
 PyNumberMethods Matrix61c_as_number = {
     /* TODO: YOUR CODE HERE */
+    .nb_add = Matrix61c_add
 };
 
 
