@@ -41,7 +41,10 @@ Each thread is a software thread and OS will multiplex these threads onto hardwa
 
 ## Example -> Race Condition
 
+```Markdown
 The example has been added to the `Testcodes/openmp` folder of this repository. Check the `.c` files and the notes inside them.  
+```
+
 By the way, the original example of this lecture can be found [in this PDF](https://inst.eecs.berkeley.edu/~cs61c/fa20/pdfs/lectures/lec34.pdf). It's an example of computing $\pi$.  
 **Race Condition**: In the file `race.c`, if there are more than one threads, the output of the program would be different from the expected result. The reason is **different threads can access the same value at the same time**, then they update this value and write it back. For example, at one instant `sum` equals 10. Then `thread 1` and `thread 2` both get the value 10 and add one to that. They both write the result `11` back! But the true result of sum after this execution should be `12`! This also shows why parallelism is **non determinism**.
 
