@@ -1,0 +1,32 @@
+rm -f test
+gcc -g -Wall -std=c99 -fopenmp -mavx -mfma -pthread mat_test.c matrix.c -o test -fopenmp -lcunit -I/usr/include/python3.12 -lpython3.12
+./test
+
+
+     CUnit - A unit testing framework for C - Version 2.1-3
+     http://cunit.sourceforge.net/
+
+
+Suite: mat_test_suite
+  Test: add_test ...passed
+  Test: sub_test ...passed
+  Test: mul_test ...passed
+  Test: neg_test ...passed
+  Test: abs_test ...passed
+  Test: pow_test ...passed
+  Test: alloc_fail_test ...passed
+  Test: alloc_success_test ...passed
+  Test: alloc_ref_test ...passed
+  Test: dealloc_null_test ...passed
+  Test: get_test ...passed
+  Test: set_test ...passed
+
+Run Summary:    Type  Total    Ran Passed Failed Inactive
+              suites      1      1    n/a      0        0
+               tests     12     12     12      0        0
+             asserts     88     88     88      0      n/a
+
+Elapsed time =    0.000 seconds
+
+
+
