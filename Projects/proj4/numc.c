@@ -383,6 +383,22 @@ PyObject *Matrix61c_neg(Matrix61c* self) {
  */
 PyObject *Matrix61c_abs(Matrix61c *self) {
     /* TODO: YOUR CODE HERE */
+    Matrix61c* rv = (Matrix61c*) Matrix61c_new(&Matrix61cType, NULL, NULL);
+    matrix* tmp_mat = NULL;
+    int alloc_result = allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
+    if (alloc_result != 0) {
+	PyErr_SetString(PyExc_RuntimeError, "Allocation failed");
+	return NULL;
+    }
+
+    int abs_failed = abs_matrix(tmp_mat, self->mat);
+    if (abs_failed != 0) {
+	PyErr_SetString(PyExc_RuntimeError, "Abs failed");
+    }
+
+    rv->mat = tmp_mat;
+    rv->shape = get_shape(tmp_mat->rows, tmp_mat->cols);
+    return (PyObject*) rv;
 }
 
 /*
@@ -401,6 +417,7 @@ PyNumberMethods Matrix61c_as_number = {
     .nb_add = Matrix61c_add,
     .nb_negative = Matrix61c_neg,
     .nb_subtract = Matrix61c_sub,
+    .nb_absolute = Matrix61c_abs,
 };
 
 
