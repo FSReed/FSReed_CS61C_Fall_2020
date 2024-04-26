@@ -438,8 +438,7 @@ PyObject *Matrix61c_pow(Matrix61c *self, PyObject *pow, PyObject *optional) {
     // int* power = (int*) pow;
     // printf("power = %d\n", *power);
     int power;
-    int parse_result;
-    parse_result = PyArg_Parse(pow, "i", &power);
+    PyArg_Parse(pow, "i", &power);
 
     printf("parse result = %d\n", power);
 
@@ -495,6 +494,17 @@ PyObject *Matrix61c_set_value(Matrix61c *self, PyObject* args) {
  */
 PyObject *Matrix61c_get_value(Matrix61c *self, PyObject* args) {
     /* TODO: YOUR CODE HERE */
+    int row = 0;
+    int col = 0;
+    double result = 0.0;
+    /* This line can raise TypeError when necessary */
+    PyArg_ParseTuple(args, "ii", &row, &col);
+    if (row >= self->mat->rows || col >= self->mat->cols) {
+	PyErr_SetString(PyExc_IndexError, "Index out of bounds");
+	return NULL;
+    }
+    result = get(self->mat, row, col);
+    return Py_BuildValue("d", result);
 }
 
 /*
@@ -505,6 +515,7 @@ PyObject *Matrix61c_get_value(Matrix61c *self, PyObject* args) {
  */
 PyMethodDef Matrix61c_methods[] = {
     /* TODO: YOUR CODE HERE */
+    {"get", Matrix61c_get_value, METH_VARARGS, "get the value of a matrix"},
     {NULL, NULL, 0, NULL}
 };
 
