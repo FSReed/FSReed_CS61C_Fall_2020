@@ -353,6 +353,32 @@ PyObject *Matrix61c_sub(Matrix61c* self, PyObject* args) {
  */
 PyObject *Matrix61c_multiply(Matrix61c* self, PyObject *args) {
     /* TODO: YOUR CODE HERE */
+    matrix* tmp_mat = NULL;
+    Matrix61c* new_arg = (Matrix61c*) args;
+    Matrix61c* rv = (Matrix61c*) Matrix61c_new(&Matrix61cType, NULL, NULL);
+    if (!PyObject_TypeCheck(args, &Matrix61cType)) {
+        PyErr_SetString(PyExc_TypeError, "Argument must of type numc.Matrix!");
+	return NULL;
+    }
+    if (self->mat->cols != new_arg->mat->rows) {
+	PyErr_SetString(PyExc_ValueError, "Incorrect dimensions");
+	return NULL;
+    }
+    int alloc_result = allocate_matrix(&tmp_mat, self->mat->rows, new_arg->mat->cols);
+    if (alloc_result != 0) {
+	PyErr_SetString(PyExc_RuntimeError, "Allocation failed");
+	return NULL;
+    }
+
+    int mul_failed = mul_matrix(tmp_mat, self->mat, new_arg->mat);
+    if (mul_failed) {
+	PyErr_SetString(PyExc_RuntimeError, "Multiplication failed");
+	return NULL;
+    }
+    rv->mat = tmp_mat;
+    rv->shape = get_shape(tmp_mat->rows, tmp_mat->cols);
+    return (PyObject*) rv;
+
 }
 
 /*
@@ -406,6 +432,35 @@ PyObject *Matrix61c_abs(Matrix61c *self) {
  */
 PyObject *Matrix61c_pow(Matrix61c *self, PyObject *pow, PyObject *optional) {
     /* TODO: YOUR CODE HERE */
+    matrix* tmp_mat = NULL;
+    Matrix61c* rv = (Matrix61c*) Matrix61c_new(&Matrix61cType, NULL, NULL);
+
+    // int* power = (int*) pow;
+    // printf("power = %d\n", *power);
+    int power;
+    int parse_result;
+    parse_result = PyArg_Parse(pow, "i", &power);
+
+    printf("parse result = %d\n", power);
+
+    if (self->mat->cols != self->mat->rows) {
+	PyErr_SetString(PyExc_ValueError, "Square Matrix required");
+	return NULL;
+    }
+    int alloc_result = allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
+    if (alloc_result != 0) {
+	PyErr_SetString(PyExc_RuntimeError, "Allocation failed");
+	return NULL;
+    }
+
+    int pow_failed = pow_matrix(tmp_mat, self->mat, power);
+    if (pow_failed) {
+	PyErr_SetString(PyExc_RuntimeError, "Power failed");
+	return NULL;
+    }
+    rv->mat = tmp_mat;
+    rv->shape = get_shape(tmp_mat->rows, tmp_mat->cols);
+    return (PyObject*) rv;
 }
 
 /*
@@ -418,6 +473,8 @@ PyNumberMethods Matrix61c_as_number = {
     .nb_negative = Matrix61c_neg,
     .nb_subtract = Matrix61c_sub,
     .nb_absolute = Matrix61c_abs,
+    .nb_multiply = Matrix61c_multiply,
+    .nb_power = Matrix61c_pow,
 };
 
 
