@@ -485,6 +485,16 @@ PyNumberMethods Matrix61c_as_number = {
  */
 PyObject *Matrix61c_set_value(Matrix61c *self, PyObject* args) {
     /* TODO: YOUR CODE HERE */
+    int row = 0;
+    int col = 0;
+    double value = 0.0;
+    PyArg_ParseTuple(args, "iid", &row, &col, &value);
+    if (row >= self->mat->rows || col >= self->mat->cols) {
+	PyErr_SetString(PyExc_IndexError, "Index out of bounds");
+	return NULL;
+    }
+    set(self->mat, row, col, value);
+    return Py_BuildValue("");
 }
 
 /*
@@ -516,6 +526,7 @@ PyObject *Matrix61c_get_value(Matrix61c *self, PyObject* args) {
 PyMethodDef Matrix61c_methods[] = {
     /* TODO: YOUR CODE HERE */
     {"get", Matrix61c_get_value, METH_VARARGS, "get the value of a matrix"},
+    {"set", Matrix61c_set_value, METH_VARARGS, "set the value of a matrix"},
     {NULL, NULL, 0, NULL}
 };
 
