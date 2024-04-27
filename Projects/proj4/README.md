@@ -34,5 +34,5 @@ The [document](https://docs.python.org/3.6/c-api/index.html) can be really helpf
 - Python Number Methods:
   - We need a PyNumberMethods struct to specify the function we use. The format is `.nb_{python_method} = {function_name}`. **Remember**: use `,` at the end of each line.
   - Use `get_shape` function provided in numc.c to write the shape of the result.
-  - Throw exception when something went wrong. This is included in `Python.h` so I think the exceptions can only be thrown in `numc.c`, not in `matrix.c` if importing `Python.h` is not allowed.
+  - Throw exception when something went wrong. 
 

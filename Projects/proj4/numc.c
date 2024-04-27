@@ -294,21 +294,9 @@ PyObject *Matrix61c_add(Matrix61c* self, PyObject* args) {
         PyErr_SetString(PyExc_TypeError, "Argument must of type numc.Matrix!");
 	return NULL;
     }
-    if (self->mat->rows != new_arg->mat->rows || self->mat->cols != new_arg->mat->cols) {
-	PyErr_SetString(PyExc_ValueError, "Different dimension!");
-	return NULL;
-    }
-    int alloc_result = allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
-    if (alloc_result != 0) {
-	PyErr_SetString(PyExc_RuntimeError, "Allocation failed");
-	return NULL;
-    }
+    allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
 
-    int add_failed = add_matrix(tmp_mat, self->mat, new_arg->mat);
-    if (add_failed) {
-	PyErr_SetString(PyExc_RuntimeError, "Addition failed");
-	return NULL;
-    }
+    add_matrix(tmp_mat, self->mat, new_arg->mat);
     rv->mat = tmp_mat;
     rv->shape = get_shape(tmp_mat->rows, tmp_mat->cols);
     return (PyObject*) rv;
@@ -327,21 +315,9 @@ PyObject *Matrix61c_sub(Matrix61c* self, PyObject* args) {
         PyErr_SetString(PyExc_TypeError, "Argument must of type numc.Matrix!");
 	return NULL;
     }
-    if (self->mat->rows != new_arg->mat->rows || self->mat->cols != new_arg->mat->cols) {
-	PyErr_SetString(PyExc_ValueError, "Different dimension!");
-	return NULL;
-    }
-    int alloc_result = allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
-    if (alloc_result != 0) {
-	PyErr_SetString(PyExc_RuntimeError, "Allocation failed");
-	return NULL;
-    }
+    allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
 
-    int add_failed = sub_matrix(tmp_mat, self->mat, new_arg->mat);
-    if (add_failed) {
-	PyErr_SetString(PyExc_RuntimeError, "Subtraction failed");
-	return NULL;
-    }
+    sub_matrix(tmp_mat, self->mat, new_arg->mat);
     rv->mat = tmp_mat;
     rv->shape = get_shape(tmp_mat->rows, tmp_mat->cols);
     return (PyObject*) rv;
@@ -360,21 +336,9 @@ PyObject *Matrix61c_multiply(Matrix61c* self, PyObject *args) {
         PyErr_SetString(PyExc_TypeError, "Argument must of type numc.Matrix!");
 	return NULL;
     }
-    if (self->mat->cols != new_arg->mat->rows) {
-	PyErr_SetString(PyExc_ValueError, "Incorrect dimensions");
-	return NULL;
-    }
-    int alloc_result = allocate_matrix(&tmp_mat, self->mat->rows, new_arg->mat->cols);
-    if (alloc_result != 0) {
-	PyErr_SetString(PyExc_RuntimeError, "Allocation failed");
-	return NULL;
-    }
+    allocate_matrix(&tmp_mat, self->mat->rows, new_arg->mat->cols);
 
-    int mul_failed = mul_matrix(tmp_mat, self->mat, new_arg->mat);
-    if (mul_failed) {
-	PyErr_SetString(PyExc_RuntimeError, "Multiplication failed");
-	return NULL;
-    }
+    mul_matrix(tmp_mat, self->mat, new_arg->mat);
     rv->mat = tmp_mat;
     rv->shape = get_shape(tmp_mat->rows, tmp_mat->cols);
     return (PyObject*) rv;
@@ -388,16 +352,9 @@ PyObject *Matrix61c_neg(Matrix61c* self) {
     /* TODO: YOUR CODE HERE */
     Matrix61c* rv = (Matrix61c*) Matrix61c_new(&Matrix61cType, NULL, NULL);
     matrix* tmp_mat = NULL;
-    int alloc_result = allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
-    if (alloc_result != 0) {
-	PyErr_SetString(PyExc_RuntimeError, "Allocation failed");
-	return NULL;
-    }
+    allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
 
-    int neg_failed = neg_matrix(tmp_mat, self->mat);
-    if (neg_failed != 0) {
-	PyErr_SetString(PyExc_RuntimeError, "Negation failed");
-    }
+    neg_matrix(tmp_mat, self->mat);
 
     rv->mat = tmp_mat;
     rv->shape = get_shape(tmp_mat->rows, tmp_mat->cols);
@@ -411,16 +368,9 @@ PyObject *Matrix61c_abs(Matrix61c *self) {
     /* TODO: YOUR CODE HERE */
     Matrix61c* rv = (Matrix61c*) Matrix61c_new(&Matrix61cType, NULL, NULL);
     matrix* tmp_mat = NULL;
-    int alloc_result = allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
-    if (alloc_result != 0) {
-	PyErr_SetString(PyExc_RuntimeError, "Allocation failed");
-	return NULL;
-    }
+    allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
 
-    int abs_failed = abs_matrix(tmp_mat, self->mat);
-    if (abs_failed != 0) {
-	PyErr_SetString(PyExc_RuntimeError, "Abs failed");
-    }
+    abs_matrix(tmp_mat, self->mat);
 
     rv->mat = tmp_mat;
     rv->shape = get_shape(tmp_mat->rows, tmp_mat->cols);
@@ -438,25 +388,13 @@ PyObject *Matrix61c_pow(Matrix61c *self, PyObject *pow, PyObject *optional) {
     // int* power = (int*) pow;
     // printf("power = %d\n", *power);
     int power;
+    /* This line includes the type check */
     PyArg_Parse(pow, "i", &power);
 
-    printf("parse result = %d\n", power);
+    allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
 
-    if (self->mat->cols != self->mat->rows) {
-	PyErr_SetString(PyExc_ValueError, "Square Matrix required");
-	return NULL;
-    }
-    int alloc_result = allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
-    if (alloc_result != 0) {
-	PyErr_SetString(PyExc_RuntimeError, "Allocation failed");
-	return NULL;
-    }
+    pow_matrix(tmp_mat, self->mat, power);
 
-    int pow_failed = pow_matrix(tmp_mat, self->mat, power);
-    if (pow_failed) {
-	PyErr_SetString(PyExc_RuntimeError, "Power failed");
-	return NULL;
-    }
     rv->mat = tmp_mat;
     rv->shape = get_shape(tmp_mat->rows, tmp_mat->cols);
     return (PyObject*) rv;

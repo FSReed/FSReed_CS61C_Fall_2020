@@ -73,12 +73,12 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int row_offset, int col_offs
                         int rows, int cols) {
     /* TODO: YOUR CODE HERE */
      if (rows <= 0 || cols <= 0) {
-	// PyErr_SetString(PyExc_ValueError, "Wrong Value!");
+	PyErr_SetString(PyExc_ValueError, "Wrong Value!");
 	return -1;
     }
 
     if (from != NULL && ((rows + row_offset) > from->rows || (cols + col_offset) > from->cols)) {
-	// PyErr_SetString(PyExc_ValueError, "Wrong Value!");
+	PyErr_SetString(PyExc_ValueError, "Wrong Value!");
 	return -1;
     }
 
@@ -88,7 +88,7 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int row_offset, int col_offs
     for (int r = 0; r < rows; r++) {
 	double* rData = (double*) malloc(sizeof(double) * cols);
 	if (rData == NULL) {
-	// PyErr_SetString(PyExc_RuntimeError, "Fail to Allocate!");
+	    PyErr_SetString(PyExc_RuntimeError, "Fail to Allocate!");
 	    return -1;
 	}
 	for (int c = 0; c < cols; c++) {
@@ -171,7 +171,7 @@ void fill_matrix(matrix *mat, double val) {
 int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     /* TODO: YOUR CODE HERE */
     if (mat1->rows != mat2->rows || mat1->cols != mat2->cols) {
-	// PyErr_SetString(PyExc_RunTimeError, "Different dimension of two given matrices!");
+	PyErr_SetString(PyExc_ValueError, "Different dimension of two given matrices!");
 	return -1;
     }
     // allocate_matrix(&result, mat1->rows, mat1->cols);
@@ -209,7 +209,7 @@ int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
      * To use the cache locality better, the innermost loop should be iterating over j
      */
     if (mat1->cols != mat2->rows) {
-	// PyErr_SetString(PyExc_ValueError, "Improper dimensions of two matrices to do multiplication");
+	PyErr_SetString(PyExc_ValueError, "Improper dimensions of two matrices to do multiplication");
 	return -1;
     }
     // Wrong!:
@@ -239,7 +239,7 @@ int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
 int pow_matrix(matrix *result, matrix *mat, int pow) {
     /* TODO: YOUR CODE HERE */
     if (mat->rows != mat->cols) {
-	// PyErr...
+	PyErr_SetString(PyExc_ValueError, "Given Matrix is not a square matrix");
 	return -1;
     }
     int mat_size = mat->rows;
