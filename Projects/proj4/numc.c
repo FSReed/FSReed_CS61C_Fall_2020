@@ -406,12 +406,12 @@ PyObject *Matrix61c_pow(Matrix61c *self, PyObject *pow, PyObject *optional) {
  */
 PyNumberMethods Matrix61c_as_number = {
     /* TODO: YOUR CODE HERE */
-    .nb_add = Matrix61c_add,
-    .nb_negative = Matrix61c_neg,
-    .nb_subtract = Matrix61c_sub,
-    .nb_absolute = Matrix61c_abs,
-    .nb_multiply = Matrix61c_multiply,
-    .nb_power = Matrix61c_pow,
+    .nb_add = (binaryfunc)Matrix61c_add,
+    .nb_subtract = (binaryfunc)Matrix61c_sub,
+    .nb_multiply = (binaryfunc)Matrix61c_multiply,
+    .nb_negative = (unaryfunc)Matrix61c_neg,
+    .nb_absolute = (unaryfunc)Matrix61c_abs,
+    .nb_power = (ternaryfunc)Matrix61c_pow,
 };
 
 
@@ -463,8 +463,8 @@ PyObject *Matrix61c_get_value(Matrix61c *self, PyObject* args) {
  */
 PyMethodDef Matrix61c_methods[] = {
     /* TODO: YOUR CODE HERE */
-    {"get", Matrix61c_get_value, METH_VARARGS, "get the value of a matrix"},
-    {"set", Matrix61c_set_value, METH_VARARGS, "set the value of a matrix"},
+    {"get", (PyCFunction)Matrix61c_get_value, METH_VARARGS, "get the value of a matrix"},
+    {"set", (PyCFunction)Matrix61c_set_value, METH_VARARGS, "set the value of a matrix"},
     {NULL, NULL, 0, NULL}
 };
 
