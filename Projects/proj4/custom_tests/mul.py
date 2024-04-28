@@ -10,5 +10,6 @@ print(f"2*3 and 3*2 Matrix: {A * B}")
 
 A = nc.Matrix(2, 3);
 B = nc.Matrix(2, 3);
-print(f"Wrong Dimension test:\n {A * B}");
+print("Wrong Dimension test:");
+print(A * B)
 
