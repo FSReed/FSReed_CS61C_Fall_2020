@@ -17,6 +17,11 @@ It seems to be fine if you don't modify `Makefile`, but I don't know why. `make`
 - In `mul_matrix`, I forget to initialize the `result` matrix's entries to all 0.
 - Use a "stupid" way to copy the previous `result` into `tmp` in `pow_matrix`. Is there any clever way to implement `pow_matrix`?
 
+### Conceptual check for Task 3
+
+When implementing slice in Task3, I found the implementation of `allocate` and `deallocate` is totally wrong!  
+When creating a slice, this slice should share the same data with its parent matrix. This means **DO NOT allocate another space and copy the data from the parent!**. Instead, only create a `double**` pointer and allocate the space of `rows` pointers of the type `double`. Then manage the pointers to let them point to the right location of the original data.
+
 ## Task 2: Setup Numc
 
 Only need to modify the `setup.py` using 2 function calls. If it's done properly:

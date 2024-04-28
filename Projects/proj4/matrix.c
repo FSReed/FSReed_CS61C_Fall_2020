@@ -73,29 +73,39 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int row_offset, int col_offs
                         int rows, int cols) {
     /* TODO: YOUR CODE HERE */
      if (rows <= 0 || cols <= 0) {
-	PyErr_SetString(PyExc_ValueError, "Wrong Value!");
+	PyErr_SetString(PyExc_ValueError, "Wrong Dimension!"); 
 	return -1;
     }
 
     if (from != NULL && ((rows + row_offset) > from->rows || (cols + col_offset) > from->cols)) {
-	PyErr_SetString(PyExc_ValueError, "Wrong Value!");
+	PyErr_SetString(PyExc_ValueError, "Wrong Dimension!");
 	return -1;
     }
 
     *mat = (matrix*) malloc(sizeof(matrix));
     double** data = (double**) malloc(sizeof(double*) * rows);
 
-    for (int r = 0; r < rows; r++) {
-	double* rData = (double*) malloc(sizeof(double) * cols);
-	if (rData == NULL) {
-	    PyErr_SetString(PyExc_RuntimeError, "Fail to Allocate!");
-	    return -1;
+    if (from == NULL) {
+	for (int r = 0; r < rows; r++) {
+	    double* rData = (double*) malloc(sizeof(double) * cols);
+	    if (rData == NULL) {
+		PyErr_SetString(PyExc_RuntimeError, "Fail to Allocate!");
+		return -1;
+	    }
+	    for (int c = 0; c < cols; c++) {
+		rData[c] = 0.0;
+	    }
+	    data[r] = rData;
 	}
-	for (int c = 0; c < cols; c++) {
-	    double element = (from == NULL ? 0.0 : from->data[row_offset + r][col_offset + c]);
-	    rData[c] = element;
+    } else {
+	for (int r = 0; r < rows; r++) {
+	    double* rData = from->data[r + row_offset] + col_offset;
+	    data[r] = rData;
 	}
-	data[r] = rData;
+    }
+
+    if (from != NULL) {
+	from->ref_cnt += 1;
     }
 
     (*mat)->rows = rows;
@@ -104,10 +114,6 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int row_offset, int col_offs
     (*mat)->ref_cnt = 1;
     (*mat)->is_1d = (rows == 1 || cols == 1) ? 1 : 0;
     (*mat)->parent = from;
-    
-    if (from != NULL) {
-	from->ref_cnt++;
-    }
 
     return 0;
 }
@@ -125,13 +131,16 @@ void deallocate_matrix(matrix *mat) {
 	return;
     }
     if (mat->parent != NULL) {
-	mat->parent->ref_cnt--;
+	free(mat->data);
+	mat->parent->ref_cnt -= 1;
+	free(mat);
+    } else {
+    	for (int r = 0; r < mat->rows; r++) {
+	    free(mat->data[r]);
+	}
+	free(mat->data);
+	free(mat);
     }
-    for (int r = 0; r < mat->rows; r++) {
-	free(mat->data[r]);
-    }
-    free(mat->data);
-    free(mat);
 }
 
 /*

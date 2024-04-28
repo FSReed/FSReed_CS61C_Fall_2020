@@ -286,7 +286,7 @@ PyObject *Matrix61c_repr(PyObject *self) {
  * self, and the second operand can be obtained by casting `args`.
  */
 PyObject *Matrix61c_add(Matrix61c* self, PyObject* args) {
-    /* TODO: YOUR CODE HERE */
+    /* YOUR CODE HERE */
     matrix* tmp_mat = NULL;
     Matrix61c* new_arg = (Matrix61c*) args;
     Matrix61c* rv = (Matrix61c*) Matrix61c_new(&Matrix61cType, NULL, NULL);
@@ -307,7 +307,7 @@ PyObject *Matrix61c_add(Matrix61c* self, PyObject* args) {
  * self, and the second operand can be obtained by casting `args`.
  */
 PyObject *Matrix61c_sub(Matrix61c* self, PyObject* args) {
-    /* TODO: YOUR CODE HERE */
+    /* YOUR CODE HERE */
     matrix* tmp_mat = NULL;
     Matrix61c* new_arg = (Matrix61c*) args;
     Matrix61c* rv = (Matrix61c*) Matrix61c_new(&Matrix61cType, NULL, NULL);
@@ -328,7 +328,7 @@ PyObject *Matrix61c_sub(Matrix61c* self, PyObject* args) {
  * can be obtained by casting `args`.
  */
 PyObject *Matrix61c_multiply(Matrix61c* self, PyObject *args) {
-    /* TODO: YOUR CODE HERE */
+    /* YOUR CODE HERE */
     matrix* tmp_mat = NULL;
     Matrix61c* new_arg = (Matrix61c*) args;
     Matrix61c* rv = (Matrix61c*) Matrix61c_new(&Matrix61cType, NULL, NULL);
@@ -349,7 +349,7 @@ PyObject *Matrix61c_multiply(Matrix61c* self, PyObject *args) {
  * Negates the given numc.Matrix.
  */
 PyObject *Matrix61c_neg(Matrix61c* self) {
-    /* TODO: YOUR CODE HERE */
+    /* YOUR CODE HERE */
     Matrix61c* rv = (Matrix61c*) Matrix61c_new(&Matrix61cType, NULL, NULL);
     matrix* tmp_mat = NULL;
     allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
@@ -365,7 +365,7 @@ PyObject *Matrix61c_neg(Matrix61c* self) {
  * Take the element-wise absolute value of this numc.Matrix.
  */
 PyObject *Matrix61c_abs(Matrix61c *self) {
-    /* TODO: YOUR CODE HERE */
+    /* YOUR CODE HERE */
     Matrix61c* rv = (Matrix61c*) Matrix61c_new(&Matrix61cType, NULL, NULL);
     matrix* tmp_mat = NULL;
     allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
@@ -381,7 +381,7 @@ PyObject *Matrix61c_abs(Matrix61c *self) {
  * Raise numc.Matrix (Matrix61c) to the `pow`th power. You can ignore the argument `optional`.
  */
 PyObject *Matrix61c_pow(Matrix61c *self, PyObject *pow, PyObject *optional) {
-    /* TODO: YOUR CODE HERE */
+    /* YOUR CODE HERE */
     matrix* tmp_mat = NULL;
     Matrix61c* rv = (Matrix61c*) Matrix61c_new(&Matrix61cType, NULL, NULL);
 
@@ -405,7 +405,7 @@ PyObject *Matrix61c_pow(Matrix61c *self, PyObject *pow, PyObject *optional) {
  * define. You might find this link helpful: https://docs.python.org/3.6/c-api/typeobj.html
  */
 PyNumberMethods Matrix61c_as_number = {
-    /* TODO: YOUR CODE HERE */
+    /* YOUR CODE HERE */
     .nb_add = (binaryfunc)Matrix61c_add,
     .nb_subtract = (binaryfunc)Matrix61c_sub,
     .nb_multiply = (binaryfunc)Matrix61c_multiply,
@@ -422,7 +422,7 @@ PyNumberMethods Matrix61c_as_number = {
  * Return None in Python (this is different from returning null).
  */
 PyObject *Matrix61c_set_value(Matrix61c *self, PyObject* args) {
-    /* TODO: YOUR CODE HERE */
+    /* YOUR CODE HERE */
     int row = 0;
     int col = 0;
     double value = 0.0;
@@ -441,7 +441,7 @@ PyObject *Matrix61c_set_value(Matrix61c *self, PyObject* args) {
  * float/int.
  */
 PyObject *Matrix61c_get_value(Matrix61c *self, PyObject* args) {
-    /* TODO: YOUR CODE HERE */
+    /* YOUR CODE HERE */
     int row = 0;
     int col = 0;
     double result = 0.0;
@@ -462,7 +462,7 @@ PyObject *Matrix61c_get_value(Matrix61c *self, PyObject* args) {
  * You might find this link helpful: https://docs.python.org/3.6/c-api/structures.html
  */
 PyMethodDef Matrix61c_methods[] = {
-    /* TODO: YOUR CODE HERE */
+    /* YOUR CODE HERE */
     {"get", (PyCFunction)Matrix61c_get_value, METH_VARARGS, "get the value of a matrix"},
     {"set", (PyCFunction)Matrix61c_set_value, METH_VARARGS, "set the value of a matrix"},
     {NULL, NULL, 0, NULL}
