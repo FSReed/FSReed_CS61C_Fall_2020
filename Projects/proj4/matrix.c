@@ -192,7 +192,7 @@ int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
 int sub_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     /* TODO: YOUR CODE HERE */
     matrix* tmp;
-    allocate_matrix(&tmp, mat1->rows, mat1->cols);
+    allocate_matrix(&tmp, mat2->rows, mat2->cols);
     neg_matrix(tmp, mat2);
     return add_matrix(result, mat1, tmp);
 }

@@ -294,7 +294,7 @@ PyObject *Matrix61c_add(Matrix61c* self, PyObject* args) {
         PyErr_SetString(PyExc_TypeError, "Argument must of type numc.Matrix!");
 	return NULL;
     }
-    allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
+    allocate_matrix(&tmp_mat, new_arg->mat->rows, new_arg->mat->cols);
 
     add_matrix(tmp_mat, self->mat, new_arg->mat);
     rv->mat = tmp_mat;
@@ -315,7 +315,7 @@ PyObject *Matrix61c_sub(Matrix61c* self, PyObject* args) {
         PyErr_SetString(PyExc_TypeError, "Argument must of type numc.Matrix!");
 	return NULL;
     }
-    allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
+    allocate_matrix(&tmp_mat, new_arg->mat->rows, new_arg->mat->cols);
 
     sub_matrix(tmp_mat, self->mat, new_arg->mat);
     rv->mat = tmp_mat;

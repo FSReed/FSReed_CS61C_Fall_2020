@@ -29,10 +29,32 @@ The output of python should be `CS61C Fall2020 Project 4: numc imported!`
 
 ## Task 3
 
-The [document](https://docs.python.org/3.6/c-api/index.html) can be really helpful. I use it to parse the Python args into Integer in C.
+### Number Methods
+
+The [documentation](https://docs.python.org/3.6/c-api/index.html) can be really helpful. I use it to parse the Python args into Integer in C.
 
 - Python Number Methods:
   - We need a PyNumberMethods struct to specify the function we use. The format is `.nb_{python_method} = {function_name}`. **Remember**: use `,` at the end of each line.
   - Use `get_shape` function provided in numc.c to write the shape of the result.
   - Throw exception when something went wrong. 
+
+*Something weird*: When I launch python, and type:
+
+```Python
+import numc as nc
+
+A = nc.Matrix(2, 3, 4);
+B = nc.Matrix(3, 4, 2);
+A + B
+```
+
+And run these codes **without other operations**, **NO EXCEPTION WILL BE THROWN**. But run another `A + B`, the exception occurs.  
+If I put these codes in a python file and execute it, the exception will be thrown during the first wrong addition. Huh?
+
+### Instance Methods
+
+Read the documentation!
+
+- If the number of the arguments is wrong or the type of any argument if wrong, throw a `TypeError` exception. This can be handled by `PyArg_ParseTuple` automatically.
+- The return value is not a datatype in C. It should be a datatype in Python. `Py_BuildValue` is needed.
 
