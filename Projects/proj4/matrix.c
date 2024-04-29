@@ -73,12 +73,12 @@ int allocate_matrix_ref(matrix **mat, matrix *from, int row_offset, int col_offs
                         int rows, int cols) {
     /* TODO: YOUR CODE HERE */
      if (rows <= 0 || cols <= 0) {
-	PyErr_SetString(PyExc_ValueError, "Wrong Dimension!"); 
+	PyErr_SetString(PyExc_IndexError, "Rows and cols should be positive numbers"); 
 	return -1;
     }
 
     if (from != NULL && ((rows + row_offset) > from->rows || (cols + col_offset) > from->cols)) {
-	PyErr_SetString(PyExc_ValueError, "Wrong Dimension!");
+	PyErr_SetString(PyExc_IndexError, "Index out of bounds");
 	return -1;
     }
 

@@ -45,7 +45,7 @@ int init_fill(PyObject *self, int rows, int cols, double val) {
     return 0;
 }
 
-/*
+/*:e
  * Matrix(rows, cols, 1d_list). Fill a matrix with dimension rows * cols with 1d_list values
  */
 int init_1d(PyObject *self, int rows, int cols, PyObject *lst) {
@@ -475,6 +475,28 @@ PyMethodDef Matrix61c_methods[] = {
  */
 PyObject *Matrix61c_subscript(Matrix61c* self, PyObject* key) {
     /* TODO: YOUR CODE HERE */
+
+    Py_ssize_t row_offset = 0, col_offset = 0;
+    Py_ssize_t row = self->mat->rows, col = self->mat->cols;
+
+    int is_single_num = parse_subscript(self, key, &row_offset, &col_offset, &row, &col);
+
+    if (is_single_num == 1) {
+	double result = get(self->mat, row_offset, col_offset);
+	return Py_BuildValue("d", result);
+    } else if (is_single_num == 0) {
+	matrix* tmp_mat = NULL;
+	Matrix61c* rv = (Matrix61c*) Matrix61c_new(&Matrix61cType, NULL, NULL);
+	allocate_matrix_ref(&tmp_mat, self->mat, row_offset, col_offset, row, col);
+
+	rv->mat = tmp_mat;
+	rv->shape = get_shape(tmp_mat->rows, tmp_mat->cols);
+	return (PyObject*) rv;
+    } else {
+	/* Return value is -1, execution failed */
+	PyErr_SetString(PyExc_RuntimeError, "Something wrong happened when parsing subscripts");
+	return NULL;
+    }
 }
 
 /*
@@ -542,3 +564,90 @@ PyMODINIT_FUNC PyInit_numc(void) {
     fflush(stdout);
     return m;
 }
+
+/* return 0 if a new matrix needs to be created.
+ * if there's only a single number, return 1.
+ */
+int parse_subscript(Matrix61c* self, PyObject* key,
+			Py_ssize_t* row_offset,
+			Py_ssize_t* col_offset,
+			Py_ssize_t* row,
+			Py_ssize_t* col) {
+    if (self->mat->is_1d) {
+	if (PyTuple_Check(key)) {
+	    PyErr_SetString(PyExc_TypeError, "1D matrix only support single slice");
+	    return -1;
+	}
+
+	Py_ssize_t start, length;
+	parse_basic_info(key, &start, &length);
+
+	if (self->mat->rows == 1) {
+	    *row_offset = 0;
+	    *col_offset = start;
+	    *row = 1;
+	    *col = length;
+	    return length == 1 ? 1 : 0;
+	} else {
+	    *row_offset = start;
+	    *col_offset = 0;
+	    *row = length;
+	    *col = 1;
+	    return length == 1 ? 1 : 0;
+	}
+    } else {
+	if (PyLong_Check(key) || PySlice_Check(key)) {
+	    Py_ssize_t start, length;
+	    parse_basic_info(key, &start, &length);
+	    *row_offset = start;
+	    *col_offset = 0;
+	    *row = length;
+	    *col = self->mat->cols;
+	    return length == 1 ? 1 : 0;
+	} else if (PyTuple_Check(key) && PyTuple_Size(key) == 2) {
+
+	    PyObject* row_info = NULL;
+	    PyObject* col_info = NULL;
+
+	    Py_ssize_t row_start, row_length;
+	    Py_ssize_t col_start, col_length;
+
+	    /* This line below doesn't work and I don't know why :( * PyTuple_GetItem works fine
+	     */
+	    // PyArg_ParseTuple(key, "O|O:subscript", row_info, col_info);
+	    row_info = PyTuple_GetItem(key, 0);
+	    col_info = PyTuple_GetItem(key, 1);
+
+	    /* Parse the basic information of these two dimensions */
+	    parse_basic_info(row_info, &row_start, &row_length);
+	    parse_basic_info(col_info, &col_start, &col_length);
+	    
+	    *row_offset = row_start;
+	    *col_offset = col_start;
+	    *row = row_length;
+	    *col = col_length;
+
+	    return (row_length = 1 && col_length == 1) ? 1 : 0;
+	} else {
+	    PyErr_SetString(PyExc_TypeError, "The index can only be an integer, a single slice or a tuple of two integers/slices for a 2D matrix");
+	    return -1;
+    	}
+    }
+}
+
+/* As the function name says */
+void parse_basic_info(PyObject* key, Py_ssize_t* start, Py_ssize_t* length) {
+    if (PyLong_Check(key)) {
+	PyArg_Parse(key, "l", &start);
+	*length = 1;
+    } else if (PySlice_Check(key)) {
+	Py_ssize_t step;
+	PySlice_GetIndicesEx(key, 0, start, NULL, &step, length);
+	if (step != 1 || *length < 1) {
+	    PyErr_SetString(PyExc_ValueError, "Invalid slice info");
+	}
+    } else {
+	PyErr_SetString(PyExc_TypeError, "Invalid slice info");
+    }
+}
+

@@ -31,3 +31,11 @@ PyObject *Matrix61c_neg(Matrix61c* self);
 PyObject *Matrix61c_abs(Matrix61c *self);
 PyObject *Matrix61c_pow(Matrix61c *self, PyObject *pow, PyObject *optional);
 
+/* Custom func */
+int parse_subscript(Matrix61c* self, PyObject* key,
+			Py_ssize_t* row_offset,
+			Py_ssize_t* col_offset,
+			Py_ssize_t* row,
+			Py_ssize_t* col);
+void parse_basic_info(PyObject* key, Py_ssize_t* start, Py_ssize_t* length);
+
