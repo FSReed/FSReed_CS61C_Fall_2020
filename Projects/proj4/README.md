@@ -41,7 +41,7 @@ The [documentation](https://docs.python.org/3.6/c-api/index.html) can be really 
 - Python Number Methods:
   - We need a PyNumberMethods struct to specify the function we use. The format is `.nb_{python_method} = {function_name}`. **Remember**: use `,` at the end of each line.
   - Use `get_shape` function provided in numc.c to write the shape of the result.
-  - Throw exception when something went wrong. 
+  - Throw exception when something went wrong.
 
 ~~*Something weird*: When I launch python, and type:~~
 
@@ -56,7 +56,7 @@ A + B
 ~~And run these codes **without other operations**, **NO EXCEPTION WILL BE THROWN**. But run another `A + B`, the exception occurs.  
 If I put these codes in a python file and execute it, the exception will be thrown during the first wrong addition. Huh?~~
 
-- Update 2 days later: 
+- Update 2 days later:
   - `PyErr_SetString(...)` will only set the information that's ready to be printed. We need to call `PyErr_Print()` to print it out.
   - **It's not over yet!** Because the code will continue to run after we print the exception in `matrix.c`. Now we return from `matrix.c` and continue to execute the code in `numc.c`.
   - That's why we need to **catch the return value from `matrix.c`**, and **terminate the process in `numc.c`**. For example, return a `NULL` or something else. In addition, we can set another exception like `*** failed!` then terminate the process.
@@ -80,4 +80,3 @@ Here's what I did when implementing `Matrix61c_subscript`:
   - This can be reused in `Matrix61c_set_subscript` to locate the target slice inside the given matrix.
 - I don't use `PySlice_GetIndicesEx`. I use `PySlice_Unpack`. The [documentation](https://docs.python.org/3/c-api/slice.html) says the previous one would be deprecated since Python 3.6.1.  
   `Unpack` is simpler and makes more sense. I don't really know how to set the `length` argument in `GetIndicesEx` btw.
-
