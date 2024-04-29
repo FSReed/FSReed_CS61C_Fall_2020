@@ -43,7 +43,7 @@ The [documentation](https://docs.python.org/3.6/c-api/index.html) can be really 
   - Use `get_shape` function provided in numc.c to write the shape of the result.
   - Throw exception when something went wrong. 
 
-*Something weird*: When I launch python, and type:
+~~*Something weird*: When I launch python, and type:~~
 
 ```Python
 import numc as nc
@@ -53,8 +53,13 @@ B = nc.Matrix(3, 4, 2);
 A + B
 ```
 
-And run these codes **without other operations**, **NO EXCEPTION WILL BE THROWN**. But run another `A + B`, the exception occurs.  
-If I put these codes in a python file and execute it, the exception will be thrown during the first wrong addition. Huh?
+~~And run these codes **without other operations**, **NO EXCEPTION WILL BE THROWN**. But run another `A + B`, the exception occurs.  
+If I put these codes in a python file and execute it, the exception will be thrown during the first wrong addition. Huh?~~
+
+- Update 2 days later: 
+  - `PyErr_SetString(...)` will only set the information that's ready to be printed. We need to call `PyErr_Print()` to print it out.
+  - **It's not over yet!** Because the code will continue to run after we print the exception in `matrix.c`. Now we return from `matrix.c` and continue to execute the code in `numc.c`.
+  - That's why we need to **catch the return value from `matrix.c`**, and **terminate the process in `numc.c`**. For example, return a `NULL` or something else. In addition, we can set another exception like `*** failed!` then terminate the process.
 
 ### Instance Methods
 
@@ -62,4 +67,17 @@ Read the documentation!
 
 - If the number of the arguments is wrong or the type of any argument if wrong, throw a `TypeError` exception. This can be handled by `PyArg_ParseTuple` automatically.
 - The return value is not a datatype in C. It should be a datatype in Python. `Py_BuildValue` is needed.
+
+### Indexing
+
+I'm living upon the documentation!
+Here's what I did when implementing `Matrix61c_subscript`:  
+
+- As there are many representations of the slices, e.g., 1D and 2D behaves differently. What's more, both two arguments in the slice tuple can be integer/slice. It's a little bit complicated and I don't want to use a huge amount of `if-else`.
+- Therefore, I tried my best to reuse my code:
+  - Define a function called `parse_subscript`. I would pass the `key` to it, as well as the **pointers** of `row_offset, col_offset, row, col`. And it should modify these 4 numbers and *return 0 when succeed, -1 when failed and 1 when the target value is a single number*.
+  - Define a function called `parse_basic_info`. This is for the convenience of `parse_subscript`. It can parse **a single integer or a slice key** and tell the start position and the length of the key. This can be used multiple times in `parse_subscript`.
+  - This can be reused in `Matrix61c_set_subscript` to locate the target slice inside the given matrix.
+- I don't use `PySlice_GetIndicesEx`. I use `PySlice_Unpack`. The [documentation](https://docs.python.org/3/c-api/slice.html) says the previous one would be deprecated since Python 3.6.1.  
+  `Unpack` is simpler and makes more sense. I don't really know how to set the `length` argument in `GetIndicesEx` btw.
 

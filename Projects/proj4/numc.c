@@ -294,9 +294,11 @@ PyObject *Matrix61c_add(Matrix61c* self, PyObject* args) {
         PyErr_SetString(PyExc_TypeError, "Argument must of type numc.Matrix!");
 	return NULL;
     }
-    allocate_matrix(&tmp_mat, new_arg->mat->rows, new_arg->mat->cols);
+    int allocate_failed = allocate_matrix(&tmp_mat, new_arg->mat->rows, new_arg->mat->cols);
+    if (allocate_failed) return NULL;
 
-    add_matrix(tmp_mat, self->mat, new_arg->mat);
+    int add_failed = add_matrix(tmp_mat, self->mat, new_arg->mat);
+    if (add_failed) return NULL;
     rv->mat = tmp_mat;
     rv->shape = get_shape(tmp_mat->rows, tmp_mat->cols);
     return (PyObject*) rv;
@@ -315,9 +317,11 @@ PyObject *Matrix61c_sub(Matrix61c* self, PyObject* args) {
         PyErr_SetString(PyExc_TypeError, "Argument must of type numc.Matrix!");
 	return NULL;
     }
-    allocate_matrix(&tmp_mat, new_arg->mat->rows, new_arg->mat->cols);
+    int allocate_failed = allocate_matrix(&tmp_mat, new_arg->mat->rows, new_arg->mat->cols);
+    if (allocate_failed) return NULL;
 
-    sub_matrix(tmp_mat, self->mat, new_arg->mat);
+    int sub_failed = sub_matrix(tmp_mat, self->mat, new_arg->mat);
+    if (sub_failed) return NULL;
     rv->mat = tmp_mat;
     rv->shape = get_shape(tmp_mat->rows, tmp_mat->cols);
     return (PyObject*) rv;
@@ -336,9 +340,11 @@ PyObject *Matrix61c_multiply(Matrix61c* self, PyObject *args) {
         PyErr_SetString(PyExc_TypeError, "Argument must of type numc.Matrix!");
 	return NULL;
     }
-    allocate_matrix(&tmp_mat, self->mat->rows, new_arg->mat->cols);
+    int allocate_failed = allocate_matrix(&tmp_mat, self->mat->rows, new_arg->mat->cols);
+    if (allocate_failed) return NULL;
 
-    mul_matrix(tmp_mat, self->mat, new_arg->mat);
+    int mul_failed = mul_matrix(tmp_mat, self->mat, new_arg->mat);
+    if (mul_failed) return NULL;
     rv->mat = tmp_mat;
     rv->shape = get_shape(tmp_mat->rows, tmp_mat->cols);
     return (PyObject*) rv;
@@ -352,7 +358,8 @@ PyObject *Matrix61c_neg(Matrix61c* self) {
     /* YOUR CODE HERE */
     Matrix61c* rv = (Matrix61c*) Matrix61c_new(&Matrix61cType, NULL, NULL);
     matrix* tmp_mat = NULL;
-    allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
+    int allocate_failed = allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
+    if (allocate_failed) return NULL;
 
     neg_matrix(tmp_mat, self->mat);
 
@@ -368,7 +375,8 @@ PyObject *Matrix61c_abs(Matrix61c *self) {
     /* YOUR CODE HERE */
     Matrix61c* rv = (Matrix61c*) Matrix61c_new(&Matrix61cType, NULL, NULL);
     matrix* tmp_mat = NULL;
-    allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
+    int allocate_failed = allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
+    if (allocate_failed) return NULL;
 
     abs_matrix(tmp_mat, self->mat);
 
@@ -391,9 +399,11 @@ PyObject *Matrix61c_pow(Matrix61c *self, PyObject *pow, PyObject *optional) {
     /* This line includes the type check */
     PyArg_Parse(pow, "i", &power);
 
-    allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
+    int allocate_failed = allocate_matrix(&tmp_mat, self->mat->rows, self->mat->cols);
+    if (allocate_failed) return NULL;
 
-    pow_matrix(tmp_mat, self->mat, power);
+    int pow_failed = pow_matrix(tmp_mat, self->mat, power);
+    if (pow_failed) return NULL;
 
     rv->mat = tmp_mat;
     rv->shape = get_shape(tmp_mat->rows, tmp_mat->cols);
@@ -487,7 +497,9 @@ PyObject *Matrix61c_subscript(Matrix61c* self, PyObject* key) {
     } else if (is_single_num == 0) {
 	matrix* tmp_mat = NULL;
 	Matrix61c* rv = (Matrix61c*) Matrix61c_new(&Matrix61cType, NULL, NULL);
-	allocate_matrix_ref(&tmp_mat, self->mat, row_offset, col_offset, row, col);
+
+	int allocate_failed = allocate_matrix_ref(&tmp_mat, self->mat, row_offset, col_offset, row, col);
+	if (allocate_failed) return NULL;
 
 	rv->mat = tmp_mat;
 	rv->shape = get_shape(tmp_mat->rows, tmp_mat->cols);
@@ -576,6 +588,7 @@ int parse_subscript(Matrix61c* self, PyObject* key,
     if (self->mat->is_1d) {
 	if (PyTuple_Check(key)) {
 	    PyErr_SetString(PyExc_TypeError, "1D matrix only support single slice");
+	    PyErr_Print();
 	    return -1;
 	}
 
@@ -630,6 +643,7 @@ int parse_subscript(Matrix61c* self, PyObject* key,
 	    return (row_length = 1 && col_length == 1) ? 1 : 0;
 	} else {
 	    PyErr_SetString(PyExc_TypeError, "The index can only be an integer, a single slice or a tuple of two integers/slices for a 2D matrix");
+	    PyErr_Print();
 	    return -1;
     	}
     }
@@ -638,13 +652,15 @@ int parse_subscript(Matrix61c* self, PyObject* key,
 /* As the function name says */
 void parse_basic_info(PyObject* key, Py_ssize_t* start, Py_ssize_t* length) {
     if (PyLong_Check(key)) {
-	PyArg_Parse(key, "l", &start);
+	PyArg_Parse(key, "l", start);
 	*length = 1;
     } else if (PySlice_Check(key)) {
-	Py_ssize_t step;
-	PySlice_GetIndicesEx(key, 0, start, NULL, &step, length);
+	Py_ssize_t stop, step;
+	PySlice_Unpack(key, start, &stop, &step);
+	*length = stop - *start;
 	if (step != 1 || *length < 1) {
 	    PyErr_SetString(PyExc_ValueError, "Invalid slice info");
+	    PyErr_Print();
 	}
     } else {
 	PyErr_SetString(PyExc_TypeError, "Invalid slice info");
