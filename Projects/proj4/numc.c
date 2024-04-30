@@ -484,7 +484,7 @@ PyMethodDef Matrix61c_methods[] = {
  * Given a numc.Matrix `self`, index into it with `key`. Return the indexed result.
  */
 PyObject *Matrix61c_subscript(Matrix61c* self, PyObject* key) {
-    /* TODO: YOUR CODE HERE */
+    /* YOUR CODE HERE */
 
     Py_ssize_t row_offset = 0, col_offset = 0;
     Py_ssize_t row = self->mat->rows, col = self->mat->cols;
@@ -516,6 +516,66 @@ PyObject *Matrix61c_subscript(Matrix61c* self, PyObject* key) {
  */
 int Matrix61c_set_subscript(Matrix61c* self, PyObject *key, PyObject *v) {
     /* TODO: YOUR CODE HERE */
+    Py_ssize_t row_offset = 0, col_offset = 0;
+    Py_ssize_t row = self->mat->rows, col = self->mat->cols;
+
+    int is_single_num = parse_subscript(self, key, &row_offset, &col_offset, &row, &col);
+
+    if (is_single_num == -1) {
+	PyErr_SetString(PyExc_RuntimeError, "Something wrong happened when parsing subscripts");
+	return -1;
+    } else if (is_single_num == 1) {
+	if (!PyLong_Check(v) || !PyFloat_Check(v)) {
+	    PyErr_SetString(PyExc_TypeError, "Resulting slice is 1 by 1, but v is not a float or int.");
+	    return -1;
+	}
+	double target;
+	PyArg_Parse(v, "d", &target);
+	set(self->mat, row_offset, col_offset, target);
+	return 0;
+    } else {
+	/* 2D matrix */
+	if (!PyList_Check(v)) {
+	    PyErr_SetString(PyExc_TypeError, "Resulting slice is not 1 by 1, but v is not a list.");
+	    return -1;
+	}
+	/* Set the values */
+	if (col == 1) {
+	    /* Resulting slice's col equals 1 */
+	    if (PyList_Size(v) != row) {
+		PyErr_SetString(PyExc_ValueError, "Wrong size of the input list");
+		return -1;
+	    }
+	    /* TODO: fill_column */
+	    PyObject* element = NULL;
+	    double* tmp = (double*) malloc(sizeof(double) * row);
+
+	    for (Py_ssize_t r = 0; r < row; r++) {
+		element = PyList_GetItem(v, r);
+		if (!PyLong_Check(element) && !PyFloat_Check(element)) {
+		    PyErr_SetString(PyExc_ValueError, "Element should be a single number");
+		    return -1;
+		}
+		PyArg_Parse(element, "d", tmp + r);
+	    }
+	    for (int r = row_offset; r < row + row_offset; r++) {
+		set(self->mat, r, 1, tmp[r - row_offset]);
+	    }
+
+	    free(tmp);
+	    return 0;
+	} else {
+	    /* Fill each row of the slice */
+	    if (PyList_Size(v) != row) {
+		PyErr_SetString(PyExc_ValueError, "Wrong size of the input list");
+		return -1;
+	    }
+	    for (int r = row_offset; r < row + row_offset; r++) {
+		/* TODO: fill_row */
+	    }
+	    return 0;
+	}
+    }
 }
 
 PyMappingMethods Matrix61c_mapping = {
@@ -616,7 +676,10 @@ int parse_subscript(Matrix61c* self, PyObject* key,
 	    *col_offset = 0;
 	    *row = length;
 	    *col = self->mat->cols;
-	    return length == 1 ? 1 : 0;
+	    /* Bug:
+	     * return length == 1 ? 1 : 0;
+	     */
+	    return 0;
 	} else if (PyTuple_Check(key) && PyTuple_Size(key) == 2) {
 
 	    PyObject* row_info = NULL;
@@ -640,7 +703,7 @@ int parse_subscript(Matrix61c* self, PyObject* key,
 	    *row = row_length;
 	    *col = col_length;
 
-	    return (row_length = 1 && col_length == 1) ? 1 : 0;
+	    return (row_length == 1 && col_length == 1) ? 1 : 0;
 	} else {
 	    PyErr_SetString(PyExc_TypeError, "The index can only be an integer, a single slice or a tuple of two integers/slices for a 2D matrix");
 	    PyErr_Print();
