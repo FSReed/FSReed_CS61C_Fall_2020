@@ -525,7 +525,7 @@ int Matrix61c_set_subscript(Matrix61c* self, PyObject *key, PyObject *v) {
 	PyErr_SetString(PyExc_RuntimeError, "Something wrong happened when parsing subscripts");
 	return -1;
     } else if (is_single_num == 1) {
-	if (!PyLong_Check(v) || !PyFloat_Check(v)) {
+	if (!PyLong_Check(v) && !PyFloat_Check(v)) {
 	    PyErr_SetString(PyExc_TypeError, "Resulting slice is 1 by 1, but v is not a float or int.");
 	    return -1;
 	}
