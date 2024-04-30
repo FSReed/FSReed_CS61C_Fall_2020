@@ -540,39 +540,75 @@ int Matrix61c_set_subscript(Matrix61c* self, PyObject *key, PyObject *v) {
 	    return -1;
 	}
 	/* Set the values */
-	if (col == 1) {
-	    /* Resulting slice's col equals 1 */
-	    if (PyList_Size(v) != row) {
+	if (row == 1 || col == 1) {
+	    /* Resulting slice is a 1D array.
+	     * row_label == 1 indicates this is a row_array,
+	     * col_label == 1 indicates this is a col_array.
+	     */
+	    int row_label = (row == 1) ? 1 : 0;
+	    int col_label = 1 - row_label;
+
+	    int total_num = col * row_label + row * col_label;
+	    if (PyList_Size(v) != total_num) {
 		PyErr_SetString(PyExc_ValueError, "Wrong size of the input list");
 		return -1;
 	    }
-	    /* TODO: fill_column */
+	    /* fill the array */
 	    PyObject* element = NULL;
-	    double* tmp = (double*) malloc(sizeof(double) * row);
+	    double* tmp = (double*) malloc(sizeof(double) * total_num);
 
-	    for (Py_ssize_t r = 0; r < row; r++) {
-		element = PyList_GetItem(v, r);
+	    for (Py_ssize_t p = 0; p < total_num; p++) {
+		element = PyList_GetItem(v, p);
 		if (!PyLong_Check(element) && !PyFloat_Check(element)) {
 		    PyErr_SetString(PyExc_ValueError, "Element should be a single number");
 		    return -1;
 		}
-		PyArg_Parse(element, "d", tmp + r);
+		PyArg_Parse(element, "d", tmp + p);
 	    }
-	    for (int r = row_offset; r < row + row_offset; r++) {
-		set(self->mat, r, 1, tmp[r - row_offset]);
+	    /* Prepare to fill in */
+	    for (int position = 0; position < total_num; position++) {
+		set(self->mat, row_offset + position * col_label,
+		       	col_offset + position * row_label, tmp[position]);
 	    }
 
 	    free(tmp);
 	    return 0;
 	} else {
-	    /* Fill each row of the slice */
+	    /* TODO: Fill in a 2D slice */
 	    if (PyList_Size(v) != row) {
 		PyErr_SetString(PyExc_ValueError, "Wrong size of the input list");
 		return -1;
 	    }
-	    for (int r = row_offset; r < row + row_offset; r++) {
-		/* TODO: fill_row */
+
+	    double** tmp = (double**) malloc(sizeof(double*) * row);
+	    PyObject* row_array = NULL;
+	    PyObject* element = NULL;
+	    double target;
+	    for (int r = 0; r < row; r++) {
+		tmp[r] = (double*) malloc(sizeof(double) * col);
+		row_array = PyList_GetItem(v, r);
+		if (!PyList_Check(row_array) || PyList_Size(row_array) != col) {
+		    PyErr_SetString(PyExc_RuntimeError, "Some row in the list is invalid");
+		}
+		for (int c = 0; c < col; c++) {
+		    element = PyList_GetItem(row_array, c);
+		    if (!PyLong_Check(element) && !PyFloat_Check(element)) {
+			PyErr_SetString(PyExc_TypeError, "Element should be a single number");
+			return -1;
+		    }
+		    PyArg_Parse(element, "d", &target);
+		    tmp[r][c] = target;
+		}
 	    }
+	    
+	    /* Fill in the elements */
+	    for (int r = 0; r < row; r++) {
+		for (int c = 0; c < col; c++) {
+		    set(self->mat, row_offset + r, col_offset + c, tmp[r][c]);
+		}
+		free(tmp[r]);
+	    }
+	    free(tmp);
 	    return 0;
 	}
     }

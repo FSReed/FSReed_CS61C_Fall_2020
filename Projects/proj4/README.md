@@ -80,3 +80,10 @@ Here's what I did when implementing `Matrix61c_subscript`:
   - This can be reused in `Matrix61c_set_subscript` to locate the target slice inside the given matrix.
 - I don't use `PySlice_GetIndicesEx`. I use `PySlice_Unpack`. The [documentation](https://docs.python.org/3/c-api/slice.html) says the previous one would be deprecated since Python 3.6.1.  
   `Unpack` is simpler and makes more sense. I don't really know how to set the `length` argument in `GetIndicesEx` btw.
+
+In `set_subscript`:
+
+- First, I treat 1D col-arrays and 1D row-arrays differently because I think fill multiple rows can be done by filling in one row multiple times. But I found parsing the given value `v` depends on whether the slice is 1D.
+- So I integrate all 1D arrays into one case by setting a `row_flag` and a `col_flag`. And $row_flag + col_flag == 1$.
+- In both cases (1D and 2D), I **allocate an additional space to store the values** and check if they are valid. The reason is: **If I do these conceptual checks during setting the values, some of these values may be polluted on failure.**
+
