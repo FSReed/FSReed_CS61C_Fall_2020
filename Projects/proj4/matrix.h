@@ -29,4 +29,5 @@ int abs_matrix(matrix *result, matrix *mat);
 /* I add this method on my own
  */
 void copy_data(matrix *dests, matrix *src);
+int transpose_matrix(matrix* result, matrix* mat);
 

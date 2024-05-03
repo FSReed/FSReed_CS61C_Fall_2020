@@ -218,7 +218,9 @@ int sub_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     matrix* tmp;
     allocate_matrix(&tmp, mat2->rows, mat2->cols);
     neg_matrix(tmp, mat2);
-    return add_matrix(result, mat1, tmp);
+    int add_success = add_matrix(result, mat1, tmp);
+    free(tmp);
+    return add_success;
 }
 
 /*
@@ -232,7 +234,9 @@ int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     /* By Me: */
     /* As matrix is row oriented, the formula is:
      * result[i * n + j] += mat1[i * n + k] * mat1[k * n + j]
-     * To use the cache locality better, the innermost loop should be iterating over j
+     * And!
+     * result[i * n + j] += mat1[i * n + k] * transpose[j * n + k]
+     * To use the cache locality better, the innermost loop should be iterating over k when using tranposed mat2!
      */
     if (mat1->cols != mat2->rows) {
 	PyErr_SetString(PyExc_ValueError, "Improper dimensions of two matrices to do multiplication");
@@ -243,27 +247,30 @@ int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     // allocate_matrix(&result, mat1->rows, mat2->cols);
 
     fill_matrix(result, 0.0);
-    __m256d current_result, tmp_result, mat1_elm, mat2_elm;
+    /* Transpose the second matrix */
+    matrix* transpose = NULL;
+    allocate_matrix(&transpose, mat2->cols, mat2->rows);
+    transpose_matrix(transpose, mat2);
+
+    __m256d current_result, mat1_elm, mat2_elm;
 
     for (int i = 0; i < result->rows; i++) {
-	for (int k = 0; k < mat1->cols; k++) {
-
-	    double mat1_val = mat1->data[i][k];
-	    mat1_elm = _mm256_set1_pd(mat1_val);
-
-	    for (int j = 0; j < result->cols / 4; j++) {
+	for (int j = 0; j <  result->cols; j++) {
+	    for (int k = 0; k < mat1->cols / 4; k++) {
 		// result->data[i][j] += mat1->data[i][k] * mat2->data[k][j];
-		mat2_elm = _mm256_loadu_pd(mat2->data[k] + j * 4);
-		tmp_result = _mm256_mul_pd(mat1_elm, mat2_elm);
+		mat1_elm = _mm256_loadu_pd(mat1->data[i] + k * 4);
+		mat2_elm = _mm256_loadu_pd(transpose->data[j] + k * 4);
 		current_result = _mm256_loadu_pd(result->data[i] + j * 4);
-		current_result = _mm256_add_pd(tmp_result, current_result);
+		current_result = _mm256_fmadd_pd(mat1_elm, mat2_elm, current_result);
 		_mm256_storeu_pd(result->data[i] + j * 4, current_result);
 	    }
-	    for (int j = result->cols / 4 * 4; j < result->cols; j++) {
-		result->data[i][j] += mat1_val * mat2->data[k][j];
+	    for (int k = mat1->cols / 4 * 4; k < mat1->cols; k++) {
+		result->data[i][j] += mat1->data[i][k] * mat2->data[j][k];
 	    }
 	}
     }
+
+    deallocate_matrix(transpose);
     return 0;
 }
 
@@ -336,5 +343,27 @@ void copy_data(matrix* dest, matrix* src) {
 	    dest->data[r][c] = src->data[r][c];
 	}
     }
+}
+
+int transpose_matrix(matrix* result, matrix* mat) {
+
+    /* This piece of code comes from lab07 */
+    if (result->rows != mat->cols || result->cols != mat->rows) {
+	PyErr_SetString(PyExc_RuntimeError, "Can't transpose!");
+	PyErr_Print();
+	return -1;
+    }
+    int row = 0, col = 0, blocksize = 20;
+    for (row = 0; row < mat->rows; row += blocksize) {
+	for (col = 0; col < mat->cols; col += blocksize) {
+	    for (int x = row; x < row + blocksize && x < mat->rows; x++) {
+		for (int y = col; y < col + blocksize && y < mat->cols; y++) {
+		    /* dst[x + y * n] = src[x * n + y]; */
+		    result->data[y][x] = mat->data[x][y];
+		}
+	    }
+	}
+    }
+    return 0;
 }
 
