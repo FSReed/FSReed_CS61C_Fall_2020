@@ -228,6 +228,8 @@ int sub_matrix(matrix *result, matrix *mat1, matrix *mat2) {
  */
 int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     /* TODO: YOUR CODE HERE */
+
+    /* By Me: */
     /* As matrix is row oriented, the formula is:
      * result[i * n + j] += mat1[i * n + k] * mat1[k * n + j]
      * To use the cache locality better, the innermost loop should be iterating over j
@@ -240,16 +242,25 @@ int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     // Wrong!:
     // allocate_matrix(&result, mat1->rows, mat2->cols);
 
-    for (int i = 0; i < result->rows; i++) {
-	for (int j = 0; j < result->cols; j++) {
-	    result->data[i][j] = 0;
-	}
-    }
+    fill_matrix(result, 0.0);
+    __m256d current_result, tmp_result, mat1_elm, mat2_elm;
 
     for (int i = 0; i < result->rows; i++) {
 	for (int k = 0; k < mat1->cols; k++) {
-	    for (int j = 0; j < result->cols; j++) {
-		result->data[i][j] += mat1->data[i][k] * mat2->data[k][j];
+
+	    double mat1_val = mat1->data[i][k];
+	    mat1_elm = _mm256_set1_pd(mat1_val);
+
+	    for (int j = 0; j < result->cols / 4; j++) {
+		// result->data[i][j] += mat1->data[i][k] * mat2->data[k][j];
+		mat2_elm = _mm256_loadu_pd(mat2->data[k] + j * 4);
+		tmp_result = _mm256_mul_pd(mat1_elm, mat2_elm);
+		current_result = _mm256_loadu_pd(result->data[i] + j * 4);
+		current_result = _mm256_add_pd(tmp_result, current_result);
+		_mm256_storeu_pd(result->data[i] + j * 4, current_result);
+	    }
+	    for (int j = result->cols / 4 * 4; j < result->cols; j++) {
+		result->data[i][j] += mat1_val * mat2->data[k][j];
 	    }
 	}
     }
@@ -289,8 +300,14 @@ int pow_matrix(matrix *result, matrix *mat, int pow) {
 int neg_matrix(matrix *result, matrix *mat) {
     /* TODO: YOUR CODE HERE */
     // allocate_matrix(&result, mat ->rows, mat ->cols);
+    __m256d tmp = _mm256_setzero_pd();
+
     for (int r = 0; r < mat->rows; r++) {
-	for (int c = 0; c < mat->cols; c++) {
+	for (int c = 0; c < mat->cols / 4; c++) {
+	    tmp = _mm256_loadu_pd(mat->data[r] + c * 4);
+	    _mm256_storeu_pd(result->data[r] + c * 4, tmp);
+	}
+	for (int c = mat->cols / 4 * 4; c < mat->cols; c++) {
 	    result->data[r][c] = -mat->data[r][c];
 	}
     }
