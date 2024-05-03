@@ -188,11 +188,22 @@ int add_matrix(matrix *result, matrix *mat1, matrix *mat2) {
 	return -1;
     }
     // allocate_matrix(&result, mat1->rows, mat1->cols);
+    __m256d tmp_A = _mm256_setzero_pd();
+    __m256d tmp_B = _mm256_setzero_pd();
+    __m256d current = _mm256_setzero_pd();
+
     for (int r = 0; r < mat1->rows; r++) {
-	for (int c = 0; c < mat1->cols; c++) {
-	    double tmp1 = get(mat1, r, c);
-	    double tmp2 = get(mat2, r, c);
-	    set(result, r, c, tmp1 + tmp2);
+	for (int c = 0; c < mat1->cols / 4; c++) {
+	    // double tmp1 = get(mat1, r, c);
+	    // double tmp2 = get(mat2, r, c);
+	    // set(result, r, c, tmp1 + tmp2);
+	    tmp_A = _mm256_loadu_pd(mat1->data[r] + c * 4);
+	    tmp_B = _mm256_loadu_pd(mat2->data[r] + c * 4);
+	    current = _mm256_add_pd(tmp_A, tmp_B);
+	    _mm256_storeu_pd(result->data[r] + c * 4, current);
+	}
+	for (int c = mat1->cols / 4 * 4; c < mat1->cols; c++) {
+	    set(result, r, c, get(mat1, r, c) + get(mat2, r, c));
 	}
     }
     return 0;
