@@ -22,7 +22,7 @@ It seems to be fine if you don't modify `Makefile`, but I don't know why. `make`
 When implementing slice in Task3, I found the implementation of `allocate` and `deallocate` is totally wrong!  
 When creating a slice, this slice should share the same data with its parent matrix. This means **DO NOT allocate another space and copy the data from the parent!**. Instead, only create a `double**` pointer and allocate the space of `rows` pointers of the type `double`. Then manage the pointers to let them point to the right location of the original data.
 
-## Task 2: Setup Numc
+## Task 2: Setup numc
 
 Only need to modify the `setup.py` using 2 function calls. If it's done properly:
 
@@ -93,8 +93,7 @@ In `set_subscript`:
 
 **Key Problem**: `mul_matrix`.
 
-1. I use `-mm256_set1_pd()` to store 4 same values in mat1, and use SIMD to multiply 4 mat2 values at the same time. This is simple, but there's no acceleration at all.
+1. I use `_mm256_set1_pd()` to store 4 same values in mat1, and use SIMD to multiply 4 mat2 values at the same time. This is simple, but there's no acceleration at all.
 2. I figured out there's no way to use SIMD on both mat1 and mat2 at the same time because I can't access one of these two's adjacent memory addresses. This is proved on [Fall22 Project4](https://inst.eecs.berkeley.edu/~cs61c/fa22/projects/proj4/#task-2-speeding-up-matrix-operations), it says:
-   - `To vectorize the dot product (multiplication and addition) operations in matrix multiplication, consider transposing the second matrix so that the elements in a column are located at adjacent memory addresses.`
-   So I need to implement matrix transposing first.
-
+   - `To vectorize the dot product (multiplication and addition) operations in matrix multiplication, consider transposing the second matrix so that the elements in a column are located at adjacent memory addresses.`  
+   So I need to implement matrix transposing first..
