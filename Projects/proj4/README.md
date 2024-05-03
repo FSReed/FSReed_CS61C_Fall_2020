@@ -87,3 +87,14 @@ In `set_subscript`:
 - So I integrate all 1D arrays into one case by setting a `row_flag` and a `col_flag`. And $row_flag + col_flag == 1$.
 - In both cases (1D and 2D), I **allocate an additional space to store the values** and check if they are valid. The reason is: **If I do these conceptual checks during setting the values, some of these values may be polluted on failure.**
 
+## Optimization
+
+### SIMD
+
+**Key Problem**: `mul_matrix`.
+
+1. I use `-mm256_set1_pd()` to store 4 same values in mat1, and use SIMD to multiply 4 mat2 values at the same time. This is simple, but there's no acceleration at all.
+2. I figured out there's no way to use SIMD on both mat1 and mat2 at the same time because I can't access one of these two's adjacent memory addresses. This is proved on [Fall22 Project4](https://inst.eecs.berkeley.edu/~cs61c/fa22/projects/proj4/#task-2-speeding-up-matrix-operations), it says:
+   - `To vectorize the dot product (multiplication and addition) operations in matrix multiplication, consider transposing the second matrix so that the elements in a column are located at adjacent memory addresses.`
+   So I need to implement matrix transposing first.
+
