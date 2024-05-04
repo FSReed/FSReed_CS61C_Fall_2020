@@ -24,7 +24,7 @@
  * __m256d _mm256_cmp_pd (__m256d a, __m256d b, const int imm8)
  * __m256d _mm256_and_pd (__m256d a, __m256d b)
  * __m256d _mm256_max_pd (__m256d a, __m256d b)
-*/
+ */
 
 /*
  * Generates a random double between `low` and `high`.
@@ -41,9 +41,9 @@ double rand_double(double low, double high) {
 void rand_matrix(matrix *result, unsigned int seed, double low, double high) {
     srand(seed);
     for (int i = 0; i < result->rows; i++) {
-        for (int j = 0; j < result->cols; j++) {
-            set(result, i, j, rand_double(low, high));
-        }
+	for (int j = 0; j < result->cols; j++) {
+	    set(result, i, j, rand_double(low, high));
+	}
     }
 }
 
@@ -70,9 +70,9 @@ int allocate_matrix(matrix **mat, int rows, int cols) {
  * Return 0 upon success and non-zero upon failure.
  */
 int allocate_matrix_ref(matrix **mat, matrix *from, int row_offset, int col_offset,
-                        int rows, int cols) {
+	int rows, int cols) {
     /* TODO: YOUR CODE HERE */
-     if (rows <= 0 || cols <= 0) {
+    if (rows <= 0 || cols <= 0) {
 	PyErr_SetString(PyExc_IndexError, "Rows and cols should be positive numbers"); 
 	PyErr_Print();
 	return -1;
@@ -138,7 +138,7 @@ void deallocate_matrix(matrix *mat) {
 	mat->parent->ref_cnt -= 1;
 	free(mat);
     } else {
-    	for (int r = 0; r < mat->rows; r++) {
+	for (int r = 0; r < mat->rows; r++) {
 	    free(mat->data[r]);
 	}
 	free(mat->data);
@@ -252,25 +252,33 @@ int mul_matrix(matrix *result, matrix *mat1, matrix *mat2) {
     allocate_matrix(&transpose, mat2->cols, mat2->rows);
     transpose_matrix(transpose, mat2);
 
-    __m256d current_result, mat1_elm, mat2_elm;
+    __m256d current_result, tmp_result, mat1_elm, mat2_elm;
+    double* tmp_array = (double*) malloc(sizeof(double) * 4);
 
     for (int i = 0; i < result->rows; i++) {
-	for (int j = 0; j <  result->cols; j++) {
+	for (int j = 0; j < result->cols; j++) {
+
+	    current_result = _mm256_setzero_pd();
+
 	    for (int k = 0; k < mat1->cols / 4; k++) {
 		// result->data[i][j] += mat1->data[i][k] * mat2->data[k][j];
 		mat1_elm = _mm256_loadu_pd(mat1->data[i] + k * 4);
 		mat2_elm = _mm256_loadu_pd(transpose->data[j] + k * 4);
-		current_result = _mm256_loadu_pd(result->data[i] + j * 4);
-		current_result = _mm256_fmadd_pd(mat1_elm, mat2_elm, current_result);
-		_mm256_storeu_pd(result->data[i] + j * 4, current_result);
+		tmp_result = _mm256_mul_pd(mat1_elm, mat2_elm);
+		current_result = _mm256_add_pd(tmp_result, current_result);
+	    }
+	    _mm256_storeu_pd(tmp_array, current_result);
+	    for (int p = 0; p < 4; p++) {
+		result->data[i][j] += tmp_array[p];
 	    }
 	    for (int k = mat1->cols / 4 * 4; k < mat1->cols; k++) {
-		result->data[i][j] += mat1->data[i][k] * mat2->data[j][k];
+		result->data[i][j] += mat1->data[i][k] * transpose->data[j][k];
 	    }
 	}
     }
 
     deallocate_matrix(transpose);
+    free(tmp_array);
     return 0;
 }
 

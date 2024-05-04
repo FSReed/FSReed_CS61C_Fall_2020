@@ -1,7 +1,7 @@
 import numc as nc
 import time
 
-SIZE = 2000;
+SIZE = 3000;
 print(f"Size of the square matrix is {SIZE} * {SIZE}");
 
 A = nc.Matrix(SIZE, SIZE, 2.3);

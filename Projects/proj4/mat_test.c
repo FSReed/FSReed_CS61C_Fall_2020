@@ -105,6 +105,26 @@ void neg_test(void) {
     deallocate_matrix(mat);
 }
 
+void transpose_test(void) {
+    matrix *result = NULL;
+    matrix *mat = NULL;
+    CU_ASSERT_EQUAL(allocate_matrix(&result, 15, 13), 0);
+    CU_ASSERT_EQUAL(allocate_matrix(&mat, 13, 15), 0);
+    for (int i = 0; i < 13; i++) {
+        for (int j = 0; j < 15; j++) {
+            set(mat, i, j, i * 2 + j);
+        }
+    }
+    transpose_matrix(result, mat);
+    for (int i = 0; i < 15; i++) {
+        for (int j = 0; j < 13; j++) {
+            CU_ASSERT_EQUAL(get(result, i, j), get(mat, j, i));
+        }
+    }
+    deallocate_matrix(result);
+    deallocate_matrix(mat);
+}
+
 void abs_test(void) {
     matrix *result = NULL;
     matrix *mat = NULL;
@@ -271,6 +291,7 @@ int main(void) {
             (CU_add_test(pSuite, "sub_test", sub_test) == NULL) ||
             (CU_add_test(pSuite, "mul_test", mul_test) == NULL) ||
             (CU_add_test(pSuite, "neg_test", neg_test) == NULL) ||
+            (CU_add_test(pSuite, "transpose_test", transpose_test) == NULL) ||
             (CU_add_test(pSuite, "abs_test", abs_test) == NULL) ||
             (CU_add_test(pSuite, "pow_test", pow_test) == NULL) ||
             (CU_add_test(pSuite, "alloc_fail_test", alloc_fail_test) == NULL) ||
