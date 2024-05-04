@@ -1,0 +1,25 @@
+Optimized adjacent: 1 thread(s) took 0.742625 seconds
+Optimized adjacent: 2 thread(s) took 0.717393 seconds
+Optimized adjacent: 3 thread(s) took 0.710562 seconds
+Optimized adjacent: 4 thread(s) took 0.711197 seconds
+Optimized adjacent: 5 thread(s) took 0.730504 seconds
+Optimized adjacent: 6 thread(s) took 0.752765 seconds
+Optimized adjacent: 7 thread(s) took 0.817423 seconds
+Optimized adjacent: 8 thread(s) took 1.304368 seconds
+Optimized chunks: 1 thread(s) took 0.860246 seconds
+Optimized chunks: 2 thread(s) took 0.637124 seconds
+Optimized chunks: 3 thread(s) took 0.641385 seconds
+Optimized chunks: 4 thread(s) took 0.635548 seconds
+Optimized chunks: 5 thread(s) took 0.636254 seconds
+Optimized chunks: 6 thread(s) took 0.635648 seconds
+Optimized chunks: 7 thread(s) took 0.646378 seconds
+Optimized chunks: 8 thread(s) took 0.678110 seconds
+Naive: 1 thread(s) took 0.844562 seconds
+Naive: 2 thread(s) took 0.968121 seconds
+Naive: 3 thread(s) took 1.155753 seconds
+Naive: 4 thread(s) took 1.375051 seconds
+Naive: 5 thread(s) took 1.699763 seconds
+Naive: 6 thread(s) took 1.776230 seconds
+Naive: 7 thread(s) took 1.763912 seconds
+Naive: 8 thread(s) took 2.001909 seconds
+
