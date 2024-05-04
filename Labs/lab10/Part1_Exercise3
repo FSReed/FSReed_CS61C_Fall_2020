@@ -1,0 +1,20 @@
+=== Original Code ===
+Manual Optimized: 1 thread(s) took 3.696404 seconds
+Manual Optimized: 2 thread(s) took 9.158310 seconds
+Manual Optimized: 3 thread(s) took 20.193661 seconds
+Manual Optimized: 4 thread(s) took 28.043727 seconds
+Manual Optimized: 5 thread(s) took 35.742903 seconds
+
+Too slow!
+
+=== Manual Optimization ===
+
+Manual Optimized: 1 thread(s) took 0.675287 seconds
+Manual Optimized: 2 thread(s) took 0.405459 seconds
+Manual Optimized: 3 thread(s) took 0.366754 seconds
+Manual Optimized: 4 thread(s) took 0.348932 seconds
+Manual Optimized: 5 thread(s) took 0.338351 seconds
+Manual Optimized: 6 thread(s) took 0.376520 seconds
+Manual Optimized: 7 thread(s) took 0.360412 seconds
+Manual Optimized: 8 thread(s) took 0.332527 seconds
+
