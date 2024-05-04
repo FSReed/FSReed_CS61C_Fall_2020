@@ -1,0 +1,18 @@
+=== Before Optimization ===
+python custom_tests/speed.py
+CS61C Fall 2020 Project 4: numc imported!
+Size of the square matrix is 5000 * 5000
+A + B spends 0.3627133369445801 seconds
+A - B spends 0.5531151294708252 seconds
+abs(A) spends 0.041480302810668945 seconds
+A * B spends 106.65738606452942 seconds
+
+=== After SIMD ===
+
+python custom_tests/speed.py
+CS61C Fall 2020 Project 4: numc imported!
+Size of the square matrix is 5000 * 5000
+A + B spends 0.1799783706665039 seconds
+A - B spends 0.3579833507537842 seconds
+abs(A) spends 0.040585994720458984 seconds
+A * B spends 74.29758143424988 seconds

@@ -252,7 +252,7 @@ int mul_matrix(matrix* result, matrix* mat1, matrix* mat2) {
     allocate_matrix(&transpose, mat2->cols, mat2->rows);
     transpose_matrix(transpose, mat2);
 
-    __m256d current_result, tmp_result, mat1_elm, mat2_elm;
+    __m256d current_result, mat1_elm, mat2_elm;
     double* tmp_array = (double*)malloc(sizeof(double) * 4);
 
     for (int i = 0; i < result->rows; i++) {
@@ -264,8 +264,7 @@ int mul_matrix(matrix* result, matrix* mat1, matrix* mat2) {
                 // result->data[i][j] += mat1->data[i][k] * mat2->data[k][j];
                 mat1_elm = _mm256_loadu_pd(mat1->data[i] + k * 4);
                 mat2_elm = _mm256_loadu_pd(transpose->data[j] + k * 4);
-                tmp_result = _mm256_mul_pd(mat1_elm, mat2_elm);
-                current_result = _mm256_add_pd(tmp_result, current_result);
+                current_result = _mm256_fmadd_pd(mat1_elm, mat2_elm, current_result);
             }
             _mm256_storeu_pd(tmp_array, current_result);
             for (int p = 0; p < 4; p++) {
