@@ -22,7 +22,7 @@ It seems to be fine if you don't modify `Makefile`, but I don't know why. `make`
 When implementing slice in Task3, I found the implementation of `allocate` and `deallocate` is totally wrong!  
 When creating a slice, this slice should share the same data with its parent matrix. This means **DO NOT allocate another space and copy the data from the parent!**. Instead, only create a `double**` pointer and allocate the space of `rows` pointers of the type `double`. Then manage the pointers to let them point to the right location of the original data.
 
-## Task 2: Setup Numc
+## Task 2: Setup numc
 
 Only need to modify the `setup.py` using 2 function calls. If it's done properly:
 
@@ -86,4 +86,29 @@ In `set_subscript`:
 - First, I treat 1D col-arrays and 1D row-arrays differently because I think fill multiple rows can be done by filling in one row multiple times. But I found parsing the given value `v` depends on whether the slice is 1D.
 - So I integrate all 1D arrays into one case by setting a `row_flag` and a `col_flag`. And $row_flag + col_flag == 1$.
 - In both cases (1D and 2D), I **allocate an additional space to store the values** and check if they are valid. The reason is: **If I do these conceptual checks during setting the values, some of these values may be polluted on failure.**
+
+## Optimization
+
+### SIMD
+
+**Key Problem**: `mul_matrix`.
+
+1. I use `_mm256_set1_pd()` to store 4 same values in mat1, and use SIMD to multiply 4 mat2 values at the same time. This is simple, but there's no acceleration at all.
+2. I figured out there's no way to use SIMD on both mat1 and mat2 at the same time because I can't access one of these two's adjacent memory addresses. This is proved on [Fall22 Project4](https://inst.eecs.berkeley.edu/~cs61c/fa22/projects/proj4/#task-2-speeding-up-matrix-operations), it says:
+   - `To vectorize the dot product (multiplication and addition) operations in matrix multiplication, consider transposing the second matrix so that the elements in a column are located at adjacent memory addresses.`  
+   So I need to implement matrix transposing first.
+3. `transpose_matrix` implemented. Now I can use SIMD in my `mul_matrix`!
+
+### OpenMP
+
+- I try to write the `#pragma omp parallel` block, assigning the chunks and the critical part on my own. But it didn't have a better performance than a single `parallel for`. I use a temporary variable to store the value of each innermost iteration, then access the memory to write back.
+- After using both SIMD and OpenMP, there's only about a 3x speed up...  
+  I'm not sure if it's because of the structure of mat->data (a double pointer). Would that be better if I use a single pointer to point to the data? I want to give it a shot.
+  - You can check this on branch `proj4_single_pointer`.
+
+### Cache Locality
+
+Fine, I have to say **this is the key point**.  
+When I implement mul_matrix for the first time, I use `cache locality`. All the optimization I made above are based on this. But when I go back to the original code and modify the loop condition to break cache locality, the performance became **MUCH WORSE**! I've listed the difference in the file `Optimization` in thi folder. Feel free to check it.
+
 
