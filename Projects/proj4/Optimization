@@ -23,3 +23,8 @@ A - B spends 0.18514299392700195 seconds
 abs(A) spends 0.05610775947570801 seconds
 A * B spends 45.07635998725891 seconds
 
+
+=== Loop Unroll ===
+
+A * B spends 37.75395154953003 seconds
+

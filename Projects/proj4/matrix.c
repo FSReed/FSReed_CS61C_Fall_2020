@@ -293,17 +293,29 @@ int mul_matrix(matrix* result, matrix* mat1, matrix* mat2) {
             current_result = _mm256_setzero_pd();
             double tmp = 0.0;
 
-            for (int k = 0; k < mat1->cols / 4; k++) {
+            for (int k = 0; k < mat1->cols / 16; k++) {
                 // result->data[i][j] += mat1->data[i][k] * mat2->data[k][j];
-                mat1_elm = _mm256_loadu_pd(mat1->data[i] + k * 4);
-                mat2_elm = _mm256_loadu_pd(transpose->data[j] + k * 4);
+                mat1_elm = _mm256_loadu_pd(mat1->data[i] + k * 16);
+                mat2_elm = _mm256_loadu_pd(transpose->data[j] + k * 16);
+                current_result = _mm256_fmadd_pd(mat1_elm, mat2_elm, current_result);
+
+                mat1_elm = _mm256_loadu_pd(mat1->data[i] + k * 16 + 4);
+                mat2_elm = _mm256_loadu_pd(transpose->data[j] + k * 16 + 4);
+                current_result = _mm256_fmadd_pd(mat1_elm, mat2_elm, current_result);
+
+                mat1_elm = _mm256_loadu_pd(mat1->data[i] + k * 16 + 8);
+                mat2_elm = _mm256_loadu_pd(transpose->data[j] + k * 16 + 8);
+                current_result = _mm256_fmadd_pd(mat1_elm, mat2_elm, current_result);
+
+                mat1_elm = _mm256_loadu_pd(mat1->data[i] + k * 16 + 12);
+                mat2_elm = _mm256_loadu_pd(transpose->data[j] + k * 16 + 12);
                 current_result = _mm256_fmadd_pd(mat1_elm, mat2_elm, current_result);
             }
             _mm256_storeu_pd(tmp_array, current_result);
             for (int p = 0; p < 4; p++) {
                 tmp += tmp_array[p];
             }
-            for (int k = mat1->cols / 4 * 4; k < mat1->cols; k++) {
+            for (int k = mat1->cols / 16 * 16; k < mat1->cols; k++) {
                 tmp += mat1->data[i][k] * transpose->data[j][k];
             }
 #pragma omp critical
