@@ -18,3 +18,13 @@ Manual Optimized: 6 thread(s) took 0.376520 seconds
 Manual Optimized: 7 thread(s) took 0.360412 seconds
 Manual Optimized: 8 thread(s) took 0.332527 seconds
 
+=== Reduction Optimization ===
+
+Reduction Optimized: 1 thread(s) took 0.699489 seconds
+Reduction Optimized: 2 thread(s) took 0.420139 seconds
+Reduction Optimized: 3 thread(s) took 0.339855 seconds
+Reduction Optimized: 4 thread(s) took 0.347418 seconds
+Reduction Optimized: 5 thread(s) took 0.319267 seconds
+Reduction Optimized: 6 thread(s) took 0.314274 seconds
+Reduction Optimized: 7 thread(s) took 0.343534 seconds
+Reduction Optimized: 8 thread(s) took 0.393187 seconds
