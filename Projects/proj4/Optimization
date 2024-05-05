@@ -28,3 +28,11 @@ A * B spends 45.07635998725891 seconds
 
 A * B spends 37.75395154953003 seconds
 
+=== Cache Locality! ===
+
+For a 2000 x 2000 matrix:
+Before: about 64 seconds
+After: about 2.6 seconds
+
+Testing a 5000*5000 matrix with no cache locality is terrifying. I won't do that lol
+

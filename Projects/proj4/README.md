@@ -104,4 +104,11 @@ In `set_subscript`:
 - I try to write the `#pragma omp parallel` block, assigning the chunks and the critical part on my own. But it didn't have a better performance than a single `parallel for`. I use a temporary variable to store the value of each innermost iteration, then access the memory to write back.
 - After using both SIMD and OpenMP, there's only about a 3x speed up...  
   I'm not sure if it's because of the structure of mat->data (a double pointer). Would that be better if I use a single pointer to point to the data? I want to give it a shot.
+  - You can check this on branch `proj4_single_pointer`.
+
+### Cache Locality
+
+Fine, I have to say **this is the key point**.  
+When I implement mul_matrix for the first time, I use `cache locality`. All the optimization I made above are based on this. But when I go back to the original code and modify the loop condition to break cache locality, the performance became **MUCH WORSE**! I've listed the difference in the file `Optimization` in thi folder. Feel free to check it.
+
 
