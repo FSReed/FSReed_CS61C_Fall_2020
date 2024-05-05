@@ -96,4 +96,12 @@ In `set_subscript`:
 1. I use `_mm256_set1_pd()` to store 4 same values in mat1, and use SIMD to multiply 4 mat2 values at the same time. This is simple, but there's no acceleration at all.
 2. I figured out there's no way to use SIMD on both mat1 and mat2 at the same time because I can't access one of these two's adjacent memory addresses. This is proved on [Fall22 Project4](https://inst.eecs.berkeley.edu/~cs61c/fa22/projects/proj4/#task-2-speeding-up-matrix-operations), it says:
    - `To vectorize the dot product (multiplication and addition) operations in matrix multiplication, consider transposing the second matrix so that the elements in a column are located at adjacent memory addresses.`  
-   So I need to implement matrix transposing first..
+   So I need to implement matrix transposing first.
+3. `transpose_matrix` implemented. Now I can use SIMD in my `mul_matrix`!
+
+### OpenMP
+
+- I try to write the `#pragma omp parallel` block, assigning the chunks and the critical part on my own. But it didn't have a better performance than a single `parallel for`. I use a temporary variable to store the value of each innermost iteration, then access the memory to write back.
+- After using both SIMD and OpenMP, there's only about a 3x speed up...  
+  I'm not sure if it's because of the structure of mat->data (a double pointer). Would that be better if I use a single pointer to point to the data? I want to give it a shot.
+
