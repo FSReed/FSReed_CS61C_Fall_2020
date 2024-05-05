@@ -392,13 +392,14 @@ void copy_data(matrix* dest, matrix* src) {
 
 int transpose_matrix(matrix* result, matrix* mat) {
 
-    /* This piece of code comes from lab07 */
     if (result->rows != mat->cols || result->cols != mat->rows) {
         PyErr_SetString(PyExc_RuntimeError, "Can't transpose!");
         PyErr_Print();
         return -1;
     }
     int row = 0, col = 0, blocksize = 50;
+
+    /* This piece of code comes from lab07 */
 #pragma omp parallel for
     for (row = 0; row < mat->rows; row += blocksize) {
         for (col = 0; col < mat->cols; col += blocksize) {
