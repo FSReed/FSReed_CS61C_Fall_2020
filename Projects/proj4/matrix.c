@@ -85,25 +85,13 @@ int allocate_matrix_ref(matrix** mat, matrix* from, int row_offset, int col_offs
     }
 
     *mat = (matrix*)malloc(sizeof(matrix));
-    double** data = (double**)malloc(sizeof(double*) * rows);
+    double* data = NULL;
 
     if (from == NULL) {
-        for (int r = 0; r < rows; r++) {
-            double* rData = (double*)malloc(sizeof(double) * cols);
-            if (rData == NULL) {
-                PyErr_SetString(PyExc_RuntimeError, "Fail to allocate the data of the matrix");
-                PyErr_Print();
-                return -1;
-            }
-            for (int c = 0; c < cols; c++) {
-                rData[c] = 0.0;
-            }
-            data[r] = rData;
-        }
+	data = calloc(rows * cols, sizeof(double));
     } else {
         for (int r = 0; r < rows; r++) {
-            double* rData = from->data[r + row_offset] + col_offset;
-            data[r] = rData;
+	    data = from->data + row_offset * from->cols + col_offset;
         }
     }
 
@@ -134,13 +122,9 @@ void deallocate_matrix(matrix* mat) {
         return;
     }
     if (mat->parent != NULL) {
-        free(mat->data);
         mat->parent->ref_cnt -= 1;
         free(mat);
     } else {
-        for (int r = 0; r < mat->rows; r++) {
-            free(mat->data[r]);
-        }
         free(mat->data);
         free(mat);
     }
@@ -152,7 +136,7 @@ void deallocate_matrix(matrix* mat) {
  */
 double get(matrix* mat, int row, int col) {
     /* TODO: YOUR CODE HERE */
-    return mat->data[row][col];
+    return mat->data[row * mat->cols + col];
 }
 
 /*
@@ -161,7 +145,7 @@ double get(matrix* mat, int row, int col) {
  */
 void set(matrix* mat, int row, int col, double val) {
     /* TODO: YOUR CODE HERE */
-    mat->data[row][col] = val;
+    mat->data[row * mat->cols + col] = val;
 }
 
 /*
@@ -171,7 +155,7 @@ void fill_matrix(matrix* mat, double val) {
     /* TODO: YOUR CODE HERE */
     for (int r = 0; r < mat->rows; r++) {
         for (int c = 0; c < mat->cols; c++) {
-            mat->data[r][c] = val;
+            mat->data[r * mat->cols + c] = val;
         }
     }
 }
@@ -198,10 +182,10 @@ int add_matrix(matrix* result, matrix* mat1, matrix* mat2) {
             // double tmp1 = get(mat1, r, c);
             // double tmp2 = get(mat2, r, c);
             // set(result, r, c, tmp1 + tmp2);
-            tmp_A = _mm256_loadu_pd(mat1->data[r] + c * 4);
-            tmp_B = _mm256_loadu_pd(mat2->data[r] + c * 4);
+            tmp_A = _mm256_loadu_pd(mat1->data + r * mat1->cols + c * 4);
+            tmp_B = _mm256_loadu_pd(mat2->data + r * mat2->cols + c * 4);
             current = _mm256_add_pd(tmp_A, tmp_B);
-            _mm256_storeu_pd(result->data[r] + c * 4, current);
+            _mm256_storeu_pd(result->data + r * result->cols + c * 4, current);
         }
         for (int c = mat1->cols / 4 * 4; c < mat1->cols; c++) {
             set(result, r, c, get(mat1, r, c) + get(mat2, r, c));
@@ -233,10 +217,10 @@ int sub_matrix(matrix* result, matrix* mat1, matrix* mat2) {
             // double tmp1 = get(mat1, r, c);
             // double tmp2 = get(mat2, r, c);
             // set(result, r, c, tmp1 + tmp2);
-            tmp_A = _mm256_loadu_pd(mat1->data[r] + c * 4);
-            tmp_B = _mm256_loadu_pd(mat2->data[r] + c * 4);
+            tmp_A = _mm256_loadu_pd(mat1->data + r * mat1->cols + c * 4);
+            tmp_B = _mm256_loadu_pd(mat2->data + r * mat2->cols + c * 4);
             current = _mm256_sub_pd(tmp_A, tmp_B);
-            _mm256_storeu_pd(result->data[r] + c * 4, current);
+            _mm256_storeu_pd(result->data + r * result->cols + c * 4, current);
         }
         for (int c = mat1->cols / 4 * 4; c < mat1->cols; c++) {
             set(result, r, c, get(mat1, r, c) - get(mat2, r, c));
@@ -295,8 +279,8 @@ int mul_matrix(matrix* result, matrix* mat1, matrix* mat2) {
 
             for (int k = 0; k < mat1->cols / 4; k++) {
                 // result->data[i][j] += mat1->data[i][k] * mat2->data[k][j];
-                mat1_elm = _mm256_loadu_pd(mat1->data[i] + k * 4);
-                mat2_elm = _mm256_loadu_pd(transpose->data[j] + k * 4);
+                mat1_elm = _mm256_loadu_pd(mat1->data + i * mat1->cols + k * 4);
+                mat2_elm = _mm256_loadu_pd(transpose->data + j * transpose->cols + k * 4);
                 current_result = _mm256_fmadd_pd(mat1_elm, mat2_elm, current_result);
             }
             _mm256_storeu_pd(tmp_array, current_result);
@@ -304,11 +288,11 @@ int mul_matrix(matrix* result, matrix* mat1, matrix* mat2) {
                 tmp += tmp_array[p];
             }
             for (int k = mat1->cols / 4 * 4; k < mat1->cols; k++) {
-                tmp += mat1->data[i][k] * transpose->data[j][k];
+                tmp += mat1->data[i * mat1->cols + k] * transpose->data[j * transpose->cols + k];
             }
 #pragma omp critical
             {
-                result->data[i][j] += tmp;
+                result->data[i * result->cols + j] += tmp;
             }
         }
     }
@@ -355,11 +339,11 @@ int neg_matrix(matrix* result, matrix* mat) {
 
     for (int r = 0; r < mat->rows; r++) {
         for (int c = 0; c < mat->cols / 4; c++) {
-            tmp = _mm256_loadu_pd(mat->data[r] + c * 4);
-            _mm256_storeu_pd(result->data[r] + c * 4, tmp);
+            tmp = _mm256_loadu_pd(mat->data + r * mat->cols + c * 4);
+            _mm256_storeu_pd(result->data + r * result->cols + c * 4, tmp);
         }
         for (int c = mat->cols / 4 * 4; c < mat->cols; c++) {
-            result->data[r][c] = -mat->data[r][c];
+            result->data[r * result->cols + c] = -mat->data[r * mat->cols + c];
         }
     }
     return 0;
@@ -374,8 +358,8 @@ int abs_matrix(matrix* result, matrix* mat) {
     // allocate_matrix(&result, mat ->rows, mat ->cols);
     for (int r = 0; r < mat->rows; r++) {
         for (int c = 0; c < mat->cols; c++) {
-            int tmp = mat->data[r][c];
-            result->data[r][c] = tmp >= 0 ? tmp : -tmp;
+            int tmp = mat->data[r * mat->cols + c];
+            result->data[r * result->cols + c] = tmp >= 0 ? tmp : -tmp;
         }
     }
     return 0;
@@ -385,7 +369,7 @@ void copy_data(matrix* dest, matrix* src) {
 #pragma omp parallel for
     for (int r = 0; r < src->rows; r++) {
         for (int c = 0; c < src->cols; c++) {
-            dest->data[r][c] = src->data[r][c];
+            dest->data[r * dest->cols + c] = src->data[r * src->cols + c];
         }
     }
 }
@@ -406,7 +390,7 @@ int transpose_matrix(matrix* result, matrix* mat) {
             for (int x = row; x < row + blocksize && x < mat->rows; x++) {
                 for (int y = col; y < col + blocksize && y < mat->cols; y++) {
                     /* dst[x + y * n] = src[x * n + y]; */
-                    result->data[y][x] = mat->data[x][y];
+                    result->data[y * result->cols + x] = mat->data[x * mat->cols + y];
                 }
             }
         }

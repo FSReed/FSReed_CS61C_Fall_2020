@@ -104,4 +104,5 @@ In `set_subscript`:
 - I try to write the `#pragma omp parallel` block, assigning the chunks and the critical part on my own. But it didn't have a better performance than a single `parallel for`. I use a temporary variable to store the value of each innermost iteration, then access the memory to write back.
 - After using both SIMD and OpenMP, there's only about a 3x speed up...  
   I'm not sure if it's because of the structure of mat->data (a double pointer). Would that be better if I use a single pointer to point to the data? I want to give it a shot.
+  - Ok, it doesn't help at all, and it makes `get()` and `set()` much harder.
 
