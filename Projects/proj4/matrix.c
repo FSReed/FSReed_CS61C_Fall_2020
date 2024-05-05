@@ -192,6 +192,7 @@ int add_matrix(matrix* result, matrix* mat1, matrix* mat2) {
     __m256d tmp_B = _mm256_setzero_pd();
     __m256d current = _mm256_setzero_pd();
 
+#pragma omp parallel for
     for (int r = 0; r < mat1->rows; r++) {
         for (int c = 0; c < mat1->cols / 4; c++) {
             // double tmp1 = get(mat1, r, c);
@@ -215,12 +216,42 @@ int add_matrix(matrix* result, matrix* mat1, matrix* mat2) {
  */
 int sub_matrix(matrix* result, matrix* mat1, matrix* mat2) {
     /* TODO: YOUR CODE HERE */
-    matrix* tmp;
-    allocate_matrix(&tmp, mat2->rows, mat2->cols);
-    neg_matrix(tmp, mat2);
-    int add_success = add_matrix(result, mat1, tmp);
-    free(tmp);
-    return add_success;
+
+    if (mat1->rows != mat2->rows || mat1->cols != mat2->cols) {
+        PyErr_SetString(PyExc_ValueError, "Different dimension of two given matrices");
+        PyErr_Print();
+        return -1;
+    }
+    // allocate_matrix(&result, mat1->rows, mat1->cols);
+    __m256d tmp_A = _mm256_setzero_pd();
+    __m256d tmp_B = _mm256_setzero_pd();
+    __m256d current = _mm256_setzero_pd();
+
+#pragma omp parallel for
+    for (int r = 0; r < mat1->rows; r++) {
+        for (int c = 0; c < mat1->cols / 4; c++) {
+            // double tmp1 = get(mat1, r, c);
+            // double tmp2 = get(mat2, r, c);
+            // set(result, r, c, tmp1 + tmp2);
+            tmp_A = _mm256_loadu_pd(mat1->data[r] + c * 4);
+            tmp_B = _mm256_loadu_pd(mat2->data[r] + c * 4);
+            current = _mm256_sub_pd(tmp_A, tmp_B);
+            _mm256_storeu_pd(result->data[r] + c * 4, current);
+        }
+        for (int c = mat1->cols / 4 * 4; c < mat1->cols; c++) {
+            set(result, r, c, get(mat1, r, c) - get(mat2, r, c));
+        }
+    }
+    return 0;
+
+    /* Original Implementation of sub_matrix. Neat but inefficient
+    * matrix* tmp;
+    * allocate_matrix(&tmp, mat2->rows, mat2->cols);
+    * neg_matrix(tmp, mat2);
+    * int add_success = add_matrix(result, mat1, tmp);
+    * free(tmp);
+    * return add_success;
+    */
 }
 
 /*
@@ -255,10 +286,12 @@ int mul_matrix(matrix* result, matrix* mat1, matrix* mat2) {
     __m256d current_result, mat1_elm, mat2_elm;
     double* tmp_array = (double*)malloc(sizeof(double) * 4);
 
+#pragma omp parallel for
     for (int i = 0; i < result->rows; i++) {
         for (int j = 0; j < result->cols; j++) {
 
             current_result = _mm256_setzero_pd();
+            double tmp = 0.0;
 
             for (int k = 0; k < mat1->cols / 4; k++) {
                 // result->data[i][j] += mat1->data[i][k] * mat2->data[k][j];
@@ -268,10 +301,14 @@ int mul_matrix(matrix* result, matrix* mat1, matrix* mat2) {
             }
             _mm256_storeu_pd(tmp_array, current_result);
             for (int p = 0; p < 4; p++) {
-                result->data[i][j] += tmp_array[p];
+                tmp += tmp_array[p];
             }
             for (int k = mat1->cols / 4 * 4; k < mat1->cols; k++) {
-                result->data[i][j] += mat1->data[i][k] * transpose->data[j][k];
+                tmp += mat1->data[i][k] * transpose->data[j][k];
+            }
+#pragma omp critical
+            {
+                result->data[i][j] += tmp;
             }
         }
     }
@@ -345,6 +382,7 @@ int abs_matrix(matrix* result, matrix* mat) {
 }
 
 void copy_data(matrix* dest, matrix* src) {
+#pragma omp parallel for
     for (int r = 0; r < src->rows; r++) {
         for (int c = 0; c < src->cols; c++) {
             dest->data[r][c] = src->data[r][c];
@@ -360,7 +398,8 @@ int transpose_matrix(matrix* result, matrix* mat) {
         PyErr_Print();
         return -1;
     }
-    int row = 0, col = 0, blocksize = 20;
+    int row = 0, col = 0, blocksize = 50;
+#pragma omp parallel for
     for (row = 0; row < mat->rows; row += blocksize) {
         for (col = 0; col < mat->cols; col += blocksize) {
             for (int x = row; x < row + blocksize && x < mat->rows; x++) {
