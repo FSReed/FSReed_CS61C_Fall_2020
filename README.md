@@ -32,3 +32,5 @@ This long-lost enthusiasm in study really cheers me up.
 - The moment that we make hardware and software contact in Lecture20!
   ![Wow!](./Notes/Image/Week8/Week8-9.png)
   - Typed at 2024/02/20, 20:08
+- After a long journey, **I finished all the labs and projects of this course**! And I consider the last few lectures (from lecture 36) as supplementary materials for further exploration out of the scope of this course. It's almost over!
+  - Typed at 2024/05/10, 22:38
