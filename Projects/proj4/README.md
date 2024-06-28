@@ -84,7 +84,7 @@ Here's what I did when implementing `Matrix61c_subscript`:
 In `set_subscript`:
 
 - First, I treat 1D col-arrays and 1D row-arrays differently because I think fill multiple rows can be done by filling in one row multiple times. But I found parsing the given value `v` depends on whether the slice is 1D.
-- So I integrate all 1D arrays into one case by setting a `row_flag` and a `col_flag`. And $row_flag + col_flag == 1$.
+- So I integrate all 1D arrays into one case by setting a `row_flag` and a `col_flag`. And $row\_flag + col\_flag == 1$.
 - In both cases (1D and 2D), I **allocate an additional space to store the values** and check if they are valid. The reason is: **If I do these conceptual checks during setting the values, some of these values may be polluted on failure.**
 
 ## Optimization
@@ -109,6 +109,4 @@ In `set_subscript`:
 ### Cache Locality
 
 Fine, I have to say **this is the key point**.  
-When I implement mul_matrix for the first time, I use `cache locality`. All the optimization I made above are based on this. But when I go back to the original code and modify the loop condition to break cache locality, the performance became **MUCH WORSE**! I've listed the difference in the file `Optimization` in thi folder. Feel free to check it.
-
-
+When I implement mul_matrix for the first time, I use `cache locality`. All the optimization I made above are based on this. But when I go back to the original code and modify the loop condition to break cache locality, the performance became **MUCH WORSE**! I've listed the difference in the file `Optimization` in this folder. Feel free to check it.
