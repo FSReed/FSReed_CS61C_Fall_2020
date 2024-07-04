@@ -386,7 +386,7 @@ int abs_matrix(matrix* result, matrix* mat) {
     // allocate_matrix(&result, mat ->rows, mat ->cols);
     for (int r = 0; r < mat->rows; r++) {
         for (int c = 0; c < mat->cols; c++) {
-            int tmp = mat->data[r][c];
+            double tmp = mat->data[r][c];
             result->data[r][c] = tmp >= 0 ? tmp : -tmp;
         }
     }

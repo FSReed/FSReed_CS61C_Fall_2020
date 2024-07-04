@@ -119,7 +119,7 @@ class TestSet(TestCase):
         dp_mat, nc_mat = rand_dp_nc_matrix(2, 2, seed=0)
         rand_row = np.random.randint(dp_mat.shape[0])
         rand_col = np.random.randint(dp_mat.shape[1])
-        self.assertEquals(round(dp_mat[rand_row][rand_col], decimal_places),
+        self.assertEqual(round(dp_mat[rand_row][rand_col], decimal_places),
             round(nc_mat[rand_row][rand_col], decimal_places))
 
 class TestShape(TestCase):

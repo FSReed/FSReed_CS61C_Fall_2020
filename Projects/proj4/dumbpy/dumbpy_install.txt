@@ -1,0 +1,3 @@
+/home/digital/FSReed_61cTest/Projects/proj4/.venv/lib/python3.8/site-packages/dumbpy.cpython-38-x86_64-linux-gnu.so
+/home/digital/FSReed_61cTest/Projects/proj4/.venv/lib/python3.8/site-packages/dumbpy-0.0.1-py3.8.egg-info
+.venv/lib/python3.11/site-packages/dumbpy-*
