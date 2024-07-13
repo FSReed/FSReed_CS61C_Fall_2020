@@ -88,27 +88,24 @@ int allocate_matrix_ref(matrix** mat, matrix* from, int row_offset, int col_offs
     double** data = (double**)malloc(sizeof(double*) * rows);
 
     if (from == NULL) {
+        double* elements = (double*)malloc(sizeof(double) * rows * cols);
+        if (elements == NULL) {
+            PyErr_SetString(PyExc_RuntimeError, "Fail to allocate the data of the matrix");
+            PyErr_Print();
+            return -1;
+        }
         for (int r = 0; r < rows; r++) {
-            double* rData = (double*)malloc(sizeof(double) * cols);
-            if (rData == NULL) {
-                PyErr_SetString(PyExc_RuntimeError, "Fail to allocate the data of the matrix");
-                PyErr_Print();
-                return -1;
-            }
             for (int c = 0; c < cols; c++) {
-                rData[c] = 0.0;
+                elements[r * cols + c] = 0.0;
             }
-            data[r] = rData;
+            data[r] = elements + r * cols;
         }
     } else {
-        for (int r = 0; r < rows; r++) {
-            double* rData = from->data[r + row_offset] + col_offset;
-            data[r] = rData;
-        }
-    }
-
-    if (from != NULL) {
         from->ref_cnt += 1;
+        for (int r = 0; r < rows; r++) {
+            double* elements = from->data[r + row_offset] + col_offset;
+            data[r] = elements;
+        }
     }
 
     (*mat)->rows = rows;
@@ -138,9 +135,7 @@ void deallocate_matrix(matrix* mat) {
         mat->parent->ref_cnt -= 1;
         free(mat);
     } else {
-        for (int r = 0; r < mat->rows; r++) {
-            free(mat->data[r]);
-        }
+        free(*(mat->data));
         free(mat->data);
         free(mat);
     }
@@ -368,7 +363,7 @@ int neg_matrix(matrix* result, matrix* mat) {
     for (int r = 0; r < mat->rows; r++) {
         for (int c = 0; c < mat->cols / 4; c++) {
             tmp = _mm256_loadu_pd(mat->data[r] + c * 4);
-            _mm256_storeu_pd(result->data[r] + c * 4, tmp);
+            _mm256_storeu_pd(result->data[r] + c * 4, -tmp);
         }
         for (int c = mat->cols / 4 * 4; c < mat->cols; c++) {
             result->data[r][c] = -mat->data[r][c];
@@ -409,7 +404,7 @@ int transpose_matrix(matrix* result, matrix* mat) {
         PyErr_Print();
         return -1;
     }
-    int row = 0, col = 0, blocksize = 50;
+    int row = 0, col = 0, blocksize = 8;
 
     /* This piece of code comes from lab07 */
 #pragma omp parallel for

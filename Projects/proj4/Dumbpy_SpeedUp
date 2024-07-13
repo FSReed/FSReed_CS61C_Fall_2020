@@ -1,0 +1,36 @@
+CS61C Fall 2021 Project 4: dumbpy imported!
+CS61C Fall 2020 Project 4: numc imported!
+test_large_abs (unittests.TestAbs) ... ok
+test_medium_abs (unittests.TestAbs) ... ok
+test_small_abs (unittests.TestAbs) ... Speed up is: 0.3333333333333333
+ok
+test_large_add (unittests.TestAdd) ... Speed up is: 0.9283336699354472
+ok
+test_medium_add (unittests.TestAdd) ... ok
+test_small_add (unittests.TestAdd) ... Speed up is: 0.058333333333333334
+ok
+test_get (unittests.TestGet) ... ok
+test_large_mul (unittests.TestMul) ... Speed up is: 31.06160302546931
+ok
+test_medium_mul (unittests.TestMul) ... ok
+test_small_mul (unittests.TestMul) ... Speed up is: 0.04242424242424243
+ok
+test_large_neg (unittests.TestNeg) ... Speed up is: 0.8722226139469679
+ok
+test_medium_neg (unittests.TestNeg) ... ok
+test_small_neg (unittests.TestNeg) ... Speed up is: 0.4166666666666667
+ok
+test_large_pow (unittests.TestPow) ... Speed up is: 23.49781955662461
+ok
+test_medium_pow (unittests.TestPow) ... ok
+test_small_pow (unittests.TestPow) ... Speed up is: 0.0085927057475654
+ok
+test_set (unittests.TestSet) ... ok
+test_shape (unittests.TestShape) ... ok
+test_large_sub (unittests.TestSub) ... ok
+test_medium_sub (unittests.TestSub) ... ok
+test_small_sub (unittests.TestSub) ... Speed up is: 0.3333333333333333
+ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 104.630s

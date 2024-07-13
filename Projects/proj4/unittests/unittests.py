@@ -21,7 +21,11 @@ class TestAdd(TestCase):
 
     def test_large_add(self):
         # TODO: YOUR CODE HERE
-        pass
+        dp_mat1, nc_mat1 = rand_dp_nc_matrix(1852, 3057, seed=0)
+        dp_mat2, nc_mat2 = rand_dp_nc_matrix(1852, 3057, seed=1)
+        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "add")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
 
 class TestSub(TestCase):
     def test_small_sub(self):
@@ -69,7 +73,10 @@ class TestNeg(TestCase):
 
     def test_large_neg(self):
         # TODO: YOUR CODE HERE
-        pass
+        dp_mat, nc_mat = rand_dp_nc_matrix(1955, 5051, seed=0)
+        is_correct, speed_up = compute([dp_mat], [nc_mat], "neg")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
 
 class TestMul(TestCase):
     def test_small_mul(self):
@@ -86,7 +93,11 @@ class TestMul(TestCase):
 
     def test_large_mul(self):
         # TODO: YOUR CODE HERE
-        pass
+        dp_mat1, nc_mat1 = rand_dp_nc_matrix(2001, 1999, seed=0)
+        dp_mat2, nc_mat2 = rand_dp_nc_matrix(1999, 2003, seed=1)
+        is_correct, speed_up = compute([dp_mat1, dp_mat2], [nc_mat1, nc_mat2], "mul")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
 
 class TestPow(TestCase):
     def test_small_pow(self):
@@ -102,7 +113,10 @@ class TestPow(TestCase):
 
     def test_large_pow(self):
         # TODO: YOUR CODE HERE
-        pass
+        dp_mat, nc_mat = rand_dp_nc_matrix(1655, 1655, seed=0)
+        is_correct, speed_up = compute([dp_mat, 3], [nc_mat, 3], "pow")
+        self.assertTrue(is_correct)
+        print_speedup(speed_up)
 
 class TestGet(TestCase):
     def test_get(self):
