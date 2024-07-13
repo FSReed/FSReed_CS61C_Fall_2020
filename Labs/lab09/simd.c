@@ -67,7 +67,6 @@ long long int sum_simd(int vals[NUM_ELEMS]) {
 		    // Sum with previous result
 		    tmpResult = _mm_add_epi32(current, tmpResult);
 		}
-		_mm_storeu_si128(&tmpResult, tmpResult);
 		container = (int*) &tmpResult;
 		for (int i = 0; i < 4; i++) {
 		    result += container[i];
@@ -130,7 +129,6 @@ long long int sum_simd_unrolled(int vals[NUM_ELEMS]) {
 		    // Sum with previous result
 		    tmpResult = _mm_add_epi32(current, tmpResult);
 		}
-		_mm_storeu_si128(&tmpResult, tmpResult);
 		container = (int*) &tmpResult;
 		for (int j = 0; j < 4; j++) {
 		    result += container[j];
